@@ -416,14 +416,13 @@ function finalMessageMaker(playerArray) {
 }
 
 function availableRoles(objectArray, nextUp) {
+  console.log(nextUp.preferred);
+  const prefRoleArr = nextUp.preferred;
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
-      const availableRole = nextUp.preferred.splice(
-        nextUp.preferred.indexOf(object.position),
-        1
-      );
-      console.log(availableRole);
+      prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
+      console.log(prefRoleArr);
     }
   }
-  return availableRole;
+  return prefRoleArr;
 }
