@@ -36,7 +36,6 @@ module.exports = {
   async execute(interaction) {
     const playerArray = [];
     const numPlayers = 5;
-    const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     //Joel unique id checking code
     const uniquePlayerIds = [];
     for (let i = 1; i < numPlayers + 1; i++) {
@@ -62,6 +61,7 @@ module.exports = {
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
     for (player of shuffledArray) {
+      const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
       //tjonga in maakep code here
       objectArray.push({
         player: player,
