@@ -386,7 +386,7 @@ function rowBoat(updatedArray) {
       .setCustomId("fill")
       .setStyle(ButtonStyle.Primary)
       .setEmoji("935684531023925299")
-      .setDisabled(false)
+      .setDisabled(!whosNext(playerArray))
   );
   //NEED FILL-CHECKER
   return [row1, row2];
