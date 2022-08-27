@@ -62,12 +62,14 @@ module.exports = {
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
     for (player of shuffledArray) {
+      //tjonga in maakep code here
       objectArray.push({
         player: player,
         position: "Has not picked yet",
         preferred: shuffle(standardRoles),
       });
     }
+    console.log(objectArray);
     const thread = await interaction.channel.threads.create({
       name: interaction.user.username + "'s Dota Party",
       autoArchiveDuration: 60,
@@ -416,8 +418,12 @@ function finalMessageMaker(playerArray) {
 function availableRoles(objectArray, nextUp) {
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
-      nextUp.preferred.splice(nextUp.preferred.indexOf(object.position), 1);
+      const availableRole = nextUp.preferred.splice(
+        nextUp.preferred.indexOf(object.position),
+        1
+      );
+      console.log(availableRole);
     }
   }
-  return preferredArray;
+  return availableRole;
 }
