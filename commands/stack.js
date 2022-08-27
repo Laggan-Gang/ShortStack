@@ -159,6 +159,7 @@ async function badabingBadaboom(
         );
       } catch (error) {
         interaction.edit("There was an error baby  " + error);
+        console.log(error);
       }
     } else {
       const recentlyPicked = { player: nextUp.player, position: randomRole };
