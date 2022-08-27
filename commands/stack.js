@@ -109,8 +109,8 @@ async function badabingBadaboom(
   const buttonRows = rowBoat(updatedArray);
   const embed = await prettyEmbed(updatedArray);
   //pre-assign role preferences for players when they're put into the big array, make new property for them and read them that way
-  const randomRole = shuffle(availableRoles(updatedArray, nextUp))[0];
   if (nextUp) {
+    const randomRole = availableRoles(updatedArray, nextUp)[0];
     await interaction.edit({
       content: `${nextUp.player.toString()} You're up! If you do not pick you will be assigned ${randomRole}`,
       embeds: [embed.embed],
