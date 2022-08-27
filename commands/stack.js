@@ -344,6 +344,7 @@ async function artTime(objectArray) {
 }
 
 function rowBoat(updatedArray) {
+  const nextUp = whosNext(updatedArray);
   const row1 = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
@@ -386,7 +387,7 @@ function rowBoat(updatedArray) {
       .setCustomId("fill")
       .setStyle(ButtonStyle.Primary)
       .setEmoji("935684531023925299")
-      .setDisabled(!whosNext(updatedArray))
+      .setDisabled(!nextUp)
   );
   //NEED FILL-CHECKER
   return [row1, row2];
