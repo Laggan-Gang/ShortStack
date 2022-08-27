@@ -416,12 +416,20 @@ function finalMessageMaker(playerArray) {
 }
 
 function availableRoles(objectArray, nextUp) {
-  console.log(nextUp.preferred);
+  console.log(
+    "Next up är " +
+      nextUp.player.user.username +
+      "med preferenserna" +
+      nextUp.preferred
+  );
   const prefRoleArr = nextUp.preferred;
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
+      console.log("Object.position är " + object.position);
       prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
-      console.log(prefRoleArr);
+      console.log(
+        "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
+      );
     }
   }
   return prefRoleArr;
