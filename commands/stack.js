@@ -63,10 +63,11 @@ module.exports = {
     const objectArray = [];
     for (player of shuffledArray) {
       //tjonga in maakep code here
+      const preferredRoles = shuffle(standardRoles);
       objectArray.push({
         player: player,
         position: "Has not picked yet",
-        preferred: shuffle(standardRoles),
+        preferred: preferredRoles,
       });
     }
     console.log(objectArray);
@@ -422,7 +423,7 @@ function availableRoles(objectArray, nextUp) {
       "med preferenserna" +
       nextUp.preferred
   );
-  const prefRoleArr = nextUp.preferred;
+  const prefRoleArr = nextUp.preferred.slice();
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
       console.log("Object.position är " + object.position);
