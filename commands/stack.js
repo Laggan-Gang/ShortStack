@@ -438,21 +438,23 @@ function availableRoles(objectArray) {
       " med preferenserna " +
       nextUp.preferred
   );
+  //I think I shouldn't slice over a looped array
   const prefRoleArr = nextUp.preferred.slice();
-  console.log("Efter .slice " + prefRoleArr);
   for (preference of prefRoleArr) {
     console.log("Nu kollar vi preferensen " + preference);
     for (object of objectArray) {
       console.log("Nu kollar vi object " + object.position);
-      if (object.position == preference) {
+      if (object.position != "fill" && object.position == preference) {
         console.log(
-          "Nu tycker jag att " + object.position + " matchar med " + preference
+          "Nu tycker jag att " +
+            object.position +
+            " matchar med " +
+            preference +
+            " så det är BREAK time"
         );
-        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
-        console.log(
-          prefRoleArr + " såhär ser array ut efter att jag plockat bort"
-        );
+        break;
       }
+      return preference;
     }
   }
 
