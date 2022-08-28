@@ -169,7 +169,7 @@ async function badabingBadaboom(
         console.log(error);
       }
     } else {
-      const randomRole = availableRoles(updatedArray)[0];
+      const randomRole = availableRoles(updatedArray);
 
       const recentlyPicked = {
         player: nextUp.player,
@@ -440,10 +440,10 @@ function availableRoles(objectArray) {
   );
   //I think I shouldn't slice over a looped array
   const prefRoleArr = nextUp.preferred.slice();
-  for (preference of prefRoleArr) {
-    console.log("Nu kollar vi preferensen " + preference);
-    for (object of objectArray) {
-      console.log("Nu kollar vi object " + object.position);
+  for (object of objectArray) {
+    console.log("Nu kollar vi object " + object.position);
+    for (preference of prefRoleArr) {
+      console.log("Nu kollar vi preferensen " + preference);
       if (object.position != "fill" && object.position == preference) {
         console.log(
           "Nu tycker jag att " +
@@ -455,8 +455,8 @@ function availableRoles(objectArray) {
         break;
       }
       console.log(preference + " verkar opickad, så vi föreslår den");
+      return preference;
     }
-    return preference;
   }
 
   //for (object of objectArray) {
