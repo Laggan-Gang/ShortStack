@@ -74,6 +74,7 @@ module.exports = {
         position: "Has not picked yet",
         preferred: preferences,
       });
+      console.log(player.user.username + " " + preferences);
     }
     const thread = await interaction.channel.threads.create({
       name: interaction.user.username + "'s Dota Party",
@@ -439,15 +440,15 @@ function availableRoles(objectArray) {
   );
   const prefRoleArr = nextUp.preferred.slice();
   for (preference of prefRoleArr) {
-    if (!preference == "fill") {
-      for (object of objectArray) {
-        if (object.position == preference) {
-          console.log("Object.position är " + object.position);
-          prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
-          console.log(
-            "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
-          );
-        }
+    console.log("Nu kollar vi " + preference);
+    for (object of objectArray) {
+      console.log("Nu kollar vi " + object);
+      if (object.position == preference && preference != "fill") {
+        console.log("Object.position är " + object.position);
+        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
+        console.log(
+          "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
+        );
       }
     }
   }
@@ -460,13 +461,11 @@ async function getMyPreferences(discordId) {
     aliases: [discordId],
   });
   const prefs = res.data?.[0]?.preference;
-  console.log(prefs);
   for (preference of prefs) {
     if (parseInt(preference)) {
       console.log("parseInt är positiv och det är nummer " + preference);
       prefs[prefs.indexOf(preference)] = "pos" + preference;
     }
   }
-  console.log(prefs);
   return prefs;
 }
