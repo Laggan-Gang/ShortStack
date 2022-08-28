@@ -462,8 +462,5 @@ async function getMyPreferences(discordId) {
     }
   }
   console.log(prefs);
-  return {
-    message: prefs || "No roles stored for you. Use `!dota set 5 2 3 fill 1 2`",
-    success: !!prefs,
-  };
+  return prefs;
 }
