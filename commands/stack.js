@@ -443,7 +443,6 @@ function availableRoles(objectArray) {
   for (preference of prefRoleArr) {
     console.log("Nu kollar vi preferensen " + preference);
     for (object of objectArray) {
-      console.log("Object array: " + objectArray);
       console.log("Nu kollar vi object " + object.position);
       if (object.position != "fill" && object.position == preference) {
         console.log(
@@ -456,8 +455,8 @@ function availableRoles(objectArray) {
         break;
       }
       console.log(preference + " verkar opickad, så vi föreslår den");
-      return preference;
     }
+    return preference;
   }
 
   //for (object of objectArray) {
