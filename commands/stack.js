@@ -115,7 +115,7 @@ async function badabingBadaboom(
   const embed = await prettyEmbed(updatedArray);
   //pre-assign role preferences for players when they're put into the big array, make new property for them and read them that way
   if (nextUp) {
-    const randomRole = availableRoles(updatedArray);
+    const randomRole = availableRoles(updatedArray)[0];
     await interaction.edit({
       content: `${nextUp.player.toString()} You're up! If you do not pick you will be assigned ${randomRole}`,
       embeds: [embed.embed],
@@ -169,7 +169,7 @@ async function badabingBadaboom(
         console.log(error);
       }
     } else {
-      const randomRole = availableRoles(updatedArray);
+      const randomRole = availableRoles(updatedArray)[0];
 
       const recentlyPicked = {
         player: nextUp.player,
@@ -454,13 +454,13 @@ function availableRoles(objectArray) {
             preference +
             " så det är REMOVE time"
         );
-        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
+        modifiedArr.splice(modifiedArr.indexOf(object.position), 1);
         console.log("modified arr är " + modifiedArr);
         console.log("prefRoleArr är " + prefRoleArr);
       }
     }
   }
-  return prefRoleArr;
+  return modifiedArr;
 
   //for (object of objectArray) {
   //  if (object.position.startsWith("pos")) {
