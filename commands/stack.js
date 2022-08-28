@@ -440,6 +440,7 @@ function availableRoles(objectArray) {
   );
   //I think I shouldn't slice over a looped array
   const prefRoleArr = nextUp.preferred.slice();
+  const modifiedArr = prefRoleArr.slice();
 
   for (preference of prefRoleArr) {
     console.log("Nu kollar vi preferensen " + preference);
@@ -453,9 +454,9 @@ function availableRoles(objectArray) {
             preference +
             " så det är REMOVE time"
         );
-        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
-        console.log(prefRoleArr);
-        break;
+        modifiedArr.splice(modifiedArr.indexOf(object.position), 1);
+        console.log("modified arr är " + modifiedArr);
+        console.log("prefRoleArr är " + prefRoleArr);
       }
     }
   }
