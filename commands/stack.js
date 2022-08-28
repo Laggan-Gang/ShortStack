@@ -48,7 +48,7 @@ module.exports = {
       );
       if (uniquePlayerIds.includes(currentPlayer.id)) {
         interaction.reply(
-          "Please provide 5 unique players!\nLove, ShortStack!"
+          "Please provide 5 unique players!\nLove, **ShortStack**!"
         );
         return;
       }
@@ -61,7 +61,7 @@ module.exports = {
     }
     console.log(pickTime);
     await interaction.reply(
-      "Roger dodger, baby! Give me a moment to set up...\nLove, ShortStack!"
+      "Roger dodger, baby! Give me a moment to set up...\nLove, **ShortStack**!"
     );
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
