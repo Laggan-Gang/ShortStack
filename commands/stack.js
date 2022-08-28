@@ -454,10 +454,12 @@ async function getMyPreferences(discordId) {
   const res = await axios.default.post(PREF_URL, {
     aliases: [discordId],
   });
-  const prefs = res.data?.[0]?.preference;
+  let prefs = res.data?.[0]?.preference;
   console.log(prefs);
   for (preference of prefs) {
-    if (parseInt(preference)) preference = "pos" + preference;
+    if (parseInt(preference)) {
+      preference = "pos" + preference;
+    }
   }
   console.log(prefs);
   return {
