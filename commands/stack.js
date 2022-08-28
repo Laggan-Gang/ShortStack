@@ -60,14 +60,16 @@ module.exports = {
     await interaction.deleteReply();
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
+    const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     for (player of shuffledArray) {
-      const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
+      const randomPref = shuffle(standardRoles);
       //tjonga in maakep code here
       objectArray.push({
         player: player,
         position: "Has not picked yet",
-        preferred: shuffle(standardRoles),
+        preferred: randomPref,
       });
+      console.log(randomPref);
     }
     console.log(objectArray);
     const thread = await interaction.channel.threads.create({
@@ -224,18 +226,14 @@ async function prettyEmbed(playerArray) {
 function whosNext(objectArray) {
   //maybe use array.find
   for (object of objectArray) {
-    console.log("Kollar efter 'Has not picked'");
     if (object.position === "Has not picked yet") {
-      console.log("Hittade!");
       return object;
     }
   }
   //.slic() to make shallow copy otherwise it all goes to hell I guess
   const reversedArray = objectArray.slice().reverse();
   for (object of reversedArray) {
-    console.log("Kollar efter fill");
     if (object.position === "fill") {
-      console.log("Hittade!");
       return object;
     }
   }
