@@ -438,29 +438,50 @@ function availableRoles(objectArray) {
       " med preferenserna " +
       nextUp.preferred
   );
-  //I think I shouldn't slice over a looped array
-  const prefRoleArr = nextUp.preferred.slice();
-  const modifiedArr = prefRoleArr.slice();
-
-  for (preference of prefRoleArr) {
-    console.log("Nu kollar vi preferensen " + preference);
-    for (object of objectArray) {
-      console.log("Nu kollar vi object " + object.position);
-      if (object.position != "fill" && object.position == preference) {
-        console.log(
-          "Nu tycker jag att " +
-            object.position +
-            " matchar med " +
-            preference +
-            " så det är REMOVE time"
-        );
-        modifiedArr.splice(modifiedArr.indexOf(object.position), 1);
-        console.log("modified arr är " + modifiedArr);
-        console.log("prefRoleArr är " + prefRoleArr);
+  const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
+  for (object of objectArray) {
+    if (object.position.startsWith("pos")) {
+      standardRoles.splice(standardRoles.indexOf(object.position), 1);
+    }
+  }
+  console.log(
+    "Nu har jag kollat igenom vilka roller som blivit pickade, och de som inte är pickade är: " +
+      standardRoles
+  );
+  const prefRoleArr = [];
+  for (preference of nextUp.preferred.slice()) {
+    console.log("Nu kollar jag preferensen " + preference);
+    for (role of standardRoles) {
+      console.log("Mot rollen " + role);
+      if (preference == role) {
+        console.log("Preferensen " + preference + " är en match med " + role);
+        prefRoleArr.push(preference);
       }
     }
   }
-  return modifiedArr;
+
+  //I think I shouldn't slice over a looped array
+  //const modifiedArr = prefRoleArr.slice();
+  //
+  //for (preference of prefRoleArr) {
+  //  console.log("Nu kollar vi preferensen " + preference);
+  //  for (object of objectArray) {
+  //    console.log("Nu kollar vi object " + object.position);
+  //    if (object.position != "fill" && object.position == preference) {
+  //      console.log(
+  //        "Nu tycker jag att " +
+  //          object.position +
+  //          " matchar med " +
+  //          preference +
+  //          " så det är REMOVE time"
+  //      );
+  //      modifiedArr.splice(modifiedArr.indexOf(object.position), 1);
+  //      console.log("modified arr är " + modifiedArr);
+  //      console.log("prefRoleArr är " + prefRoleArr);
+  //    }
+  //  }
+  //}
+  return prefRoleArr;
 
   //for (object of objectArray) {
   //  if (object.position.startsWith("pos")) {
