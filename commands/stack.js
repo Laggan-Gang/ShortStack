@@ -168,6 +168,8 @@ async function badabingBadaboom(
         console.log(error);
       }
     } else {
+      const randomRole = availableRoles(updatedArray)[0];
+
       const recentlyPicked = {
         player: nextUp.player,
         position: randomRole,
@@ -453,6 +455,10 @@ async function getMyPreferences(discordId) {
     aliases: [discordId],
   });
   const prefs = res.data?.[0]?.preference;
+  console.log(prefs);
+  for (preference of prefs) {
+    if (parseInt(preference)) preference = "pos" + preference;
+  }
   console.log(prefs);
   return {
     message: prefs || "No roles stored for you. Use `!dota set 5 2 3 fill 1 2`",
