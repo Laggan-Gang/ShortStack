@@ -453,13 +453,12 @@ function availableRoles(objectArray) {
             preference +
             " så det är REMOVE time"
         );
+        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
         break;
-      } else {
-        console.log(preference + " verkar opickad, så vi föreslår den");
-        return preference;
       }
     }
   }
+  return prefRoleArr;
 
   //for (object of objectArray) {
   //  if (object.position.startsWith("pos")) {
