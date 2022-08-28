@@ -443,6 +443,7 @@ function availableRoles(objectArray) {
   for (preference of prefRoleArr) {
     console.log("Nu kollar vi preferensen " + preference);
     for (object of objectArray) {
+      console.log("Object array: " + objectArray);
       console.log("Nu kollar vi object " + object.position);
       if (object.position != "fill" && object.position == preference) {
         console.log(
@@ -468,7 +469,6 @@ function availableRoles(objectArray) {
   //    );
   //  }
   //}
-  return prefRoleArr;
 }
 
 async function getMyPreferences(discordId) {
