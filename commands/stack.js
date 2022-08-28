@@ -62,16 +62,14 @@ module.exports = {
     const objectArray = [];
     const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     for (player of shuffledArray) {
-      const randomPref = shuffle(standardRoles);
+      const randomPref = shuffle(standardRoles).slice();
       //tjonga in maakep code here
       objectArray.push({
         player: player,
         position: "Has not picked yet",
-        preferred: randomPref.slice(),
+        preferred: randomPref,
       });
-      console.log(randomPref);
     }
-    console.log(objectArray);
     const thread = await interaction.channel.threads.create({
       name: interaction.user.username + "'s Dota Party",
       autoArchiveDuration: 60,
