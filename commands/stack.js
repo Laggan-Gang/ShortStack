@@ -454,7 +454,7 @@ function availableRoles(objectArray) {
             preference +
             " så det är REMOVE time"
         );
-        modifiedArr.splice(modifiedArr.indexOf(object.position), 1);
+        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
         console.log("modified arr är " + modifiedArr);
         console.log("prefRoleArr är " + prefRoleArr);
       }
