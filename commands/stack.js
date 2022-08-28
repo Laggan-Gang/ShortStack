@@ -456,9 +456,13 @@ function availableRoles(objectArray) {
       if (preference == role) {
         console.log("Preferensen " + preference + " är en match med " + role);
         prefRoleArr.push(preference);
+        return prefRoleArr;
       }
     }
   }
+  console.log("Har kollat igenom hela listan, tjongar på fill");
+  prefRoleArr.push("fill");
+  return prefRoleArr;
 
   //I think I shouldn't slice over a looped array
   //const modifiedArr = prefRoleArr.slice();
@@ -481,7 +485,6 @@ function availableRoles(objectArray) {
   //    }
   //  }
   //}
-  return prefRoleArr;
 
   //for (object of objectArray) {
   //  if (object.position.startsWith("pos")) {
