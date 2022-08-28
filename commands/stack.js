@@ -454,12 +454,12 @@ async function getMyPreferences(discordId) {
   const res = await axios.default.post(PREF_URL, {
     aliases: [discordId],
   });
-  let prefs = res.data?.[0]?.preference;
+  const prefs = res.data?.[0]?.preference;
   console.log(prefs);
   for (preference of prefs) {
     if (parseInt(preference)) {
       console.log("parseInt är positiv och det är nummer " + preference);
-      preference = "pos" + preference;
+      prefs[indexOf(preference)] = "pos" + preference;
     }
   }
   console.log(prefs);
