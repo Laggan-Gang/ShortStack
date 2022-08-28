@@ -450,8 +450,9 @@ function availableRoles(objectArray) {
             object.position +
             " matchar med " +
             preference +
-            " så det är BREAK time"
+            " så det är REMOVE time"
         );
+        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
         break;
       }
       console.log(preference + " verkar opickad, så vi föreslår den");
