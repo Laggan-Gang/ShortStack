@@ -458,6 +458,7 @@ async function getMyPreferences(discordId) {
   console.log(prefs);
   for (preference of prefs) {
     if (parseInt(preference)) {
+      console.log("parseInt är positiv och det är nummer " + preference);
       preference = "pos" + preference;
     }
   }
