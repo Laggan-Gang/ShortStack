@@ -66,13 +66,13 @@ module.exports = {
     const objectArray = [];
     const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     for (player of shuffledArray) {
-      getMyPreferences(player.id);
+      const preferences = getMyPreferences(player.id);
       const randomPref = shuffle(standardRoles).slice();
       //tjonga in maakep code here
       objectArray.push({
         player: player,
         position: "Has not picked yet",
-        preferred: randomPref,
+        preferred: preferences,
       });
     }
     const thread = await interaction.channel.threads.create({
