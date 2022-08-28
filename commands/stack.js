@@ -459,7 +459,7 @@ async function getMyPreferences(discordId) {
   for (preference of prefs) {
     if (parseInt(preference)) {
       console.log("parseInt är positiv och det är nummer " + preference);
-      prefs[indexOf(preference)] = "pos" + preference;
+      prefs[prefs.indexOf(preference)] = "pos" + preference;
     }
   }
   console.log(prefs);
