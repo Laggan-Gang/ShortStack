@@ -10,6 +10,10 @@ const {
 } = require("discord.js");
 const Canvas = require("@napi-rs/canvas");
 const { request } = require("undici");
+const axios = require("axios");
+const { laggStatsBaseUrl } = require("./config.json");
+
+const PREF_URL = laggStatsBaseUrl + "/d2pos";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -62,6 +66,7 @@ module.exports = {
     const objectArray = [];
     const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     for (player of shuffledArray) {
+      getMyPreferences(player.id);
       const randomPref = shuffle(standardRoles).slice();
       //tjonga in maakep code here
       objectArray.push({
@@ -441,4 +446,16 @@ function availableRoles(objectArray) {
     }
   }
   return prefRoleArr;
+}
+
+async function getMyPreferences(discordId) {
+  const res = await axios.default.post(PREF_URL, {
+    aliases: [discordId],
+  });
+  const prefs = res.data?.[0]?.preference;
+  console.log(prefs);
+  return {
+    message: prefs || "No roles stored for you. Use `!dota set 5 2 3 fill 1 2`",
+    success: !!prefs,
+  };
 }
