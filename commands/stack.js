@@ -116,9 +116,10 @@ async function badabingBadaboom(
   if (nextUp.object) {
     const randomRole = availableRoles(updatedArray)[0];
     const time = getTimestampInSeconds();
+    const spaghettiTime = 1;
     await interaction.edit({
       content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${randomRole} in <t:${
-        time + pickTime
+        time + pickTime + spaghettiTime
       }:R>`,
       embeds: [embed.embed],
       components: buttonRows,
