@@ -114,10 +114,10 @@ async function badabingBadaboom(
   const buttonRows = rowBoat(updatedArray);
   const embed = await prettyEmbed(updatedArray);
   //pre-assign role preferences for players when they're put into the big array, make new property for them and read them that way
-  if (nextUp) {
+  if (nextUp.object) {
     const randomRole = availableRoles(updatedArray)[0];
     await interaction.edit({
-      content: `${nextUp.player.toString()} You're up! If you do not pick you will be assigned ${randomRole}`,
+      content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${randomRole}`,
       embeds: [embed.embed],
       components: buttonRows,
       files: [embed.file],
@@ -204,7 +204,7 @@ async function prettyEmbed(playerArray) {
     },
   ];
   const art = await artTime(playerArray);
-  if (whosNext(playerArray)) {
+  if (whosNext(playerArray).object) {
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
       fields: playerFields,
@@ -233,14 +233,14 @@ function whosNext(objectArray) {
   //maybe use array.find
   for (object of objectArray) {
     if (object.position === "Has not picked yet") {
-      return object;
+      return { object: object, fillFlag: false };
     }
   }
   //.slic() to make shallow copy otherwise it all goes to hell I guess
   const reversedArray = objectArray.slice().reverse();
   for (object of reversedArray) {
     if (object.position === "fill") {
-      return object;
+      return { object: object, fillFlag: true };
     }
   }
   return false;
@@ -400,7 +400,7 @@ function rowBoat(updatedArray) {
       .setCustomId("fill")
       .setStyle(ButtonStyle.Primary)
       .setEmoji("935684531023925299")
-      .setDisabled(!nextUp)
+      .setDisabled(nextUp.fillFlag)
   );
   //NEED FILL-CHECKER
   return [row1, row2];
@@ -434,9 +434,9 @@ function availableRoles(objectArray) {
   const nextUp = whosNext(objectArray);
   console.log(
     "Next up är " +
-      nextUp.player.user.username +
+      nextUp.object.player.user.username +
       " med preferenserna " +
-      nextUp.preferred
+      nextUp.object.preferred
   );
   const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
   for (object of objectArray) {
@@ -449,7 +449,7 @@ function availableRoles(objectArray) {
       standardRoles
   );
   const prefRoleArr = [];
-  for (preference of nextUp.preferred.slice()) {
+  for (preference of nextUp.object.preferred.slice()) {
     console.log("Nu kollar jag preferensen " + preference);
     for (role of standardRoles) {
       console.log("Mot rollen " + role);
@@ -460,9 +460,20 @@ function availableRoles(objectArray) {
       }
     }
   }
-  console.log("Har kollat igenom hela listan, tjongar på fill");
-  prefRoleArr.push("fill");
-  return prefRoleArr;
+
+  if (nextUp.fillFlag) {
+    console.log(
+      "Har kollat hela listan, fillFlag är true, slumpar tillgängliga och tjongar in"
+    );
+    prefRoleArr.push(shuffle(standardRoles));
+    return prefRoleArr;
+  } else {
+    console.log(
+      "Har kollat igenom hela listan, fill flag är av, tjongar på fill"
+    );
+    prefRoleArr.push("fill");
+    return prefRoleArr;
+  }
 
   //I think I shouldn't slice over a looped array
   //const modifiedArr = prefRoleArr.slice();
