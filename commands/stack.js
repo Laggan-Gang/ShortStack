@@ -196,17 +196,12 @@ function buttonHasBeenPicked(objectArray, i) {
 
 async function prettyEmbed(playerArray) {
   const BLANK = "\u200b";
-  const playerFields = [
-    {
-      name: "Picking order: ",
-      value: arrayPrettifier(playerArray).join("\n"),
-    },
-  ];
+  const playerFields = arrayPrettifier(playerArray).join("\n");
   const art = await artTime(playerArray);
   if (whosNext(playerArray).object) {
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
-      fields: playerFields,
+      fields: [{ name: "Picking order: ", value: playerFields }],
       image: {
         url: "attachment://dota-map.png",
       },
@@ -217,7 +212,7 @@ async function prettyEmbed(playerArray) {
     const finalMessage = { text: finalMessageMaker(playerArray) };
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
-      fields: playerFields,
+      fields: [{ name: "Picking complete!", value: playerFields }],
       image: {
         url: "attachment://dota-map.png",
       },
