@@ -154,9 +154,9 @@ async function badabingBadaboom(
     if (collected.last()) {
       try {
         const recentlyPicked = {
-          player: nextUp.player,
+          player: nextUp.object.player,
           position: collected.last().customId,
-          preferred: nextUp.preferred,
+          preferred: nextUp.object.preferred,
         };
         await badabingBadaboom(
           updatedArray,
@@ -172,9 +172,9 @@ async function badabingBadaboom(
       const randomRole = availableRoles(updatedArray)[0];
 
       const recentlyPicked = {
-        player: nextUp.player,
+        player: nextUp.object.player,
         position: randomRole,
-        preferred: nextUp.preferred,
+        preferred: nextUp.object.preferred,
       };
       await badabingBadaboom(
         updatedArray,
