@@ -66,7 +66,7 @@ module.exports = {
     const objectArray = [];
     const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     for (player of shuffledArray) {
-      const preferences = getMyPreferences(player.id);
+      const preferences = await getMyPreferences(player.id);
       const randomPref = shuffle(standardRoles).slice();
       //tjonga in maakep code here
       objectArray.push({
