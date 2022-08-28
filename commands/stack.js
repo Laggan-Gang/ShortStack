@@ -439,20 +439,32 @@ function availableRoles(objectArray) {
       nextUp.preferred
   );
   const prefRoleArr = nextUp.preferred.slice();
+  console.log("Efter .slice " + prefRoleArr);
   for (preference of prefRoleArr) {
-    console.log("Nu kollar vi " + preference);
+    console.log("Nu kollar vi preferensen " + preference);
     for (object of objectArray) {
-      console.log("Nu kollar vi " + object);
-      if (object.position == preference && preference != "fill") {
-        console.log("Object.position är " + object.position);
+      console.log("Nu kollar vi object " + object.position);
+      if (object.position == preference) {
+        console.log(
+          "Nu tycker jag att " + object.position + " matchar med " + preference
+        );
         prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
         console.log(
-          "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
+          prefRoleArr + " såhär ser array ut efter att jag plockat bort"
         );
       }
     }
   }
 
+  //for (object of objectArray) {
+  //  if (object.position.startsWith("pos")) {
+  //    console.log("Object.position är " + object.position);
+  //    prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
+  //    console.log(
+  //      "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
+  //    );
+  //  }
+  //}
   return prefRoleArr;
 }
 
@@ -463,7 +475,6 @@ async function getMyPreferences(discordId) {
   const prefs = res.data?.[0]?.preference;
   for (preference of prefs) {
     if (parseInt(preference)) {
-      console.log("parseInt är positiv och det är nummer " + preference);
       prefs[prefs.indexOf(preference)] = "pos" + preference;
     }
   }
