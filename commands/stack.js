@@ -60,15 +60,14 @@ module.exports = {
       pickTime = 60_000;
     }
     console.log(pickTime);
-    await interaction.reply("BABY!");
-    await interaction.deleteReply();
+    await interaction.reply(
+      "Roger dodger, baby! Give me a moment to set up...\nLove, ShortStack!"
+    );
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
     const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     for (player of shuffledArray) {
       const preferences = await getMyPreferences(player.id);
-      const randomPref = shuffle(standardRoles).slice();
-      //tjonga in maakep code here
       objectArray.push({
         player: player,
         position: "Has not picked yet",
@@ -76,6 +75,7 @@ module.exports = {
       });
       console.log(player.user.username + " " + preferences);
     }
+    await interaction.deleteReply();
     const thread = await interaction.channel.threads.create({
       name: interaction.user.username + "'s Dota Party",
       autoArchiveDuration: 60,
@@ -133,7 +133,7 @@ async function badabingBadaboom(
   }
 
   //Discord requires a filter for collectors
-  //TURNS OUT THE FILTERS ARE ACTUALLY REALLY GOOD! Now we make sure we can only edit 1 embed thingy
+  //TURNS OUT THE FILTERS ARE ACTUALLY REALLY GOOD! Now we make sure we can only edit 1 embed thingy in case of multiples
   const filter = (i) => i.channel.id === interaction.channel.id;
   const collector = interaction.channel.createMessageComponentCollector({
     filter,
@@ -144,7 +144,7 @@ async function badabingBadaboom(
     console.log(i.user.username);
     //The interaction will be "failed" unless we do something with it
     try {
-      await i.reply("lol ok");
+      await i.reply("Roger, baby!");
       await i.deleteReply();
     } catch (error) {
       console.log(error);
@@ -170,7 +170,6 @@ async function badabingBadaboom(
       }
     } else {
       const randomRole = availableRoles(updatedArray)[0];
-
       const recentlyPicked = {
         player: nextUp.object.player,
         position: randomRole,
@@ -402,7 +401,6 @@ function rowBoat(updatedArray) {
       .setEmoji("935684531023925299")
       .setDisabled(nextUp.fillFlag)
   );
-  //NEED FILL-CHECKER
   return [row1, row2];
 }
 
@@ -460,7 +458,6 @@ function availableRoles(objectArray) {
       }
     }
   }
-
   if (nextUp.fillFlag) {
     console.log(
       "Har kollat hela listan, fillFlag är true, slumpar tillgängliga och tjongar in"
@@ -474,38 +471,6 @@ function availableRoles(objectArray) {
     prefRoleArr.push("fill");
     return prefRoleArr;
   }
-
-  //I think I shouldn't slice over a looped array
-  //const modifiedArr = prefRoleArr.slice();
-  //
-  //for (preference of prefRoleArr) {
-  //  console.log("Nu kollar vi preferensen " + preference);
-  //  for (object of objectArray) {
-  //    console.log("Nu kollar vi object " + object.position);
-  //    if (object.position != "fill" && object.position == preference) {
-  //      console.log(
-  //        "Nu tycker jag att " +
-  //          object.position +
-  //          " matchar med " +
-  //          preference +
-  //          " så det är REMOVE time"
-  //      );
-  //      modifiedArr.splice(modifiedArr.indexOf(object.position), 1);
-  //      console.log("modified arr är " + modifiedArr);
-  //      console.log("prefRoleArr är " + prefRoleArr);
-  //    }
-  //  }
-  //}
-
-  //for (object of objectArray) {
-  //  if (object.position.startsWith("pos")) {
-  //    console.log("Object.position är " + object.position);
-  //    prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
-  //    console.log(
-  //      "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
-  //    );
-  //  }
-  //}
 }
 
 async function getMyPreferences(discordId) {
