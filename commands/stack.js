@@ -73,7 +73,6 @@ module.exports = {
         position: "Has not picked yet",
         preferred: preferences,
       });
-      console.log(player.user.username + " " + preferences);
     }
     await interaction.deleteReply();
     const thread = await interaction.channel.threads.create({
@@ -116,8 +115,11 @@ async function badabingBadaboom(
   //pre-assign role preferences for players when they're put into the big array, make new property for them and read them that way
   if (nextUp.object) {
     const randomRole = availableRoles(updatedArray)[0];
+    const time = getTimestampInSeconds();
     await interaction.edit({
-      content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${randomRole}`,
+      content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${randomRole} in <t:${
+        time + 60
+      }:R>`,
       embeds: [embed.embed],
       components: buttonRows,
       files: [embed.file],
@@ -443,21 +445,20 @@ function availableRoles(objectArray) {
   );
   const prefRoleArr = [];
   for (preference of nextUp.object.preferred.slice()) {
-    console.log("Nu kollar jag preferensen " + preference);
     for (role of standardRoles) {
-      console.log("Mot rollen " + role);
       if (preference == role) {
-        console.log("Preferensen " + preference + " är en match med " + role);
         prefRoleArr.push(preference);
+        console.log("This unpicked role is getting sent" + prefRoleArr);
         return prefRoleArr;
       }
     }
   }
   if (nextUp.fillFlag) {
-    console.log(
-      "Har kollat hela listan, fillFlag är true, slumpar tillgängliga och tjongar in"
-    );
     prefRoleArr.push(shuffle(standardRoles)[0]);
+    console.log(
+      "No matching available roles to preference, sending random role instead " +
+        prefRoleArr
+    );
     return prefRoleArr;
   } else {
     console.log(
@@ -480,3 +481,9 @@ async function getMyPreferences(discordId) {
   }
   return prefs;
 }
+
+function getTimestampInSeconds() {
+  return Math.floor(Date.now() / 1000);
+}
+
+//<t:unixtimestamphere:R> den här verkar räkna sekunder?
