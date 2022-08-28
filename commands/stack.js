@@ -465,7 +465,7 @@ function availableRoles(objectArray) {
     console.log(
       "Har kollat hela listan, fillFlag är true, slumpar tillgängliga och tjongar in"
     );
-    prefRoleArr.push(shuffle(standardRoles));
+    prefRoleArr.push(shuffle(standardRoles)[0]);
     return prefRoleArr;
   } else {
     console.log(
