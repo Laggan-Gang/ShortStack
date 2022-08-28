@@ -67,7 +67,7 @@ module.exports = {
       objectArray.push({
         player: player,
         position: "Has not picked yet",
-        preferred: randomPref,
+        preferred: randomPref.slice(),
       });
       console.log(randomPref);
     }
