@@ -439,14 +439,15 @@ function availableRoles(objectArray) {
   );
   const prefRoleArr = nextUp.preferred.slice();
   for (preference of prefRoleArr) {
-    if (preference == "fill") continue;
-    for (object of objectArray) {
-      if (object.position == preference) {
-        console.log("Object.position är " + object.position);
-        prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
-        console.log(
-          "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
-        );
+    if (!preference == "fill") {
+      for (object of objectArray) {
+        if (object.position == preference) {
+          console.log("Object.position är " + object.position);
+          prefRoleArr.splice(prefRoleArr.indexOf(object.position), 1);
+          console.log(
+            "Nu när den är bortplockad ser arrayen ut såhär: " + prefRoleArr
+          );
+        }
       }
     }
   }
