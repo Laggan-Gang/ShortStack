@@ -55,9 +55,9 @@ module.exports = {
       playerArray.push(currentPlayer);
       uniquePlayerIds.push(currentPlayer.id);
     }
-    let pickTime = (await interaction.options.getInteger("time")) * 1000;
+    let pickTime = await interaction.options.getInteger("time");
     if (!pickTime) {
-      pickTime = 60_000;
+      pickTime = 60;
     }
     console.log(pickTime);
     await interaction.reply(
@@ -118,7 +118,7 @@ async function badabingBadaboom(
     const time = getTimestampInSeconds();
     await interaction.edit({
       content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${randomRole} in <t:${
-        time + 60
+        time + pickTime
       }:R>`,
       embeds: [embed.embed],
       components: buttonRows,
@@ -139,7 +139,7 @@ async function badabingBadaboom(
   const filter = (i) => i.channel.id === interaction.channel.id;
   const collector = interaction.channel.createMessageComponentCollector({
     filter,
-    time: pickTime,
+    time: pickTime * 1000,
     max: 1,
   });
   collector.on("collect", async (i) => {
