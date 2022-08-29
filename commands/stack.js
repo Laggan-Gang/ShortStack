@@ -67,10 +67,14 @@ module.exports = {
     const objectArray = [];
     for (player of shuffledArray) {
       const preferences = await getMyPreferences(player.id);
+      const { body } = await request(
+        player.user.displayAvatarURL({ extension: "jpg" })
+      );
       objectArray.push({
         player: player,
         position: "Has not picked yet",
         preferred: preferences,
+        avatar: body,
       });
     }
     await interaction.deleteReply();
@@ -323,10 +327,11 @@ async function artTime(objectArray) {
   context.clip();
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
-      const { body } = await request(
-        object.player.user.displayAvatarURL({ extension: "jpg" })
-      );
-      const avatar = await Canvas.loadImage(await body.arrayBuffer());
+      //object.avatar
+      //const { body } = await request(
+      //  object.player.user.displayAvatarURL({ extension: "jpg" })
+      //);
+      const avatar = await Canvas.loadImage(await object.avatar.arrayBuffer());
       switch (object.position) {
         case "pos1":
           context.drawImage(avatar, 235, 248, 50, 50);
