@@ -70,6 +70,7 @@ module.exports = {
       const { body } = await request(
         player.user.displayAvatarURL({ extension: "jpg" })
       );
+      console.log("Här är första body");
       console.log(body);
       objectArray.push({
         player: player,
@@ -160,7 +161,8 @@ async function badabingBadaboom(
   collector.on("end", async (collected) => {
     if (collected.last()) {
       try {
-        console.log("avatar ser ut såhär" + nextUp.object.avatar);
+        console.log("Next up avatar ser ut såhär");
+        console.log(nextUp.object.avatar);
         const recentlyPicked = {
           player: nextUp.object.player,
           position: collected.last().customId,
@@ -178,7 +180,8 @@ async function badabingBadaboom(
         console.log(error);
       }
     } else {
-      console.log("avatar ser ut såhär" + nextUp.object.avatar);
+      console.log("Next up avatar ser ut såhär");
+      console.log(nextUp.object.avatar);
       const assignedRole = appropriateRole(updatedArray);
       const recentlyPicked = {
         player: nextUp.object.player,
@@ -336,7 +339,8 @@ async function artTime(objectArray) {
       //const { body } = await request(
       //  object.player.user.displayAvatarURL({ extension: "jpg" })
       //);
-      console.log("Art time avatar är: " + object.avatar);
+      console.log("Art time avatar är: ");
+      console.log(object.avatar);
       const avatar = await Canvas.loadImage(await object.avatar.arrayBuffer());
       switch (object.position) {
         case "pos1":
@@ -439,41 +443,23 @@ function finalMessageMaker(playerArray) {
 function appropriateRole(objectArray) {
   //this doesn't really need to return an array lol
   const nextUp = whosNext(objectArray);
-  console.log(
-    "Next up är " +
-      nextUp.object.player.user.username +
-      " med preferenserna " +
-      nextUp.object.preferred
-  );
   const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
       standardRoles.splice(standardRoles.indexOf(object.position), 1);
     }
   }
-  console.log(
-    "Nu har jag kollat igenom vilka roller som blivit pickade, och de som inte är pickade är: " +
-      standardRoles
-  );
   for (preference of nextUp.object.preferred.slice()) {
     for (role of standardRoles) {
       if (preference == role) {
-        console.log("This unpicked role is getting sent" + preference);
         return preference;
       }
     }
   }
   if (nextUp.fillFlag) {
     const artificialPreference = shuffle(standardRoles)[0];
-    console.log(
-      "No matching available roles to preference, sending random role instead " +
-        artificialPreference
-    );
     return artificialPreference;
   } else {
-    console.log(
-      "Har kollat igenom hela listan, fill flag är av, tjongar på fill"
-    );
     return "fill";
   }
 }
