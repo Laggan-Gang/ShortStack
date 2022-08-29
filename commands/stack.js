@@ -113,11 +113,11 @@ async function badabingBadaboom(
   const embed = await prettyEmbed(updatedArray);
   //pre-assign role preferences for players when they're put into the big array, make new property for them and read them that way
   if (nextUp.object) {
-    const randomRole = availableRoles(updatedArray)[0];
+    const assignedRole = appropriateRole(updatedArray);
     const time = getTimestampInSeconds();
     const spaghettiTime = 1; //Time isn't what you want it to be
     await interaction.edit({
-      content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${randomRole} in <t:${
+      content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${assignedRole} in <t:${
         time + pickTime + spaghettiTime
       }:R>`,
       embeds: [embed.embed],
@@ -171,10 +171,10 @@ async function badabingBadaboom(
         console.log(error);
       }
     } else {
-      const randomRole = availableRoles(updatedArray)[0];
+      const assignedRole = appropriateRole(updatedArray);
       const recentlyPicked = {
         player: nextUp.object.player,
-        position: randomRole,
+        position: assignedRole,
         preferred: nextUp.object.preferred,
       };
       await badabingBadaboom(
@@ -425,7 +425,7 @@ function finalMessageMaker(playerArray) {
   return finalMessage;
 }
 
-function availableRoles(objectArray) {
+function appropriateRole(objectArray) {
   //this doesn't really need to return an array lol
   const nextUp = whosNext(objectArray);
   console.log(
@@ -444,29 +444,26 @@ function availableRoles(objectArray) {
     "Nu har jag kollat igenom vilka roller som blivit pickade, och de som inte är pickade är: " +
       standardRoles
   );
-  const prefRoleArr = [];
   for (preference of nextUp.object.preferred.slice()) {
     for (role of standardRoles) {
       if (preference == role) {
-        prefRoleArr.push(preference);
-        console.log("This unpicked role is getting sent" + prefRoleArr);
-        return prefRoleArr;
+        console.log("This unpicked role is getting sent" + preference);
+        return preference;
       }
     }
   }
   if (nextUp.fillFlag) {
-    prefRoleArr.push(shuffle(standardRoles)[0]);
+    const artificialPreference = shuffle(standardRoles)[0];
     console.log(
       "No matching available roles to preference, sending random role instead " +
-        prefRoleArr
+        artificialPreference
     );
-    return prefRoleArr;
+    return artificialPreference;
   } else {
     console.log(
       "Har kollat igenom hela listan, fill flag är av, tjongar på fill"
     );
-    prefRoleArr.push("fill");
-    return prefRoleArr;
+    return "fill";
   }
 }
 
