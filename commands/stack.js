@@ -116,7 +116,7 @@ async function badabingBadaboom(
   if (nextUp.object) {
     const randomRole = availableRoles(updatedArray)[0];
     const time = getTimestampInSeconds();
-    const spaghettiTime = 1;
+    const spaghettiTime = 1; //Time isn't what you want it to be
     await interaction.edit({
       content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${randomRole} in <t:${
         time + pickTime + spaghettiTime
