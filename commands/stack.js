@@ -65,7 +65,6 @@ module.exports = {
     );
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
-    const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
     for (player of shuffledArray) {
       const preferences = await getMyPreferences(player.id);
       objectArray.push({
@@ -427,6 +426,7 @@ function finalMessageMaker(playerArray) {
 }
 
 function availableRoles(objectArray) {
+  //this doesn't really need to return an array lol
   const nextUp = whosNext(objectArray);
   console.log(
     "Next up är " +
@@ -486,5 +486,3 @@ async function getMyPreferences(discordId) {
 function getTimestampInSeconds() {
   return Math.floor(Date.now() / 1000);
 }
-
-//<t:unixtimestamphere:R> den här verkar räkna sekunder?
