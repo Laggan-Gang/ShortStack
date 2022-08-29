@@ -71,7 +71,6 @@ module.exports = {
         player.user.displayAvatarURL({ extension: "jpg" })
       );
       const avatar = await body.arrayBuffer();
-      console.log("Här är första body");
       objectArray.push({
         player: player,
         position: "Has not picked yet",
@@ -161,8 +160,6 @@ async function badabingBadaboom(
   collector.on("end", async (collected) => {
     if (collected.last()) {
       try {
-        console.log("Next up avatar ser ut såhär");
-        console.log(nextUp.object.avatar);
         const recentlyPicked = {
           player: nextUp.object.player,
           position: collected.last().customId,
@@ -180,8 +177,6 @@ async function badabingBadaboom(
         console.log(error);
       }
     } else {
-      console.log("Next up avatar ser ut såhär");
-      console.log(nextUp.object.avatar);
       const assignedRole = appropriateRole(updatedArray);
       const recentlyPicked = {
         player: nextUp.object.player,
@@ -339,8 +334,6 @@ async function artTime(objectArray) {
       //const { body } = await request(
       //  object.player.user.displayAvatarURL({ extension: "jpg" })
       //);
-      console.log("Art time avatar är: ");
-      console.log(object.avatar);
       const avatar = await Canvas.loadImage(object.avatar);
       switch (object.position) {
         case "pos1":
