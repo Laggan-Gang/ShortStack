@@ -70,13 +70,13 @@ module.exports = {
       const { body } = await request(
         player.user.displayAvatarURL({ extension: "jpg" })
       );
+      const avatar = await body.arrayBuffer();
       console.log("Här är första body");
-      console.log(body);
       objectArray.push({
         player: player,
         position: "Has not picked yet",
         preferred: preferences,
-        avatar: body,
+        avatar: avatar,
       });
     }
     await interaction.deleteReply();
@@ -341,7 +341,7 @@ async function artTime(objectArray) {
       //);
       console.log("Art time avatar är: ");
       console.log(object.avatar);
-      const avatar = await Canvas.loadImage(await object.avatar.arrayBuffer());
+      const avatar = await Canvas.loadImage(object.avatar);
       switch (object.position) {
         case "pos1":
           context.drawImage(avatar, 235, 248, 50, 50);
