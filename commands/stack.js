@@ -70,6 +70,7 @@ module.exports = {
       const { body } = await request(
         player.user.displayAvatarURL({ extension: "jpg" })
       );
+      console.log(body);
       objectArray.push({
         player: player,
         position: "Has not picked yet",
@@ -163,6 +164,7 @@ async function badabingBadaboom(
           player: nextUp.object.player,
           position: collected.last().customId,
           preferred: nextUp.object.preferred,
+          avatar: nextUp.object.avatar,
         };
         await badabingBadaboom(
           updatedArray,
@@ -180,6 +182,7 @@ async function badabingBadaboom(
         player: nextUp.object.player,
         position: assignedRole,
         preferred: nextUp.object.preferred,
+        avatar: nextUp.object.avatar,
       };
       await badabingBadaboom(
         updatedArray,
