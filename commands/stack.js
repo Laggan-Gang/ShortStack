@@ -160,6 +160,7 @@ async function badabingBadaboom(
   collector.on("end", async (collected) => {
     if (collected.last()) {
       try {
+        console.log("avatar ser ut såhär" + nextUp.object.avatar);
         const recentlyPicked = {
           player: nextUp.object.player,
           position: collected.last().customId,
@@ -177,6 +178,7 @@ async function badabingBadaboom(
         console.log(error);
       }
     } else {
+      console.log("avatar ser ut såhär" + nextUp.object.avatar);
       const assignedRole = appropriateRole(updatedArray);
       const recentlyPicked = {
         player: nextUp.object.player,
@@ -334,6 +336,7 @@ async function artTime(objectArray) {
       //const { body } = await request(
       //  object.player.user.displayAvatarURL({ extension: "jpg" })
       //);
+      console.log(object.avatar);
       const avatar = await Canvas.loadImage(await object.avatar.arrayBuffer());
       switch (object.position) {
         case "pos1":
