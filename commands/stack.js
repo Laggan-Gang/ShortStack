@@ -336,7 +336,7 @@ async function artTime(objectArray) {
       //const { body } = await request(
       //  object.player.user.displayAvatarURL({ extension: "jpg" })
       //);
-      console.log(object.avatar);
+      console.log("Art time avatar är: " + object.avatar);
       const avatar = await Canvas.loadImage(await object.avatar.arrayBuffer());
       switch (object.position) {
         case "pos1":
