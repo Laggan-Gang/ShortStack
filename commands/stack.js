@@ -216,9 +216,11 @@ async function prettyEmbed(playerArray) {
     return embedObject;
   } else {
     const finalMessage = { text: finalMessageMaker(playerArray).finalMessage };
+    console.log("What I think is final message: " + finalMessage.finalMessage);
+    console.log("What I think is shortCOmmand: " + finalMessage.shortCommand);
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
-      fields: [{ name: "Remake command:", value: finalMessage.shortCommand }],
+      fields: [{ name: "Picking complete!", value: playerFields }],
       image: {
         url: "attachment://dota-map.png",
       },
@@ -415,6 +417,8 @@ function finalMessageMaker(playerArray) {
   ${playerArray[4].player.user.username} ${playerArray[4].position.slice(3)}`;
 
   const shortCommand = `/stack p1:${playerArray[0].toString()} p2:${playerArray[1].toString()} p3:${playerArray[2].toString()} p4:${playerArray[3].toString()} p5:${playerArray[4].toString()}`;
+  console.log("Final message " + finalMessage);
+  console.log("ShortCommand: " + shortCommand);
   return { finalMessage: finalMessage, shortCommand: shortCommand };
 }
 
