@@ -469,7 +469,9 @@ function rowBoat(updatedArray) {
 
 function finalMessageMaker(playerArray) {
   const finalArray = [];
+  const shortArray = ["/stack"];
   for (player of playerArray) {
+    shortArray.push(player.player.toString());
     if (player.randomed) {
       finalArray.push(
         `${player.player.user.username} ${player.position.slice(3)}⁉️`
@@ -480,21 +482,10 @@ function finalMessageMaker(playerArray) {
       );
     }
   }
-  const joinedArray = finalArray.join(" | ");
-  const finalMessage = `${
-    playerArray[0].player.user.username
-  } ${playerArray[0].position.slice(3)} | ${
-    playerArray[1].player.user.username
-  } ${playerArray[1].position.slice(3)} | ${
-    playerArray[2].player.user.username
-  } ${playerArray[2].position.slice(3)} | ${
-    playerArray[3].player.user.username
-  } ${playerArray[3].position.slice(3)} |  ${
-    playerArray[4].player.user.username
-  } ${playerArray[4].position.slice(3)}`;
-
+  const finalMessage = finalArray.join(" | ");
+  const joinedArray = shortArray.join(" ");
   const shortCommand = `/stack p1:${playerArray[0].player.toString()} p2:${playerArray[1].player.toString()} p3:${playerArray[2].player.toString()} p4:${playerArray[3].player.toString()} p5:${playerArray[4].player.toString()}`;
-  return { finalMessage: joinedArray, shortCommand: shortCommand };
+  return { finalMessage: finalMessage, shortCommand: joinedArray };
 }
 
 function appropriateRole(objectArray) {
