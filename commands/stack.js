@@ -118,10 +118,9 @@ async function badabingBadaboom(
   if (nextUp.object) {
     const assignedRole = appropriateRole(updatedArray);
     const time = getTimestampInSeconds();
-    const spaghettiTime = 1; //Time isn't what you want it to be
     await interaction.edit({
       content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${assignedRole} in <t:${
-        time + pickTime + spaghettiTime
+        time + pickTime
       }:R>`,
       embeds: [embed.embed],
       components: buttonRows,
@@ -219,10 +218,7 @@ async function prettyEmbed(playerArray) {
     const finalMessage = { text: finalMessageMaker(playerArray).finalMessage };
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
-      fields: [
-        { name: "Remake command:", value: finalMessage.shortCommand },
-        { name: "Picking complete!", value: playerFields },
-      ],
+      fields: [{ name: "Remake command:", value: finalMessage.shortCommand }],
       image: {
         url: "attachment://dota-map.png",
       },
