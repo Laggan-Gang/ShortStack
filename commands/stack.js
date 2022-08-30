@@ -311,7 +311,8 @@ function arrayPrettifier(playerArray) {
         stringPrettifier(
           player.player.user.username,
           neededFilling,
-          player.position
+          player.position,
+          player.randomed
         )
       );
     }
@@ -324,7 +325,9 @@ function stringPrettifier(player, fillingNeeded, position, randomed) {
   for (let i = 0; i < fillingNeeded + 1; i++) {
     stringFilling += " ";
   }
-  console.log(player + randomed);
+  console.log(
+    "Såhär ser det ut i string prettifier: " + player + " " + randomed
+  );
   if (randomed) {
     return `\`\`${player}${stringFilling} ${position}⁉️\`\``;
   } else {
