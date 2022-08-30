@@ -74,6 +74,7 @@ module.exports = {
         position: "Has not picked yet",
         preferred: preferences,
         avatar: avatar,
+        randomed: false,
       });
     }
     await interaction.deleteReply();
@@ -95,6 +96,9 @@ async function badabingBadaboom(
   pickTime,
   recentlyPicked
 ) {
+  if (recentlyPicked) {
+    console.log(recentlyPicked.randomed);
+  }
   const updatedArray = [];
   //If someone has recently picked we update the big array to include that pick
   if (recentlyPicked) {
@@ -156,19 +160,54 @@ async function badabingBadaboom(
   });
   collector.on("end", async (collected) => {
     if (collected.last()) {
-      let pick = collected.last().customId;
       if (pick == "random") {
-        const funnyPick = shuffle(availableRoles(updatedArray));
-        console.log("Funny pick array ser ut såhär:");
-        console.log(funnyPick);
-        pick = `${funnyPick[0]}⁉️`;
+        try {
+          const recentlyPicked = {
+            player: nextUp.object.player,
+            position: shuffle(availableRoles(updatedArray))[0],
+            preferred: nextUp.object.preferred,
+            avatar: nextUp.object.avatar,
+            randomed: true,
+          };
+          await badabingBadaboom(
+            updatedArray,
+            interaction,
+            pickTime,
+            recentlyPicked
+          );
+        } catch (error) {
+          interaction.edit("There was an error baby  " + error);
+          console.log(error);
+        }
+      } else {
+        try {
+          const recentlyPicked = {
+            player: nextUp.object.player,
+            position: collected.last().customId,
+            preferred: nextUp.object.preferred,
+            avatar: nextUp.object.avatar,
+            randomed: false,
+          };
+          await badabingBadaboom(
+            updatedArray,
+            interaction,
+            pickTime,
+            recentlyPicked
+          );
+        } catch (error) {
+          interaction.edit("There was an error baby  " + error);
+          console.log(error);
+        }
       }
+    } else {
       try {
+        const assignedRole = appropriateRole(updatedArray);
         const recentlyPicked = {
           player: nextUp.object.player,
-          position: pick,
+          position: assignedRole,
           preferred: nextUp.object.preferred,
           avatar: nextUp.object.avatar,
+          randomed: false,
         };
         await badabingBadaboom(
           updatedArray,
@@ -180,20 +219,6 @@ async function badabingBadaboom(
         interaction.edit("There was an error baby  " + error);
         console.log(error);
       }
-    } else {
-      const assignedRole = appropriateRole(updatedArray);
-      const recentlyPicked = {
-        player: nextUp.object.player,
-        position: assignedRole,
-        preferred: nextUp.object.preferred,
-        avatar: nextUp.object.avatar,
-      };
-      await badabingBadaboom(
-        updatedArray,
-        interaction,
-        pickTime,
-        recentlyPicked
-      );
     }
   });
 }
@@ -462,29 +487,12 @@ function appropriateRole(objectArray) {
 
 function availableRoles(objectArray) {
   const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
-  const copyRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
-      console.log(
-        "Vi hittade " +
-          object.player.user.username +
-          " som pickat " +
-          object.position
-      );
-      console.log(
-        "Removing the thing that's at position " +
-          standardRoles.indexOf(object.position)
-      );
-      console.log(
-        "And that thing is " +
-          standardRoles[standardRoles.indexOf(object.position)]
-      );
-      copyRoles.splice(standardRoles.indexOf(object.position), 1);
-      console.log("Såhär ser standardRoles ut efter splice");
-      console.log(standardRoles);
+      standardRoles.splice(standardRoles.indexOf(object.position), 1);
     }
   }
-  return copyRoles;
+  return standardRoles;
 }
 
 async function getMyPreferences(discordId) {
