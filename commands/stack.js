@@ -158,7 +158,7 @@ async function badabingBadaboom(
     if (collected.last()) {
       let pick = collected.last().customId;
       if (pick == "random") {
-        pick = shuffle(availableRoles(updatedArray))[0];
+        pick = "" + shuffle(availableRoles(updatedArray))[0] + "⁉️";
       }
       try {
         const recentlyPicked = {
@@ -227,8 +227,8 @@ async function prettyEmbed(playerArray) {
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
       fields: [
-        { name: "Picking complete!", value: playerFields },
         { name: "Copy Code:", value: shortCommand },
+        { name: "Picking complete!", value: playerFields },
       ],
       image: {
         url: "attachment://dota-map.png",
@@ -419,7 +419,7 @@ function rowBoat(updatedArray) {
       new ButtonBuilder()
         .setCustomId("random")
         .setLabel("⁉️")
-        .setStyle(ButtonStyle.Danger)
+        .setStyle(ButtonStyle.Primary)
     );
   return [row1, row2];
 }
