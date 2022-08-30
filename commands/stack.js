@@ -216,10 +216,10 @@ async function prettyEmbed(playerArray) {
     const embedObject = { embed: embed, file: art };
     return embedObject;
   } else {
-    const finalMessage = { text: finalMessageMaker(playerArray) };
+    const finalMessage = { text: finalMessageMaker(playerArray).finalMessage };
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
-      fields: [{ name: "Picking complete!", value: playerFields }],
+      fields: [{ name: finalMessage.shortCommand, value: playerFields }],
       image: {
         url: "attachment://dota-map.png",
       },
@@ -408,27 +408,15 @@ function rowBoat(updatedArray) {
 }
 
 function finalMessageMaker(playerArray) {
-  const finalMessage =
-    playerArray[0].player.user.username +
-    " " +
-    playerArray[0].position.slice(3) +
-    " | " +
-    playerArray[1].player.user.username +
-    " " +
-    playerArray[1].position.slice(3) +
-    " | " +
-    playerArray[2].player.user.username +
-    " " +
-    playerArray[2].position.slice(3) +
-    " | " +
-    playerArray[3].player.user.username +
-    " " +
-    playerArray[3].position.slice(3) +
-    " | " +
-    playerArray[4].player.user.username +
-    " " +
-    playerArray[4].position.slice(3);
-  return finalMessage;
+  const finalMessage = `
+  ${playerArray[0].player.user.username} ${playerArray[0].position.slice(3)} | 
+  ${playerArray[1].player.user.username} ${playerArray[1].position.slice(3)} | 
+  ${playerArray[2].player.user.username} ${playerArray[2].position.slice(3)} | 
+  ${playerArray[3].player.user.username} ${playerArray[3].position.slice(3)} | 
+  ${playerArray[4].player.user.username} ${playerArray[4].position.slice(3)}`;
+
+  const shortCommand = `/stack p1:${playerArray[0].toString()} p2:${playerArray[1].toString()} p3:${playerArray[2].toString()} p4:${playerArray[3].toString()} p5:${playerArray[4].toString()}`;
+  return { finalMessage: finalMessage, shortCommand: shortCommand };
 }
 
 function appropriateRole(objectArray) {
