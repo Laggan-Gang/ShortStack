@@ -160,7 +160,7 @@ async function badabingBadaboom(
   });
   collector.on("end", async (collected) => {
     if (collected.last()) {
-      if (pick == "random") {
+      if (collected.last().customId == "random") {
         try {
           const recentlyPicked = {
             player: nextUp.object.player,
