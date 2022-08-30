@@ -156,10 +156,14 @@ async function badabingBadaboom(
   });
   collector.on("end", async (collected) => {
     if (collected.last()) {
+      let pick = collected.last().customId;
+      if (pick == "random") {
+        pick = shuffle(availableRoles(updatedArray))[0];
+      }
       try {
         const recentlyPicked = {
           player: nextUp.object.player,
-          position: collected.last().customId,
+          position: pick,
           preferred: nextUp.object.preferred,
           avatar: nextUp.object.avatar,
         };
@@ -217,7 +221,7 @@ async function prettyEmbed(playerArray) {
   } else {
     const finalText = finalMessageMaker(playerArray);
     const finalMessage = { text: finalText.finalMessage };
-    const shortCommand = "```" + finalText.shortCommand + "```";
+    const shortCommand = "`" + finalText.shortCommand + "`";
     console.log("What I think is final message: " + finalMessage.finalMessage);
     console.log("What I think is shortCommand: " + finalMessage.shortCommand);
     const embed = {
@@ -403,13 +407,20 @@ function rowBoat(updatedArray) {
         .setDisabled(buttonHasBeenPicked(updatedArray, 5))
     );
   //5 buttons/row is max for Discord, so I'm splitting them in half :)
-  const row2 = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setCustomId("fill")
-      .setStyle(ButtonStyle.Primary)
-      .setEmoji("935684531023925299")
-      .setDisabled(nextUp.fillFlag)
-  );
+  const row2 = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("fill")
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji("935684531023925299")
+        .setDisabled(nextUp.fillFlag)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("random")
+        .setLabel("⁉️")
+        .setStyle(ButtonStyle.Danger)
+    );
   return [row1, row2];
 }
 
@@ -433,16 +444,10 @@ function finalMessageMaker(playerArray) {
 }
 
 function appropriateRole(objectArray) {
-  //this doesn't really need to return an array lol
   const nextUp = whosNext(objectArray);
-  const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
-  for (object of objectArray) {
-    if (object.position.startsWith("pos")) {
-      standardRoles.splice(standardRoles.indexOf(object.position), 1);
-    }
-  }
+  const availableRoles = availableRoles(objectArray);
   for (preference of nextUp.object.preferred.slice()) {
-    for (role of standardRoles) {
+    for (role of availableRoles) {
       if (preference == role) {
         return preference;
       }
@@ -454,6 +459,16 @@ function appropriateRole(objectArray) {
   } else {
     return "fill";
   }
+}
+
+function availableRoles(objectArray) {
+  const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
+  for (object of objectArray) {
+    if (object.position.startsWith("pos")) {
+      standardRoles.splice(standardRoles.indexOf(object.position), 1);
+    }
+  }
+  return standardRoles;
 }
 
 async function getMyPreferences(discordId) {
