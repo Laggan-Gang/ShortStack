@@ -462,6 +462,7 @@ function appropriateRole(objectArray) {
 
 function availableRoles(objectArray) {
   const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
+  const copyRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
       console.log(
@@ -470,12 +471,20 @@ function availableRoles(objectArray) {
           " som pickat " +
           object.position
       );
-      standardRoles.splice(standardRoles.indexOf(object.position), 1);
+      console.log(
+        "Removing the thing that's at position " +
+          standardRoles.indexOf(object.position)
+      );
+      console.log(
+        "And that thing is " +
+          standardRoles[standardRoles.indexOf(object.position)]
+      );
+      copyRoles.splice(standardRoles.indexOf(object.position), 1);
       console.log("Såhär ser standardRoles ut efter splice");
       console.log(standardRoles);
     }
   }
-  return standardRoles;
+  return copyRoles;
 }
 
 async function getMyPreferences(discordId) {
