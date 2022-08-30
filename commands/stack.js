@@ -320,6 +320,7 @@ function stringPrettifier(player, fillingNeeded, position, randomed) {
   for (let i = 0; i < fillingNeeded + 1; i++) {
     stringFilling += " ";
   }
+  console.log(player + randomed);
   if (randomed) {
     return `\`\`${player}${stringFilling} ${position}⁉️\`\``;
   } else {
