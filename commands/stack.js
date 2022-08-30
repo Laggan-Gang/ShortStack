@@ -149,8 +149,8 @@ async function badabingBadaboom(
     console.log(i.user.username);
     //The interaction will be "failed" unless we do something with it
     try {
-      await i.deferReply();
-      await interaction.deleteReply();
+      await i.reply("Roger, babe!");
+      await i.deleteReply();
     } catch (error) {
       console.log(error);
     }
