@@ -468,6 +468,19 @@ function rowBoat(updatedArray) {
 }
 
 function finalMessageMaker(playerArray) {
+  const finalArray = [];
+  for (player of playerArray) {
+    if (player.randomed) {
+      finalArray.push(
+        `${player.player.user.username} ${player.position.slice(3)}⁉️`
+      );
+    } else {
+      finalArray.push(
+        `${player.player.user.username} ${player.position.slice(3)}`
+      );
+    }
+  }
+  const joinedArray = finalArray.join(" | ");
   const finalMessage = `${
     playerArray[0].player.user.username
   } ${playerArray[0].position.slice(3)} | ${
@@ -481,7 +494,7 @@ function finalMessageMaker(playerArray) {
   } ${playerArray[4].position.slice(3)}`;
 
   const shortCommand = `/stack p1:${playerArray[0].player.toString()} p2:${playerArray[1].player.toString()} p3:${playerArray[2].player.toString()} p4:${playerArray[3].player.toString()} p5:${playerArray[4].player.toString()}`;
-  return { finalMessage: finalMessage, shortCommand: shortCommand };
+  return { finalMessage: joinedArray, shortCommand: shortCommand };
 }
 
 function appropriateRole(objectArray) {
