@@ -219,7 +219,10 @@ async function prettyEmbed(playerArray) {
     const finalMessage = { text: finalMessageMaker(playerArray).finalMessage };
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
-      fields: [{ name: finalMessage.shortCommand, value: playerFields }],
+      fields: [
+        { name: "Remake command:", value: finalMessage.shortCommand },
+        { name: "Picking complete!", value: playerFields },
+      ],
       image: {
         url: "attachment://dota-map.png",
       },
