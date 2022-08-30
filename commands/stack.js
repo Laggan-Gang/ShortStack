@@ -217,9 +217,9 @@ async function prettyEmbed(playerArray) {
   } else {
     const finalText = finalMessageMaker(playerArray);
     const finalMessage = { text: finalText.finalMessage };
-    const shortCommand = { text: finalText.shortCommand };
+    const shortCommand = "`" + finalText.shortCommand + "`";
     console.log("What I think is final message: " + finalMessage.finalMessage);
-    console.log("What I think is shortCOmmand: " + finalMessage.shortCommand);
+    console.log("What I think is shortCommand: " + finalMessage.shortCommand);
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
       fields: [
