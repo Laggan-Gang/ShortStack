@@ -61,6 +61,7 @@ module.exports = {
     }
     console.log(pickTime);
     await interaction.deferReply();
+    await interaction.deleteReply();
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
     for (player of shuffledArray) {
