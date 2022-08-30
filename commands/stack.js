@@ -61,7 +61,6 @@ module.exports = {
     }
     console.log(pickTime);
     await interaction.deferReply();
-    await interaction.deleteReply();
     const shuffledArray = shuffle(playerArray);
     const objectArray = [];
     for (player of shuffledArray) {
@@ -151,6 +150,7 @@ async function badabingBadaboom(
     //The interaction will be "failed" unless we do something with it
     try {
       await i.deferReply();
+      await interaction.deleteReply();
     } catch (error) {
       console.log(error);
     }
