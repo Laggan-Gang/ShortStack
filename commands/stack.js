@@ -158,7 +158,10 @@ async function badabingBadaboom(
     if (collected.last()) {
       let pick = collected.last().customId;
       if (pick == "random") {
-        pick = "" + shuffle(availableRoles(updatedArray))[0] + "⁉️";
+        const funnyPick = shuffle(availableRoles(updatedArray));
+        console.log("Funny pick array ser ut såhär:");
+        console.log(funnyPick);
+        pick = `${funnyPick[0]}⁉️`;
       }
       try {
         const recentlyPicked = {
@@ -222,8 +225,6 @@ async function prettyEmbed(playerArray) {
     const finalText = finalMessageMaker(playerArray);
     const finalMessage = { text: finalText.finalMessage };
     const shortCommand = "`" + finalText.shortCommand + "`";
-    console.log("What I think is final message: " + finalMessage.finalMessage);
-    console.log("What I think is shortCommand: " + finalMessage.shortCommand);
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
       fields: [
@@ -438,13 +439,10 @@ function finalMessageMaker(playerArray) {
   } ${playerArray[4].position.slice(3)}`;
 
   const shortCommand = `/stack p1:${playerArray[0].player.toString()} p2:${playerArray[1].player.toString()} p3:${playerArray[2].player.toString()} p4:${playerArray[3].player.toString()} p5:${playerArray[4].player.toString()}`;
-  console.log("Final message " + finalMessage);
-  console.log("ShortCommand: " + shortCommand);
   return { finalMessage: finalMessage, shortCommand: shortCommand };
 }
 
 function appropriateRole(objectArray) {
-  const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
   const nextUp = whosNext(objectArray);
   const available = availableRoles(objectArray);
   for (preference of nextUp.object.preferred.slice()) {
@@ -455,7 +453,7 @@ function appropriateRole(objectArray) {
     }
   }
   if (nextUp.fillFlag) {
-    const artificialPreference = shuffle(standardRoles)[0];
+    const artificialPreference = shuffle(available)[0];
     return artificialPreference;
   } else {
     return "fill";
@@ -466,7 +464,15 @@ function availableRoles(objectArray) {
   const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
+      console.log(
+        "Vi hittade " +
+          object.player.user.username +
+          " som pickat " +
+          object.position
+      );
       standardRoles.splice(standardRoles.indexOf(object.position), 1);
+      console.log("Såhär ser standardRoles ut efter splice");
+      console.log(standardRoles);
     }
   }
   return standardRoles;
