@@ -445,9 +445,9 @@ function finalMessageMaker(playerArray) {
 
 function appropriateRole(objectArray) {
   const nextUp = whosNext(objectArray);
-  const availableRoles = availableRoles(objectArray);
+  const available = availableRoles(objectArray);
   for (preference of nextUp.object.preferred.slice()) {
-    for (role of availableRoles) {
+    for (role of available) {
       if (preference == role) {
         return preference;
       }
