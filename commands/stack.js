@@ -296,7 +296,7 @@ function arrayPrettifier(playerArray) {
           player.player.nickname,
           neededFilling,
           player.position,
-          played.randomed
+          player.randomed
         )
       );
     } else {
