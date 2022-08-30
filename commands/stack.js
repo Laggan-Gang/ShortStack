@@ -105,6 +105,10 @@ async function badabingBadaboom(
     for (object of objectArray) {
       if (object.player == recentlyPicked.player) {
         updatedArray.push(recentlyPicked);
+        console.log("Tjonar in recently picked");
+        console.log(
+          recentlyPicked.player.user.username + " " + recentlyPicked.randomed
+        );
       } else {
         updatedArray.push(object);
       }
