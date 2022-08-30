@@ -470,8 +470,9 @@ function rowBoat(updatedArray) {
 function finalMessageMaker(playerArray) {
   const finalArray = [];
   const shortArray = ["/stack"];
+  let i = 1;
   for (player of playerArray) {
-    shortArray.push(player.player.toString());
+    shortArray.push(`p${i}:${player.player.toString()}`);
     if (player.randomed) {
       finalArray.push(
         `${player.player.user.username} ${player.position.slice(3)}⁉️`
@@ -481,6 +482,7 @@ function finalMessageMaker(playerArray) {
         `${player.player.user.username} ${player.position.slice(3)}`
       );
     }
+    i++;
   }
   const finalMessage = finalArray.join(" | ");
   const joinedArray = shortArray.join(" ");
