@@ -96,19 +96,12 @@ async function badabingBadaboom(
   pickTime,
   recentlyPicked
 ) {
-  if (recentlyPicked) {
-    console.log(recentlyPicked.randomed);
-  }
   const updatedArray = [];
   //If someone has recently picked we update the big array to include that pick
   if (recentlyPicked) {
     for (object of objectArray) {
       if (object.player == recentlyPicked.player) {
         updatedArray.push(recentlyPicked);
-        console.log("Tjonar in recently picked");
-        console.log(
-          recentlyPicked.player.user.username + " " + recentlyPicked.randomed
-        );
       } else {
         updatedArray.push(object);
       }
