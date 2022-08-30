@@ -158,7 +158,9 @@ async function badabingBadaboom(
     if (collected.last()) {
       let pick = collected.last().customId;
       if (pick == "random") {
-        pick = "" + shuffle(availableRoles(updatedArray))[0] + "⁉️";
+        const funnyRoles = availableRoles(updatedArray);
+        funnyRoles.push("fill");
+        pick = "" + shuffle(funnyRoles)[0] + "⁉️";
       }
       try {
         const recentlyPicked = {
