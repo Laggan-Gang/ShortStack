@@ -292,7 +292,12 @@ function arrayPrettifier(playerArray) {
         optimalStringLength -
         (player.player.nickname.length + player.position.length);
       prettyArray.push(
-        stringPrettifier(player.player.nickname, neededFilling, player.position)
+        stringPrettifier(
+          player.player.nickname,
+          neededFilling,
+          player.position,
+          played.randomed
+        )
       );
     } else {
       const neededFilling =
@@ -310,12 +315,16 @@ function arrayPrettifier(playerArray) {
   return prettyArray;
 }
 
-function stringPrettifier(player, fillingNeeded, position) {
+function stringPrettifier(player, fillingNeeded, position, randomed) {
   let stringFilling = "";
   for (let i = 0; i < fillingNeeded + 1; i++) {
     stringFilling += " ";
   }
-  return `\`\`${player}${stringFilling} ${position}\`\``;
+  if (randomed) {
+    return `\`\`${player}${stringFilling} ${position}⁉️\`\``;
+  } else {
+    return `\`\`${player}${stringFilling} ${position}\`\``;
+  }
 }
 
 //NOTE: This is NOT the Maakep Engine, I forgot where it is and couldn't be bothered to find it.
