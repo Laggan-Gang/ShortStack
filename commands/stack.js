@@ -156,11 +156,13 @@ async function badabingBadaboom(
   });
   collector.on("end", async (collected) => {
     if (collected.last()) {
+      const unpickedRoles = availableRoles(updatedArray);
+      unpickedRoles.push("fill");
       if (collected.last().customId == "random") {
         try {
           const recentlyPicked = {
             player: nextUp.object.player,
-            position: shuffle(availableRoles(updatedArray))[0],
+            position: shuffle(unpickedRoles)[0],
             preferred: nextUp.object.preferred,
             avatar: nextUp.object.avatar,
             randomed: true,
