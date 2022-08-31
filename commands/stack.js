@@ -1,6 +1,4 @@
-//TODO: make the bot print the configuration used, pretty things (Make pretty with spaces!!!)
 //Consistency in playerArray/updatedArray/objectArray
-//Maakep integration
 const {
   SlashCommandBuilder,
   ActionRowBuilder,
@@ -12,7 +10,6 @@ const Canvas = require("@napi-rs/canvas");
 const { request } = require("undici");
 const axios = require("axios");
 const { laggStatsBaseUrl } = require("../config.json");
-
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
 
 module.exports = {
@@ -48,7 +45,7 @@ module.exports = {
       );
       if (uniquePlayerIds.includes(currentPlayer.id)) {
         interaction.reply(
-          "Please provide 5 unique players!\nLove, **ShortStack**!"
+          "Please provide 5 unique players!\nLove, **ShortStack!**"
         );
         return;
       }
@@ -87,6 +84,8 @@ module.exports = {
       content: `${shuffledArray.join("", " ")}`,
     });
     await badabingBadaboom(objectArray, message, pickTime);
+    //Do I need this return? Feels bad if I don't
+    return;
   },
 };
 
@@ -115,13 +114,13 @@ async function badabingBadaboom(
   const nextUp = whosNext(updatedArray);
   const buttonRows = rowBoat(updatedArray);
   const embed = await prettyEmbed(updatedArray);
-  //pre-assign role preferences for players when they're put into the big array, make new property for them and read them that way
   if (nextUp.object) {
     const assignedRole = appropriateRole(updatedArray);
     const time = getTimestampInSeconds();
+    const spaghettiTime = -1; //HURRY UP
     await interaction.edit({
       content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${assignedRole} in <t:${
-        time + pickTime
+        time + pickTime + spaghettiTime
       }:R>`,
       embeds: [embed.embed],
       components: buttonRows,
@@ -374,10 +373,6 @@ async function artTime(objectArray) {
   context.clip();
   for (object of objectArray) {
     if (object.position.startsWith("pos")) {
-      //object.avatar
-      //const { body } = await request(
-      //  object.player.user.displayAvatarURL({ extension: "jpg" })
-      //);
       const avatar = await Canvas.loadImage(object.avatar);
       switch (object.position) {
         case "pos1":
@@ -479,7 +474,6 @@ function finalMessageMaker(playerArray) {
   }
   const finalMessage = finalArray.join(" | ");
   const joinedArray = shortArray.join(" ");
-  const shortCommand = `/stack p1:${playerArray[0].player.toString()} p2:${playerArray[1].player.toString()} p3:${playerArray[2].player.toString()} p4:${playerArray[3].player.toString()} p5:${playerArray[4].player.toString()}`;
   return { finalMessage: finalMessage, shortCommand: joinedArray };
 }
 
