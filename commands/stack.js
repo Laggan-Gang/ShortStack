@@ -71,7 +71,7 @@ module.exports = {
         position: "Has not picked yet",
         preferred: preferences,
         avatar: avatar,
-        randomed: false,
+        randomed: 0,
       });
     }
     await interaction.deleteReply();
@@ -165,7 +165,7 @@ async function badabingBadaboom(
             position: shuffle(unpickedRoles)[0],
             preferred: nextUp.object.preferred,
             avatar: nextUp.object.avatar,
-            randomed: true,
+            randomed: nextUp.object.randomed++,
           };
           await badabingBadaboom(
             updatedArray,
@@ -184,7 +184,7 @@ async function badabingBadaboom(
             position: collected.last().customId,
             preferred: nextUp.object.preferred,
             avatar: nextUp.object.avatar,
-            randomed: false,
+            randomed: nextUp.object.randomed,
           };
           await badabingBadaboom(
             updatedArray,
@@ -205,7 +205,7 @@ async function badabingBadaboom(
           position: assignedRole,
           preferred: nextUp.object.preferred,
           avatar: nextUp.object.avatar,
-          randomed: false,
+          randomed: nextUp.object.randomed,
         };
         await badabingBadaboom(
           updatedArray,
@@ -322,8 +322,12 @@ function stringPrettifier(player, fillingNeeded, position, randomed) {
   console.log(
     "Såhär ser det ut i string prettifier: " + player + " " + randomed
   );
-  if (randomed) {
-    return `\`\`${player}${stringFilling} ${position}⁉️\`\``;
+  if (player.randomed > 0) {
+    let interrobangAmount = "";
+    for (randoms of player.randomed) {
+      interrobangAmount += "⁉️";
+    }
+    return `\`\`${player}${stringFilling} ${position}${interrobangAmount}\`\``;
   } else {
     return `\`\`${player}${stringFilling} ${position}\`\``;
   }
@@ -463,9 +467,15 @@ function finalMessageMaker(playerArray) {
   let i = 1;
   for (player of playerArray) {
     shortArray.push(`p${i}:${player.player.toString()}`);
-    if (player.randomed) {
+    if (player.randomed > 0) {
+      let interrobangAmount = "";
+      for (randoms of player.randomed) {
+        interrobangAmount += "⁉️";
+      }
       finalArray.push(
-        `${player.player.user.username} ${player.position.slice(3)}⁉️`
+        `${player.player.user.username} ${player.position.slice(
+          3
+        )}${interrobangAmount}`
       );
     } else {
       finalArray.push(
