@@ -320,7 +320,7 @@ function arrayPrettifier(playerArray) {
 
 function stringPrettifier(player, fillingNeeded, position, randomed) {
   let stringFilling = "";
-  for (let i = 0; i < fillingNeeded + 1; i++) {
+  for (let i = 0; i < fillingNeeded + 1 - randomed; i++) {
     stringFilling += " ";
   }
   console.log(
