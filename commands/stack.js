@@ -160,12 +160,14 @@ async function badabingBadaboom(
       unpickedRoles.push("fill");
       if (collected.last().customId == "random") {
         try {
+          let randomAmount = nextUp.object.randomed;
+          randomAmount++;
           const recentlyPicked = {
             player: nextUp.object.player,
             position: shuffle(unpickedRoles)[0],
             preferred: nextUp.object.preferred,
             avatar: nextUp.object.avatar,
-            randomed: nextUp.object.randomed++,
+            randomed: randomAmount++,
           };
           console.log("Någon har randomat");
           console.log("Nu är random grejen " + nextUp.object.randomed);
