@@ -328,7 +328,7 @@ function stringPrettifier(player, fillingNeeded, position, randomed) {
   );
   if (player.randomed > 0) {
     let interrobangAmount = "";
-    for (randoms of player.randomed) {
+    for (let i = 0; i < player.randomed; i++) {
       interrobangAmount += "⁉️";
     }
     return `\`\`${player}${stringFilling} ${position}${interrobangAmount}\`\``;
@@ -473,7 +473,7 @@ function finalMessageMaker(playerArray) {
     shortArray.push(`p${i}:${player.player.toString()}`);
     if (player.randomed > 0) {
       let interrobangAmount = "";
-      for (randoms of player.randomed) {
+      for (let i = 0; i < player.randomed; i++) {
         interrobangAmount += "⁉️";
       }
       finalArray.push(
