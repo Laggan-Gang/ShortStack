@@ -167,6 +167,8 @@ async function badabingBadaboom(
             avatar: nextUp.object.avatar,
             randomed: nextUp.object.randomed++,
           };
+          console.log("Någon har randomat");
+          console.log("Nu är random grejen " + nextUp.object.randomed);
           await badabingBadaboom(
             updatedArray,
             interaction,
