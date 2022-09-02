@@ -326,9 +326,9 @@ function stringPrettifier(player, fillingNeeded, position, randomed) {
   console.log(
     "Såhär ser det ut i string prettifier: " + player + " " + randomed
   );
-  if (player.randomed > 0) {
+  if (randomed > 0) {
     let interrobangAmount = "";
-    for (let i = 0; i < player.randomed; i++) {
+    for (let i = 0; i < randomed; i++) {
       interrobangAmount += "⁉️";
     }
     return `\`\`${player}${stringFilling} ${position}${interrobangAmount}\`\``;
