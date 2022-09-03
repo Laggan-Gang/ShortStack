@@ -1,4 +1,6 @@
+// kolla om det här funkar? "use strict";
 //Consistency in playerArray/updatedArray/objectArray
+
 const {
   SlashCommandBuilder,
   ActionRowBuilder,
@@ -10,7 +12,9 @@ const Canvas = require("@napi-rs/canvas");
 const { request } = require("undici");
 const axios = require("axios");
 const { laggStatsBaseUrl } = require("../config.json");
+
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
+const basePlayer = { position: "Has not picked yet", randomed: 0 };
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -53,25 +57,21 @@ module.exports = {
       memberArray.push(currentMember);
       uniquePlayerIds.push(currentMember.id);
     }
-    let pickTime = await interaction.options.getInteger("time");
-    if (!pickTime) {
-      pickTime = 60;
-    }
-    console.log(pickTime);
+    const pickTime = (await interaction.options.getInteger("time")) || 60;
     const shuffledArray = shuffle(memberArray);
     const playerArray = [];
     for (player of shuffledArray) {
-      const preferences = await getMyPreferences(player.id);
-      const { body } = await request(
-        player.user.displayAvatarURL({ extension: "jpg" })
-      );
-      const avatar = await body.arrayBuffer();
+      const preferred = await getMyPreferences(player.id);
+      //Tjonga in avataren senare?
+      //const { body } = await request(
+      //  player.user.displayAvatarURL({ extension: "jpg" })
+      //);
+      //const avatar = await body.arrayBuffer();
       playerArray.push({
-        player: player,
-        position: "Has not picked yet",
-        preferred: preferences,
-        avatar: avatar,
-        randomed: 0,
+        ...basePlayer,
+        //avatar,
+        player,
+        preferred,
       });
     }
     await interaction.deleteReply();
@@ -88,7 +88,7 @@ module.exports = {
 };
 
 async function badabingBadaboom(
-  objectArray,
+  playerArray,
   interaction,
   pickTime,
   recentlyPicked
@@ -96,35 +96,30 @@ async function badabingBadaboom(
   const updatedArray = [];
   //If someone has recently picked we update the big array to include that pick
   if (recentlyPicked) {
-    for (object of objectArray) {
-      if (object.player == recentlyPicked.player) {
+    for (player of playerArray) {
+      if (player.player == recentlyPicked.player) {
+        const { body } = await request(
+          player.player.user.displayAvatarURL({ extension: "jpg" })
+        );
+        const avatar = await body.arrayBuffer();
+        recentlyPicked.avatar = avatar;
         updatedArray.push(recentlyPicked);
       } else {
-        updatedArray.push(object);
+        updatedArray.push(player);
       }
     }
   } else {
-    for (object of objectArray) {
-      updatedArray.push(object);
-    }
+    //for (player of playerArray) {
+    //  updatedArray.push(player);
+    //}
+    updatedArray.push(...playerArray);
   }
-
+  const available = availableRoles(updatedArray);
   const nextUp = whosNext(updatedArray);
-  const buttonRows = rowBoat(updatedArray);
-  const embed = await prettyEmbed(updatedArray);
-  if (nextUp.object) {
-    const assignedRole = appropriateRole(updatedArray);
-    const time = getTimestampInSeconds();
-    const spaghettiTime = -1; //HURRY UP
-    await interaction.edit({
-      content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${assignedRole} in <t:${
-        time + pickTime + spaghettiTime
-      }:R>`,
-      embeds: [embed.embed],
-      components: buttonRows,
-      files: [embed.file],
-    });
-  } else {
+  const buttonRows = rowBoat(nextUp, available);
+  const embed = await prettyEmbed(updatedArray, nextUp);
+
+  if (!nextUp.object) {
     await interaction.edit({
       content: "",
       embeds: [embed.embed],
@@ -133,6 +128,18 @@ async function badabingBadaboom(
     });
     return;
   }
+
+  const assignedRole = appropriateRole(available, nextUp);
+  const time = getTimestampInSeconds();
+  const spaghettiTime = -1; //HURRY UP
+  await interaction.edit({
+    content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${assignedRole} in <t:${
+      time + pickTime + spaghettiTime
+    }:R>`,
+    embeds: [embed.embed],
+    components: buttonRows,
+    files: [embed.file],
+  });
 
   //Discord requires a filter for collectors
   //TURNS OUT THE FILTERS ARE ACTUALLY REALLY GOOD! Now we make sure we can only edit 1 embed thingy in case of multiples
@@ -152,35 +159,36 @@ async function badabingBadaboom(
       console.log(error);
     }
   });
+
   collector.on("end", async (collected) => {
-    if (collected.last()) {
-      const unpickedRoles = availableRoles(updatedArray);
-      unpickedRoles.push("fill");
-      if (collected.last().customId == "random") {
-        try {
-          let randomAmount = nextUp.object.randomed;
-          randomAmount++;
+    try {
+      if (collected.last()) {
+        if (collected.last().customId == "random") {
+          const unpickedRoles = [...available];
+          //TODO: Gacha
+          //switch (true) {
+          //  case tärningen > 95:
+          //    unpickedRoles.push("☭");
+          //  case tärningen > 85:
+          //    unpickedRoles.push("Ⓐ");
+          //  case tärningen > 5:
+          //    unpickedRoles.push("fill");
+          //}
+          unpickedRoles.push("fill");
           const recentlyPicked = {
             player: nextUp.object.player,
             position: shuffle(unpickedRoles)[0],
             preferred: nextUp.object.preferred,
             avatar: nextUp.object.avatar,
-            randomed: randomAmount++,
+            randomed: nextUp.object.randomed + 1,
           };
-          console.log("Någon har randomat");
-          console.log("Nu är random grejen " + nextUp.object.randomed);
           await badabingBadaboom(
             updatedArray,
             interaction,
             pickTime,
             recentlyPicked
           );
-        } catch (error) {
-          interaction.edit("There was an error baby  " + error);
-          console.log(error);
-        }
-      } else {
-        try {
+        } else {
           const recentlyPicked = {
             player: nextUp.object.player,
             position: collected.last().customId,
@@ -194,14 +202,8 @@ async function badabingBadaboom(
             pickTime,
             recentlyPicked
           );
-        } catch (error) {
-          interaction.edit("There was an error baby  " + error);
-          console.log(error);
         }
-      }
-    } else {
-      try {
-        const assignedRole = appropriateRole(updatedArray);
+      } else {
         const recentlyPicked = {
           player: nextUp.object.player,
           position: assignedRole,
@@ -215,28 +217,19 @@ async function badabingBadaboom(
           pickTime,
           recentlyPicked
         );
-      } catch (error) {
-        interaction.edit("There was an error baby  " + error);
-        console.log(error);
       }
+    } catch (error) {
+      interaction.edit("There was an error baby  " + error);
+      console.log(error);
     }
   });
 }
 
-function buttonHasBeenPicked(objectArray, i) {
-  for (object of objectArray) {
-    if (object.position === `pos${i}`) {
-      return true;
-    }
-  }
-  return false;
-}
-
-async function prettyEmbed(playerArray) {
-  const BLANK = "\u200b";
-  const playerFields = arrayPrettifier(playerArray).join("\n");
-  const art = await artTime(playerArray);
-  if (whosNext(playerArray).object) {
+async function prettyEmbed(updatedArray, nextUp) {
+  //const BLANK = "\u200b";
+  const playerFields = arrayPrettifier(updatedArray).join("\n");
+  const art = await artTime(updatedArray);
+  if (nextUp.object) {
     const embed = {
       color: (Math.random() * 0xffffff) << 0,
       fields: [{ name: "Picking order: ", value: playerFields }],
@@ -247,7 +240,7 @@ async function prettyEmbed(playerArray) {
     const embedObject = { embed: embed, file: art };
     return embedObject;
   } else {
-    const finalText = finalMessageMaker(playerArray);
+    const finalText = finalMessageMaker(updatedArray);
     const finalMessage = { text: finalText.finalMessage };
     const shortCommand = "`" + finalText.shortCommand + "`";
     const embed = {
@@ -280,7 +273,7 @@ function whosNext(objectArray) {
       return { object: object, fillFlag: true };
     }
   }
-  return false;
+  return { object: undefined, fillFlag: false };
 }
 
 function arrayPrettifier(playerArray) {
@@ -317,22 +310,9 @@ function arrayPrettifier(playerArray) {
 }
 
 function stringPrettifier(player, fillingNeeded, position, randomed) {
-  let stringFilling = "";
-  for (let i = 0; i < fillingNeeded + 1 - randomed; i++) {
-    stringFilling += " ";
-  }
-  console.log(
-    "Såhär ser det ut i string prettifier: " + player + " " + randomed
-  );
-  if (randomed > 0) {
-    let interrobangAmount = "";
-    for (let i = 0; i < randomed; i++) {
-      interrobangAmount += "⁉️";
-    }
-    return `\`\`${player}${stringFilling} ${position}${interrobangAmount}\`\``;
-  } else {
-    return `\`\`${player}${stringFilling} ${position}\`\``;
-  }
+  const stringFilling = " ".repeat(fillingNeeded + 1 - randomed);
+  const interrobangs = "⁉️".repeat(randomed);
+  return `\`\`${player}${stringFilling} ${position}${interrobangs}\`\``;
 }
 
 //shuffle(array)
@@ -357,7 +337,7 @@ function shuffle([...array]) {
   return array;
 }
 
-async function artTime(objectArray) {
+async function artTime(updatedArray) {
   const canvas = Canvas.createCanvas(308, 308);
   const context = canvas.getContext("2d");
   const background = await Canvas.loadImage("./map.png");
@@ -380,24 +360,25 @@ async function artTime(objectArray) {
   context.closePath();
 
   context.clip();
-  for (object of objectArray) {
-    if (object.position.startsWith("pos")) {
-      const avatar = await Canvas.loadImage(object.avatar);
-      switch (object.position) {
+  for (player of updatedArray) {
+    if (player.position.startsWith("pos")) {
+      const avatar = await Canvas.loadImage(player.avatar);
+      const draw = (x, y) => context.drawImage(avatar, x, y, 50, 50);
+      switch (player.position) {
         case "pos1":
-          context.drawImage(avatar, 235, 248, 50, 50);
+          draw(235, 248);
           break;
         case "pos2":
-          context.drawImage(avatar, 125, 125, 50, 50);
+          draw(125, 125);
           break;
         case "pos3":
-          context.drawImage(avatar, 10, 25, 50, 50);
+          draw(10, 25);
           break;
         case "pos4":
-          context.drawImage(avatar, 100, 40, 50, 50);
+          draw(100, 40);
           break;
         case "pos5":
-          context.drawImage(avatar, 185, 248, 50, 50);
+          draw(185, 248);
           break;
       }
     }
@@ -408,43 +389,42 @@ async function artTime(objectArray) {
   return attachment;
 }
 
-function rowBoat(updatedArray) {
-  const nextUp = whosNext(updatedArray);
+function rowBoat(nextUp, available) {
   const row1 = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
         .setCustomId("pos1")
         .setLabel("1️⃣")
         .setStyle(ButtonStyle.Secondary)
-        .setDisabled(buttonHasBeenPicked(updatedArray, 1))
+        .setDisabled(!available.includes("pos1"))
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("pos2")
         .setLabel("2️⃣")
         .setStyle(ButtonStyle.Secondary)
-        .setDisabled(buttonHasBeenPicked(updatedArray, 2))
+        .setDisabled(!available.includes("pos2"))
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("pos3")
         .setLabel("3️⃣")
         .setStyle(ButtonStyle.Secondary)
-        .setDisabled(buttonHasBeenPicked(updatedArray, 3))
+        .setDisabled(!available.includes("pos3"))
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("pos4")
         .setLabel("4️⃣")
         .setStyle(ButtonStyle.Secondary)
-        .setDisabled(buttonHasBeenPicked(updatedArray, 4))
+        .setDisabled(!available.includes("pos4"))
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("pos5")
         .setLabel("5️⃣")
         .setStyle(ButtonStyle.Secondary)
-        .setDisabled(buttonHasBeenPicked(updatedArray, 5))
+        .setDisabled(!available.includes("pos5"))
     );
   //5 buttons/row is max for Discord, so I'm splitting them in half :)
   const row2 = new ActionRowBuilder()
@@ -492,9 +472,7 @@ function finalMessageMaker(playerArray) {
   return { finalMessage: finalMessage, shortCommand: joinedArray };
 }
 
-function appropriateRole(objectArray) {
-  const nextUp = whosNext(objectArray);
-  const available = availableRoles(objectArray);
+function appropriateRole(available, nextUp) {
   //previously "for (preference of nextUp.object.preferred.slice()) {"
   for (preference of nextUp.object.preferred) {
     for (role of available) {
