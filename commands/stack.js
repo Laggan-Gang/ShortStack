@@ -98,11 +98,13 @@ async function badabingBadaboom(
   if (recentlyPicked) {
     for (player of playerArray) {
       if (player.player == recentlyPicked.player) {
-        const { body } = await request(
-          player.player.user.displayAvatarURL({ extension: "jpg" })
-        );
-        const avatar = await body.arrayBuffer();
-        recentlyPicked.avatar = avatar;
+        if (recentlyPicked.position.startsWith("pos")) {
+          const { body } = await request(
+            player.player.user.displayAvatarURL({ extension: "jpg" })
+          );
+          const avatar = await body.arrayBuffer();
+          recentlyPicked.avatar = avatar;
+        }
         updatedArray.push(recentlyPicked);
       } else {
         updatedArray.push(player);
