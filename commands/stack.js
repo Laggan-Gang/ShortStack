@@ -89,11 +89,13 @@ module.exports = {
 
 async function badabingBadaboom(
   playerArray,
-  interaction,
+  message,
   pickTime,
   recentlyPicked
 ) {
   const updatedArray = [];
+
+  //DÅLIGA, EGENTLIGA, ELAD, GULLIGA, ROB
   //If someone has recently picked we update the big array to include that pick
   if (recentlyPicked) {
     for (player of playerArray) {
@@ -122,7 +124,7 @@ async function badabingBadaboom(
   const embed = await prettyEmbed(updatedArray, nextUp);
 
   if (!nextUp.object) {
-    await interaction.edit({
+    await message.edit({
       content: "",
       embeds: [embed.embed],
       files: [embed.file],
@@ -134,7 +136,7 @@ async function badabingBadaboom(
   const assignedRole = appropriateRole(available, nextUp);
   const time = getTimestampInSeconds();
   const spaghettiTime = -1; //HURRY UP
-  await interaction.edit({
+  await message.edit({
     content: `${nextUp.object.player.toString()} You're up! If you do not pick you will be assigned ${assignedRole} in <t:${
       time + pickTime + spaghettiTime
     }:R>`,
@@ -145,8 +147,8 @@ async function badabingBadaboom(
 
   //Discord requires a filter for collectors
   //TURNS OUT THE FILTERS ARE ACTUALLY REALLY GOOD! Now we make sure we can only edit 1 embed thingy in case of multiples
-  const filter = (i) => i.channel.id === interaction.channel.id;
-  const collector = interaction.channel.createMessageComponentCollector({
+  const filter = (i) => i.channel.id === message.channel.id;
+  const collector = message.channel.createMessageComponentCollector({
     filter,
     time: pickTime * 1000,
     max: 1,
@@ -186,7 +188,7 @@ async function badabingBadaboom(
           };
           await badabingBadaboom(
             updatedArray,
-            interaction,
+            message,
             pickTime,
             recentlyPicked
           );
@@ -200,7 +202,7 @@ async function badabingBadaboom(
           };
           await badabingBadaboom(
             updatedArray,
-            interaction,
+            message,
             pickTime,
             recentlyPicked
           );
@@ -213,15 +215,10 @@ async function badabingBadaboom(
           avatar: nextUp.object.avatar,
           randomed: nextUp.object.randomed,
         };
-        await badabingBadaboom(
-          updatedArray,
-          interaction,
-          pickTime,
-          recentlyPicked
-        );
+        await badabingBadaboom(updatedArray, message, pickTime, recentlyPicked);
       }
     } catch (error) {
-      interaction.edit("There was an error baby  " + error);
+      message.edit("There was an error baby  " + error);
       console.log(error);
     }
   });
