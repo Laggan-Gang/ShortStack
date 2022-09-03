@@ -34,39 +34,39 @@ module.exports = {
     .addIntegerOption((option) =>
       option.setName("time").setDescription("Pick time")
     ),
-  async execute(interaction) {
-    const playerArray = [];
+  execute: async (interaction) => {
+    await interaction.deferReply();
+    const memberArray = [];
     const numPlayers = 5;
     //Joel unique id checking code
     const uniquePlayerIds = [];
     for (let i = 1; i < numPlayers + 1; i++) {
-      const currentPlayer = await interaction.guild.members.fetch(
+      const currentMember = await interaction.guild.members.fetch(
         interaction.options.getUser("p" + i).id
       );
-      if (uniquePlayerIds.includes(currentPlayer.id)) {
+      if (uniquePlayerIds.includes(currentMember.id)) {
         interaction.reply(
           "Please provide 5 unique players!\nLove, **ShortStack!**"
         );
         return;
       }
-      playerArray.push(currentPlayer);
-      uniquePlayerIds.push(currentPlayer.id);
+      memberArray.push(currentMember);
+      uniquePlayerIds.push(currentMember.id);
     }
     let pickTime = await interaction.options.getInteger("time");
     if (!pickTime) {
       pickTime = 60;
     }
     console.log(pickTime);
-    await interaction.deferReply();
-    const shuffledArray = shuffle(playerArray);
-    const objectArray = [];
+    const shuffledArray = shuffle(memberArray);
+    const playerArray = [];
     for (player of shuffledArray) {
       const preferences = await getMyPreferences(player.id);
       const { body } = await request(
         player.user.displayAvatarURL({ extension: "jpg" })
       );
       const avatar = await body.arrayBuffer();
-      objectArray.push({
+      playerArray.push({
         player: player,
         position: "Has not picked yet",
         preferred: preferences,
@@ -83,9 +83,7 @@ module.exports = {
     const message = await thread.send({
       content: `${shuffledArray.join("", " ")}`,
     });
-    await badabingBadaboom(objectArray, message, pickTime);
-    //Do I need this return? Feels bad if I don't
-    return;
+    await badabingBadaboom(playerArray, message, pickTime);
   },
 };
 
@@ -337,8 +335,9 @@ function stringPrettifier(player, fillingNeeded, position, randomed) {
   }
 }
 
+//shuffle(array)
 //NOTE: This is NOT the Maakep Engine, I forgot where it is and couldn't be bothered to find it.
-function shuffle(array) {
+function shuffle([...array]) {
   let currentIndex = array.length,
     randomIndex;
 
@@ -496,7 +495,8 @@ function finalMessageMaker(playerArray) {
 function appropriateRole(objectArray) {
   const nextUp = whosNext(objectArray);
   const available = availableRoles(objectArray);
-  for (preference of nextUp.object.preferred.slice()) {
+  //previously "for (preference of nextUp.object.preferred.slice()) {"
+  for (preference of nextUp.object.preferred) {
     for (role of available) {
       if (preference == role) {
         return preference;
@@ -509,16 +509,6 @@ function appropriateRole(objectArray) {
   } else {
     return "fill";
   }
-}
-
-function availableRoles(objectArray) {
-  const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
-  for (object of objectArray) {
-    if (object.position.startsWith("pos")) {
-      standardRoles.splice(standardRoles.indexOf(object.position), 1);
-    }
-  }
-  return standardRoles;
 }
 
 async function getMyPreferences(discordId) {
@@ -536,4 +526,14 @@ async function getMyPreferences(discordId) {
 
 function getTimestampInSeconds() {
   return Math.floor(Date.now() / 1000);
+}
+
+function availableRoles(objectArray) {
+  const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
+  for (object of objectArray) {
+    if (object.position.startsWith("pos")) {
+      standardRoles.splice(standardRoles.indexOf(object.position), 1);
+    }
+  }
+  return standardRoles;
 }
