@@ -38,16 +38,15 @@ module.exports = {
     .addIntegerOption((option) =>
       option.setName("time").setDescription("Pick time")
     ),
-  execute: async (interaction) => {
+  execute: async function setup(interaction) {
     await interaction.deferReply();
     const memberArray = [];
     const numPlayers = 5;
     //Joel unique id checking code
     const uniquePlayerIds = [];
     for (let i = 1; i < numPlayers + 1; i++) {
-      const currentMember = await interaction.guild.members.fetch(
-        interaction.options.getUser("p" + i).id
-      );
+      const { id } = interaction.options.getUser("p" + i);
+      const currentMember = await interaction.guild.members.fetch(id);
       if (uniquePlayerIds.includes(currentMember.id)) {
         interaction.reply(
           "Please provide 5 unique players!\nLove, **ShortStack!**"
