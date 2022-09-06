@@ -59,11 +59,11 @@ module.exports = {
     //}
 
     const promiseArray = [
-      await interaction.guild.members.fetch(siphon.choices[0]),
-      await interaction.guild.members.fetch(siphon.choices[1]),
-      await interaction.guild.members.fetch(siphon.choices[2]),
-      await interaction.guild.members.fetch(siphon.choices[3]),
-      await interaction.guild.members.fetch(siphon.choices[4]),
+      interaction.guild.members.fetch(siphon.choices[0]),
+      interaction.guild.members.fetch(siphon.choices[1]),
+      interaction.guild.members.fetch(siphon.choices[2]),
+      interaction.guild.members.fetch(siphon.choices[3]),
+      interaction.guild.members.fetch(siphon.choices[4]),
     ];
 
     const memberArray = Promise.all(promiseArray);
