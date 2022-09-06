@@ -40,6 +40,8 @@ module.exports = {
       option.setName("time").setDescription("Pick time")
     ),
   execute: async function setup(interaction) {
+    const siphon = interactionSiphon(interaction);
+    await interaction.deferReply();
     //const choices = [];
     //const numPlayers = 5;
     //for (let i = 1; i < numPlayers + 1; i++) {
@@ -52,9 +54,7 @@ module.exports = {
     //  }
     //  choices.push(id);
     //}
-    const siphon = interactionSiphon(interaction);
     const channel = await interaction.channel;
-    await interaction.deferReply();
     const memberArray = [];
     for (chosen of siphon.choices) {
       memberArray.push(await interaction.guild.members.fetch(chosen));
