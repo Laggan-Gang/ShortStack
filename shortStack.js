@@ -27,7 +27,9 @@ client.on("interactionCreate", async (interaction) => {
   if (!rightPlaceChecker(interaction)) return;
   if (command) {
     try {
-      await command.execute(interaction);
+      const siphon = interactionSiphon(interaction);
+      await interaction.deferReply();
+      await command.execute(interaction, siphon);
     } catch (error) {
       console.error(error);
       await interaction.reply({
@@ -53,4 +55,21 @@ function rightPlaceChecker(interaction) {
   } else {
     return true;
   }
+}
+
+function interactionSiphon(interaction) {
+  const choices = [];
+  const numPlayers = 5;
+  const pickTime = interaction.options.getInteger("time") || standardTime;
+  for (let i = 1; i < numPlayers + 1; i++) {
+    const { id } = interaction.options.getUser("p" + i);
+    if (choices.includes(id)) {
+      interaction.reply(
+        "Please provide 5 unique players!\nLove, **ShortStack!**"
+      );
+      return;
+    }
+    choices.push(id);
+  }
+  return { choices, pickTime };
 }
