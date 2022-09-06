@@ -15,6 +15,7 @@ const { laggStatsBaseUrl } = require("../config.json");
 
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
 const basePlayer = { position: "Has not picked yet", randomed: 0 };
+const standardTime = 60;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -39,21 +40,23 @@ module.exports = {
       option.setName("time").setDescription("Pick time")
     ),
   execute: async function setup(interaction) {
-    const choices = [];
-    const numPlayers = 5;
-    for (let i = 1; i < numPlayers + 1; i++) {
-      const { id } = interaction.options.getUser("p" + i);
-      if (choices.includes(id)) {
-        interaction.reply(
-          "Please provide 5 unique players!\nLove, **ShortStack!**"
-        );
-        return;
-      }
-      choices.push(id);
-    }
+    //const choices = [];
+    //const numPlayers = 5;
+    //for (let i = 1; i < numPlayers + 1; i++) {
+    //  const { id } = interaction.options.getUser("p" + i);
+    //  if (choices.includes(id)) {
+    //    interaction.reply(
+    //      "Please provide 5 unique players!\nLove, **ShortStack!**"
+    //    );
+    //    return;
+    //  }
+    //  choices.push(id);
+    //}
+    const siphon = interactionSiphon(interaction);
+    const channel = await interaction.channel;
     await interaction.deferReply();
     const memberArray = [];
-    for (chosen of choices) {
+    for (chosen of siphon.choices) {
       memberArray.push(await interaction.guild.members.fetch(chosen));
     }
     //await interaction.deferReply();
@@ -73,7 +76,7 @@ module.exports = {
     //  memberArray.push(currentMember);
     //  uniquePlayerIds.push(currentMember.id);
     //}
-    const pickTime = (await interaction.options.getInteger("time")) || 60;
+    //const pickTime = interaction.options.getInteger("time") || 60;
     const shuffledArray = shuffle(memberArray);
     const playerArray = [];
     for (player of shuffledArray) {
@@ -85,7 +88,7 @@ module.exports = {
       });
     }
     await interaction.deleteReply();
-    const thread = await interaction.channel.threads.create({
+    const thread = await channel.threads.create({
       name: interaction.user.username + "'s Dota Party",
       autoArchiveDuration: 60,
       reason: "Time to set up your dota party!",
@@ -93,7 +96,7 @@ module.exports = {
     const message = await thread.send({
       content: `${shuffledArray.join("", " ")}`,
     });
-    await badabingBadaboom(playerArray, message, pickTime);
+    await badabingBadaboom(playerArray, message, siphon.pickTime);
   },
 };
 
@@ -523,4 +526,21 @@ function availableRoles(objectArray) {
     }
   }
   return standardRoles;
+}
+
+function interactionSiphon(interaction) {
+  const choices = [];
+  const numPlayers = 5;
+  const pickTime = interaction.options.getInteger("time") || standardTime;
+  for (let i = 1; i < numPlayers + 1; i++) {
+    const { id } = interaction.options.getUser("p" + i);
+    if (choices.includes(id)) {
+      interaction.reply(
+        "Please provide 5 unique players!\nLove, **ShortStack!**"
+      );
+      return;
+    }
+    choices.push(id);
+  }
+  return { choices, pickTime };
 }
