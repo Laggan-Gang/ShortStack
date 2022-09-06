@@ -66,7 +66,7 @@ module.exports = {
       interaction.guild.members.fetch(siphon.choices[4]),
     ];
 
-    const memberArray = Promise.all(promiseArray);
+    const memberArray = await Promise.all(promiseArray);
     //await interaction.deferReply();
     //const memberArray = [];
     //const numPlayers = 5;
