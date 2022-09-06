@@ -30,6 +30,7 @@ client.on("interactionCreate", async (interaction) => {
   if (command) {
     try {
       const data = interactionSiphon(interaction);
+      console.log("Det här är våra boys nu " + data.choices);
       await interaction.deferReply();
       await command.execute(interaction, data);
     } catch (error) {
