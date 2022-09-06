@@ -15,7 +15,6 @@ const { laggStatsBaseUrl } = require("../config.json");
 
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
 const basePlayer = { position: "Has not picked yet", randomed: 0 };
-const standardTime = 60;
 
 module.exports = {
   data: new SlashCommandBuilder()
