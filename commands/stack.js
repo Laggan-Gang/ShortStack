@@ -39,36 +39,47 @@ module.exports = {
       option.setName("time").setDescription("Pick time")
     ),
   execute: async function setup(interaction) {
-    await interaction.deferReply();
-    const memberArray = [];
+    const choices = [];
     const numPlayers = 5;
-    //Joel unique id checking code
-    const uniquePlayerIds = [];
     for (let i = 1; i < numPlayers + 1; i++) {
       const { id } = interaction.options.getUser("p" + i);
-      const currentMember = await interaction.guild.members.fetch(id);
-      if (uniquePlayerIds.includes(currentMember.id)) {
+      if (choices.includes(id)) {
         interaction.reply(
           "Please provide 5 unique players!\nLove, **ShortStack!**"
         );
         return;
       }
-      memberArray.push(currentMember);
-      uniquePlayerIds.push(currentMember.id);
+      choices.push(id);
     }
+    await interaction.deferReply();
+    const memberArray = [];
+    for (chosen of choices) {
+      memberArray.push(await interaction.guild.members.fetch(chosen));
+    }
+    //await interaction.deferReply();
+    //const memberArray = [];
+    //const numPlayers = 5;
+    ////Joel unique id checking code
+    //const uniquePlayerIds = [];
+    //for (let i = 1; i < numPlayers + 1; i++) {
+    //  const { id } = interaction.options.getUser("p" + i);
+    //  const currentMember = await interaction.guild.members.fetch(id);
+    //  if (uniquePlayerIds.includes(currentMember.id)) {
+    //    interaction.reply(
+    //      "Please provide 5 unique players!\nLove, **ShortStack!**"
+    //    );
+    //    return;
+    //  }
+    //  memberArray.push(currentMember);
+    //  uniquePlayerIds.push(currentMember.id);
+    //}
     const pickTime = (await interaction.options.getInteger("time")) || 60;
     const shuffledArray = shuffle(memberArray);
     const playerArray = [];
     for (player of shuffledArray) {
       const preferred = await getMyPreferences(player.id);
-      //Tjonga in avataren senare?
-      //const { body } = await request(
-      //  player.user.displayAvatarURL({ extension: "jpg" })
-      //);
-      //const avatar = await body.arrayBuffer();
       playerArray.push({
         ...basePlayer,
-        //avatar,
         player,
         preferred,
       });
