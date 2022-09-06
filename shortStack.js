@@ -72,6 +72,7 @@ function interactionSiphon(interaction) {
       );
       return;
     }
+    console.log(typeof id);
     choices.push(id);
   }
   return { choices, pickTime };
