@@ -27,9 +27,9 @@ client.on("interactionCreate", async (interaction) => {
   if (!rightPlaceChecker(interaction)) return;
   if (command) {
     try {
-      const siphon = interactionSiphon(interaction);
+      const data = interactionSiphon(interaction);
       await interaction.deferReply();
-      await command.execute(interaction, siphon);
+      await command.execute(interaction, data);
     } catch (error) {
       console.error(error);
       await interaction.reply({

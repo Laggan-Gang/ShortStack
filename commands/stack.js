@@ -40,7 +40,7 @@ module.exports = {
       option.setName("time").setDescription("Pick time")
     ),
   execute: async function setup(interaction, siphon) {
-    const siphon = interactionSiphon(interaction);
+    //const siphon = interactionSiphon(interaction);
     //const choices = [];
     //const numPlayers = 5;
     //for (let i = 1; i < numPlayers + 1; i++) {
