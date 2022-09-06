@@ -53,20 +53,10 @@ module.exports = {
     //  choices.push(id);
     //}
     const channel = await interaction.channel;
-    //const memberArray = [];
-    //for (chosen of siphon.choices) {
-    //  memberArray.push(await interaction.guild.members.fetch(chosen));
-    //}
-
-    const promiseArray = [
-      interaction.guild.members.fetch(siphon.choices[0]),
-      interaction.guild.members.fetch(siphon.choices[1]),
-      interaction.guild.members.fetch(siphon.choices[2]),
-      interaction.guild.members.fetch(siphon.choices[3]),
-      interaction.guild.members.fetch(siphon.choices[4]),
-    ];
-
-    const memberArray = await Promise.all(promiseArray);
+    const memberArray = [];
+    for (chosen of siphon.choices) {
+      memberArray.push(await interaction.guild.members.fetch(chosen));
+    }
     //await interaction.deferReply();
     //const memberArray = [];
     //const numPlayers = 5;
