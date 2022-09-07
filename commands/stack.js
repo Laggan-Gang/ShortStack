@@ -551,7 +551,7 @@ async function badaBing(interaction, choices, pickTime) {
   //  memberArray.push(await interaction.guild.members.fetch(chosen));
   //}
   const memberArray = await Promise.all(
-    choices.map(interaction.guild.members.fetch())
+    choices.map(interaction.guild.members.fetch)
   );
 
   const channel = await interaction.channel;
