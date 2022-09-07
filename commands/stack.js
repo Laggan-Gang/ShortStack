@@ -544,6 +544,7 @@ function availableRoles(objectArray) {
 //}
 
 async function badaBing(interaction, choices, pickTime) {
+  interaction.deferReply();
   const channel = await interaction.channel;
   const memberArray = [];
   for (chosen of choices) {
