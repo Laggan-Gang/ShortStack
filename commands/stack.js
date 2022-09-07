@@ -39,7 +39,7 @@ module.exports = {
     .addIntegerOption((option) =>
       option.setName("time").setDescription("Pick time")
     ),
-  execute: async function setup(interaction) {
+  execute: function setup(interaction) {
     const choices = [];
     const numPlayers = 5;
     const pickTime = interaction.options.getInteger("time") || standardTime;
@@ -51,6 +51,7 @@ module.exports = {
         );
         return;
       }
+      console.log(id);
       choices.push(id);
     }
     badaBing(interaction, choices, pickTime);
@@ -545,10 +546,14 @@ function availableRoles(objectArray) {
 
 async function badaBing(interaction, choices, pickTime) {
   interaction.deferReply();
-  const memberArray = [];
-  for (chosen of choices) {
-    memberArray.push(await interaction.guild.members.fetch(chosen));
-  }
+  //const memberArray = [];
+  //for (chosen of choices) {
+  //  memberArray.push(await interaction.guild.members.fetch(chosen));
+  //}
+  const memberArray = await Promise.all(
+    choices.map(interaction.guild.members.fetch())
+  );
+
   const channel = await interaction.channel;
   const shuffledArray = shuffle(memberArray);
   const playerArray = [];
