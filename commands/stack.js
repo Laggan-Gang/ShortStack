@@ -43,6 +43,8 @@ module.exports = {
     const choices = [];
     const numPlayers = 5;
     const pickTime = interaction.options.getInteger("time") || standardTime;
+    const threadName = interaction.user.username;
+
     for (let i = 1; i < numPlayers + 1; i++) {
       const { id } = interaction.options.getUser("p" + i);
       if (choices.includes(id)) {
@@ -51,10 +53,10 @@ module.exports = {
         );
         return;
       }
-      console.log(id);
+      console.log(threadName, id);
       choices.push(id);
     }
-    badaBing(interaction, choices, pickTime);
+    badaBing(interaction, choices, pickTime, threadName);
     //const siphon = interactionSiphon(interaction);
     //const choices = [];
     //const numPlayers = 5;
@@ -523,33 +525,8 @@ function availableRoles(objectArray) {
   return standardRoles;
 }
 
-//function interactionSiphon(interaction) {
-//  const choices = [];
-//  const numPlayers = 5;
-//  const pickTime = interaction.options.getInteger("time") || standardTime;
-//  for (let i = 1; i < numPlayers + 1; i++) {
-//    const { id } = interaction.options.getUser("p" + i);
-//    if (choices.includes(id)) {
-//      interaction.reply(
-//        "Please provide 5 unique players!\nLove, **ShortStack!**"
-//      );
-//      return;
-//    }
-//    choices.push(id);
-//  }
-//  return { choices, pickTime };
-//}
-
-async function badaBing(interaction, choices, pickTime) {
+async function badaBing(interaction, choices, pickTime, threadName) {
   interaction.deferReply();
-  //const memberArray = [];
-  //for (chosen of choices) {
-  //  memberArray.push(await interaction.guild.members.fetch(chosen));
-  //}
-  //const memberArray = await Promise.all(
-  //  choices.map(interaction.guild.members.fetch)
-  //);
-
   const promiseArray = [
     interaction.guild.members.fetch(choices[0]),
     interaction.guild.members.fetch(choices[1]),
@@ -559,7 +536,10 @@ async function badaBing(interaction, choices, pickTime) {
   ];
 
   const memberArray = await Promise.all(promiseArray);
-
+  console.log(
+    threadName,
+    memberArray.map((m) => m.id)
+  );
   const channel = await interaction.channel;
   const shuffledArray = shuffle(memberArray);
   const playerArray = [];
@@ -571,9 +551,13 @@ async function badaBing(interaction, choices, pickTime) {
       preferred,
     });
   }
+  console.log(
+    threadName,
+    playerArray.map((p) => p.player.id)
+  );
   await interaction.deleteReply();
   const thread = await channel.threads.create({
-    name: interaction.user.username + "'s Dota Party",
+    name: threadName + "'s Dota Party",
     autoArchiveDuration: 60,
     reason: "Time to set up your dota party!",
   });
@@ -582,3 +566,16 @@ async function badaBing(interaction, choices, pickTime) {
   });
   badaBoom(playerArray, message, pickTime);
 }
+
+//const shuffledArray = shuffle(choices);
+//const channel = await interaction.channel;
+//const playerArray = promise.all(choices.map(choice => {
+//  const player = await interaction.guild.members.fetch(chosen));
+//  const preferred = await getMyPreferences(player.id);
+//  return {
+//    ...basePlayer,
+//    player,
+//    preferred,
+//  };
+//
+//
