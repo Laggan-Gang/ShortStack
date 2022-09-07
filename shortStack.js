@@ -7,7 +7,6 @@ const { token } = require("./config.json");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
-const standardTime = 60;
 
 const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs
@@ -29,10 +28,7 @@ client.on("interactionCreate", async (interaction) => {
   if (!rightPlaceChecker(interaction)) return;
   if (command) {
     try {
-      const data = interactionSiphon(interaction);
-      console.log("Det här är våra boys nu " + data.choices);
-      await interaction.deferReply();
-      await command.execute(interaction, data);
+      command.execute(interaction);
     } catch (error) {
       console.error(error);
       await interaction.reply({
