@@ -125,7 +125,7 @@ async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
 
   //If someone has recently picked we update the big array to include that pick
   if (recentlyPicked) {
-    for (player of playerArray) {
+    for (let player of playerArray) {
       if (player.player == recentlyPicked.player) {
         if (recentlyPicked.position.startsWith("pos")) {
           const { body } = await request(
@@ -274,14 +274,14 @@ async function prettyEmbed(updatedArray, nextUp) {
 
 function whosNext(objectArray) {
   //maybe use array.find
-  for (object of objectArray) {
+  for (let object of objectArray) {
     if (object.position === "Has not picked yet") {
       return { object: object, fillFlag: false };
     }
   }
   //.slic() to make shallow copy otherwise it all goes to hell I guess
   const reversedArray = objectArray.slice().reverse();
-  for (object of reversedArray) {
+  for (let object of reversedArray) {
     if (object.position === "fill") {
       return { object: object, fillFlag: true };
     }
@@ -292,7 +292,7 @@ function whosNext(objectArray) {
 function arrayPrettifier(playerArray) {
   const optimalStringLength = 39;
   const prettyArray = [];
-  for (player of playerArray) {
+  for (let player of playerArray) {
     if (player.player.nickname) {
       const neededFilling =
         optimalStringLength -
@@ -373,7 +373,7 @@ async function artTime(updatedArray) {
   context.closePath();
 
   context.clip();
-  for (player of updatedArray) {
+  for (let player of updatedArray) {
     if (player.position.startsWith("pos")) {
       const avatar = await Canvas.loadImage(player.avatar);
       const draw = (x, y) => context.drawImage(avatar, x, y, 50, 50);
@@ -461,7 +461,7 @@ function finalMessageMaker(playerArray) {
   const finalArray = [];
   const shortArray = ["/stack"];
   let i = 1;
-  for (player of playerArray) {
+  for (let player of playerArray) {
     shortArray.push(`p${i}:${player.player.toString()}`);
     if (player.randomed > 0) {
       let interrobangAmount = "";
@@ -487,8 +487,8 @@ function finalMessageMaker(playerArray) {
 
 function appropriateRole(available, nextUp) {
   //previously "for (preference of nextUp.object.preferred.slice()) {"
-  for (preference of nextUp.object.preferred) {
-    for (role of available) {
+  for (let preference of nextUp.object.preferred) {
+    for (let role of available) {
       if (preference == role) {
         return preference;
       }
@@ -507,7 +507,7 @@ async function getMyPreferences(discordId) {
     aliases: [discordId],
   });
   const prefs = res.data?.[0]?.preference;
-  for (preference of prefs) {
+  for (let preference of prefs) {
     if (parseInt(preference)) {
       prefs[prefs.indexOf(preference)] = "pos" + preference;
     }
@@ -521,7 +521,7 @@ function getTimestampInSeconds() {
 
 function availableRoles(objectArray) {
   const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
-  for (object of objectArray) {
+  for (let object of objectArray) {
     if (object.position.startsWith("pos")) {
       standardRoles.splice(standardRoles.indexOf(object.position), 1);
     }
@@ -531,30 +531,20 @@ function availableRoles(objectArray) {
 
 async function badaBing(interaction, choices, pickTime, threadName) {
   interaction.deferReply();
-  const promiseArray = [
-    interaction.guild.members.fetch(choices[0]),
-    interaction.guild.members.fetch(choices[1]),
-    interaction.guild.members.fetch(choices[2]),
-    interaction.guild.members.fetch(choices[3]),
-    interaction.guild.members.fetch(choices[4]),
-  ];
-
-  const memberArray = await Promise.all(promiseArray);
-  console.log(
-    threadName,
-    "member",
-    memberArray.map((m) => m.id)
-  );
   const channel = await interaction.channel;
-  const playerArray = [];
-  for (let player of memberArray) {
-    const preferred = await getMyPreferences(player.id);
-    playerArray.push({
-      ...basePlayer,
-      player,
-      preferred,
-    });
-  }
+  const playerArray = await Promise.all(
+    choices.map(async (choice) => {
+      const [player, preferred] = await Promise.all([
+        interaction.guild.members.fetch(choice),
+        getMyPreferences(choice),
+      ]);
+      return {
+        ...basePlayer,
+        player,
+        preferred,
+      };
+    })
+  );
   console.log(
     threadName,
     "player",
@@ -571,16 +561,3 @@ async function badaBing(interaction, choices, pickTime, threadName) {
   });
   badaBoom(playerArray, message, pickTime);
 }
-
-//const shuffledArray = shuffle(choices);
-//const channel = await interaction.channel;
-//const playerArray = promise.all(choices.map(choice => {
-//  const player = await interaction.guild.members.fetch(chosen));
-//  const preferred = await getMyPreferences(player.id);
-//  return {
-//    ...basePlayer,
-//    player,
-//    preferred,
-//  };
-//
-//
