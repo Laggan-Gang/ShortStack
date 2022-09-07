@@ -53,76 +53,15 @@ module.exports = {
         );
         return;
       }
-      console.log(threadName, id);
       choices.push(id);
     }
-    console.log(threadName, "pre", choices);
     const shuffledChoices = shuffle(choices);
-    console.log(threadName, "post", shuffledChoices);
-
     badaBing(interaction, shuffledChoices, pickTime, threadName);
-    //const siphon = interactionSiphon(interaction);
-    //const choices = [];
-    //const numPlayers = 5;
-    //for (let i = 1; i < numPlayers + 1; i++) {
-    //  const { id } = interaction.options.getUser("p" + i);
-    //  if (choices.includes(id)) {
-    //    interaction.reply(
-    //      "Please provide 5 unique players!\nLove, **ShortStack!**"
-    //    );
-    //    return;
-    //  }
-    //  choices.push(id);
-    //}´
-    //const channel = await interaction.channel;
-    //const memberArray = [];
-    //for (chosen of siphon.choices) {
-    //  memberArray.push(await interaction.guild.members.fetch(chosen));
-    //}
-    //await interaction.deferReply();
-    //const memberArray = [];
-    //const numPlayers = 5;
-    ////Joel unique id checking code
-    //const uniquePlayerIds = [];
-    //for (let i = 1; i < numPlayers + 1; i++) {
-    //  const { id } = interaction.options.getUser("p" + i);
-    //  const currentMember = await interaction.guild.members.fetch(id);
-    //  if (uniquePlayerIds.includes(currentMember.id)) {
-    //    interaction.reply(
-    //      "Please provide 5 unique players!\nLove, **ShortStack!**"
-    //    );
-    //    return;
-    //  }
-    //  memberArray.push(currentMember);
-    //  uniquePlayerIds.push(currentMember.id);
-    //}
-    //const pickTime = interaction.options.getInteger("time") || 60;
-    //const shuffledArray = shuffle(memberArray);
-    //const playerArray = [];
-    //for (player of shuffledArray) {
-    //  const preferred = await getMyPreferences(player.id);
-    //  playerArray.push({
-    //    ...basePlayer,
-    //    player,
-    //    preferred,
-    //  });
-    //}
-    //await interaction.deleteReply();
-    //const thread = await channel.threads.create({
-    //  name: interaction.user.username + "'s Dota Party",
-    //  autoArchiveDuration: 60,
-    //  reason: "Time to set up your dota party!",
-    //});
-    //const message = await thread.send({
-    //  content: `${shuffledArray.join("", " ")}`,
-    //});
-    //await badabingBadaboom(playerArray, message, siphon.pickTime);
   },
 };
 
 async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
   const updatedArray = [];
-
   //If someone has recently picked we update the big array to include that pick
   if (recentlyPicked) {
     for (let player of playerArray) {
@@ -486,7 +425,6 @@ function finalMessageMaker(playerArray) {
 }
 
 function appropriateRole(available, nextUp) {
-  //previously "for (preference of nextUp.object.preferred.slice()) {"
   for (let preference of nextUp.object.preferred) {
     for (let role of available) {
       if (preference == role) {
