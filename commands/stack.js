@@ -56,7 +56,11 @@ module.exports = {
       console.log(threadName, id);
       choices.push(id);
     }
-    badaBing(interaction, choices, pickTime, threadName);
+    console.log(threadName, "pre", choices);
+    const shuffledChoices = shuffle(choices);
+    console.log(threadName, "post", shuffledChoices);
+
+    badaBing(interaction, shuffledChoices, pickTime, threadName);
     //const siphon = interactionSiphon(interaction);
     //const choices = [];
     //const numPlayers = 5;
@@ -538,12 +542,12 @@ async function badaBing(interaction, choices, pickTime, threadName) {
   const memberArray = await Promise.all(promiseArray);
   console.log(
     threadName,
+    "member",
     memberArray.map((m) => m.id)
   );
   const channel = await interaction.channel;
-  const shuffledArray = shuffle(memberArray);
   const playerArray = [];
-  for (player of shuffledArray) {
+  for (player of memberArray) {
     const preferred = await getMyPreferences(player.id);
     playerArray.push({
       ...basePlayer,
@@ -553,6 +557,7 @@ async function badaBing(interaction, choices, pickTime, threadName) {
   }
   console.log(
     threadName,
+    "player",
     playerArray.map((p) => p.player.id)
   );
   await interaction.deleteReply();
@@ -562,7 +567,7 @@ async function badaBing(interaction, choices, pickTime, threadName) {
     reason: "Time to set up your dota party!",
   });
   const message = await thread.send({
-    content: `${shuffledArray.join("", " ")}`,
+    content: `${memberArray.join("", " ")}`,
   });
   badaBoom(playerArray, message, pickTime);
 }
