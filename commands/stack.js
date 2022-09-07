@@ -547,7 +547,7 @@ async function badaBing(interaction, choices, pickTime, threadName) {
   );
   const channel = await interaction.channel;
   const playerArray = [];
-  for (player of memberArray) {
+  for (let player of memberArray) {
     const preferred = await getMyPreferences(player.id);
     playerArray.push({
       ...basePlayer,
