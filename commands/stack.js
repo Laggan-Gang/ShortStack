@@ -557,7 +557,10 @@ async function badaBing(interaction, choices, pickTime, threadName) {
     reason: "Time to set up your dota party!",
   });
   const message = await thread.send({
-    content: `${memberArray.join("", " ")}`,
+    content: `${playerArray.map((b) => b.player).join("", " ")}`,
   });
   badaBoom(playerArray, message, pickTime);
 }
+
+//Definierar en variabel som är en anonym funktion som gör att skrivs "rita(25, 32" så kommer det funka
+//const rita = (x, y) => context.drawImage(avatar, x, y, 50, 50);
