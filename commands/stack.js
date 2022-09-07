@@ -551,11 +551,11 @@ async function badaBing(interaction, choices, pickTime) {
   //);
 
   const promiseArray = [
-    interaction.guild.members.fetch(siphon.choices[0]),
-    interaction.guild.members.fetch(siphon.choices[1]),
-    interaction.guild.members.fetch(siphon.choices[2]),
-    interaction.guild.members.fetch(siphon.choices[3]),
-    interaction.guild.members.fetch(siphon.choices[4]),
+    interaction.guild.members.fetch(choices[0]),
+    interaction.guild.members.fetch(choices[1]),
+    interaction.guild.members.fetch(choices[2]),
+    interaction.guild.members.fetch(choices[3]),
+    interaction.guild.members.fetch(choices[4]),
   ];
 
   const memberArray = await Promise.all(promiseArray);
