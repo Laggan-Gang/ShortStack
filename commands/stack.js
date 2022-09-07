@@ -117,7 +117,6 @@ module.exports = {
 async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
   const updatedArray = [];
 
-  //DÅLIGA, EGENTLIGA, ELAD, GULLIGA, ROB
   //If someone has recently picked we update the big array to include that pick
   if (recentlyPicked) {
     for (player of playerArray) {
@@ -135,9 +134,6 @@ async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
       }
     }
   } else {
-    //for (player of playerArray) {
-    //  updatedArray.push(player);
-    //}
     updatedArray.push(...playerArray);
   }
   const available = availableRoles(updatedArray);
@@ -550,9 +546,19 @@ async function badaBing(interaction, choices, pickTime) {
   //for (chosen of choices) {
   //  memberArray.push(await interaction.guild.members.fetch(chosen));
   //}
-  const memberArray = await Promise.all(
-    choices.map(interaction.guild.members.fetch)
-  );
+  //const memberArray = await Promise.all(
+  //  choices.map(interaction.guild.members.fetch)
+  //);
+
+  const promiseArray = [
+    interaction.guild.members.fetch(siphon.choices[0]),
+    interaction.guild.members.fetch(siphon.choices[1]),
+    interaction.guild.members.fetch(siphon.choices[2]),
+    interaction.guild.members.fetch(siphon.choices[3]),
+    interaction.guild.members.fetch(siphon.choices[4]),
+  ];
+
+  const memberArray = await Promise.all(promiseArray);
 
   const channel = await interaction.channel;
   const shuffledArray = shuffle(memberArray);
