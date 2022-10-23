@@ -445,6 +445,11 @@ async function getMyPreferences(discordId) {
     aliases: [discordId],
   });
   const prefs = res.data?.[0]?.preference;
+  if ((prefs[0] = "random")) {
+    const standardRoles = ["pos1", "pos2", "pos3", "pos4", "pos5"];
+    const randomPref = shuffle(standardRoles);
+    return randomPref;
+  }
   for (let preference of prefs) {
     if (parseInt(preference)) {
       prefs[prefs.indexOf(preference)] = "pos" + preference;
