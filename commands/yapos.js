@@ -12,7 +12,7 @@ module.exports = {
     .setDescription("Time to gauge dota interest"),
   async execute(interaction) {
     console.log("Nu är vi i interaction grejen");
-    interaction.reply("Hej hej");
+    interaction.deferReply();
     await setUp(interaction);
   },
 };
@@ -42,7 +42,7 @@ async function setUp(interaction, dotaMessage) {
   });
   collector.on("collect", async (i) => {
     console.log(i.user.username);
-    if (confirmedPlayers.length() < 5) {
+    if (confirmedPlayers.length < 5) {
       confirmedPlayers.append(collector.collected.last);
     }
 
