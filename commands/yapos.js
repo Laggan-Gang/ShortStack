@@ -23,16 +23,13 @@ module.exports = {
   async execute(interaction) {
     console.log("Nu är vi i interaction grejen");
     interaction.deferReply();
-    const confirmedPlayers = gamerCollection(interaction);
+    const confirmedPlayers = await gamerCollection(interaction);
     interaction.deleteReply();
     await setUp(interaction, confirmedPlayers);
   },
 };
 
 async function setUp(interaction, confirmedPlayers) {
-  console.log("Nu är vi i setup");
-
-  console.log("confirmedPlayer ser ut såhär: " + confirmedPlayers);
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
   console.log(embed);
@@ -86,14 +83,14 @@ async function setUp(interaction, confirmedPlayers) {
     }
   });
 }
-function gamerCollection(interaction) {
+async function gamerCollection(interaction) {
   const confirmedPlayers = [interaction.member];
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 5; i++) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
-        interaction.reply(
+        await interaction.reply(
           "Please provide unique players!\nLove, **ShortStack!**"
         );
         return;
