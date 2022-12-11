@@ -122,7 +122,7 @@ function stackIt(message) {
     //The interaction will be "failed" unless we do something with it
     try {
       await i.reply("This is not a thing just yet, sorry!!!");
-      message.edit({ components: "" });
+      message.edit({ components: [] });
     } catch (error) {
       console.log(error);
     }
