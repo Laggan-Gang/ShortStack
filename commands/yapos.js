@@ -27,6 +27,8 @@ module.exports = {
     for (let i = 2; i < 5; i++) {
       if (interaction.options.getUser("p" + i)) {
         const player = interaction.options.getUser("p" + i);
+        console.log("Confirmed players ser ut såhär: " + confirmedPlayers);
+        console.log("Player ser ut såhär: " + player);
         if (confirmedPlayers.includes(player)) {
           await interaction.reply(
             "Please provide unique players!\nLove, **ShortStack!**"
