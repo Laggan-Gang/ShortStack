@@ -71,7 +71,7 @@ async function setUp(interaction, confirmedPlayers) {
   });
   collector.on("collect", async (i) => {
     console.log(i.user.username);
-    if (confirmedPlayers.length < 5) {
+    if (confirmedPlayers.length < 4) {
       console.log(collector.collected.last);
       console.log(i.user.toString());
       console.log("Nu är confirmed players " + confirmedPlayers.length);
