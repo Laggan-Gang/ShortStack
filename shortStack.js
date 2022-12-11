@@ -24,10 +24,11 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   const command = client.commands.get(interaction.commandName);
-  console.log(command.data.name);
   if (!interaction.isChatInputCommand()) return;
   if (command) {
     if (!command.data.name == "yapos") {
+      console.log("Det här är command.data.name");
+      console.log(command.data.name);
       if (!rightPlaceChecker(interaction)) return;
     }
     try {
