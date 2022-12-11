@@ -61,7 +61,7 @@ async function setUp(interaction, confirmedPlayers) {
   const time = getTimestampInSeconds();
   const anHour = 30 * 60 * 1000;
   const message = await interaction.channel.send({
-    content: "Yapos call open for " + time + anHour, //<@&412260353699872768>
+    content: `Yapos call open for  <t:${time + anHour}:R>`, //<@&412260353699872768>
     embeds: [embed],
     components: [buttonRow],
   });
