@@ -23,13 +23,14 @@ async function setUp(interaction, dotaMessage) {
   console.log("confirmedPlayer ser ut såhär: " + confirmedPlayers);
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
+  const buttonRow = rowBoat();
 
   //<@&412260353699872768>
   console.log("Nu är vi precis innan embed");
   const message = await interaction.channel.send({
     content: "Yapos",
     embeds: [embed],
-    components: [rowBoat()],
+    components: [buttonRow],
   });
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
@@ -95,5 +96,5 @@ function rowBoat() {
       .setLabel("I'M IN")
       .setStyle(ButtonStyle.Secondary)
   );
-  return buttonRow;
+  return [buttonRow];
 }
