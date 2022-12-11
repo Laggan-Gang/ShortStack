@@ -81,6 +81,9 @@ async function setUp(interaction, confirmedPlayers) {
         embeds: [prettyEmbed(confirmedPlayers)],
       });
     } else {
+      await message.edit({
+        embeds: [prettyEmbed(confirmedPlayers)],
+      });
       collector.stop("That's enough!");
     }
 
