@@ -48,7 +48,7 @@ async function setUp(interaction, dotaMessage) {
       console.log(i.user.toString());
       console.log("Nu är confirmed players " + confirmedPlayers.length);
       console.log("Confirmed Players " + confirmedPlayers);
-      confirmedPlayers.push(collector.collected.last);
+      confirmedPlayers.push(i.user.toString());
       await message.edit({
         embeds: [prettyEmbed(confirmedPlayers)],
       });
