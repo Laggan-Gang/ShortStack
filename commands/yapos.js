@@ -66,16 +66,12 @@ async function setUp(interaction, confirmedPlayers) {
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
     filter,
-    time: 5 * 60 * 1000,
+    time: 30 * 60 * 1000, //Maybe 30 minutes is fine??
     max: 4,
   });
   collector.on("collect", async (i) => {
-    console.log(i.user.username);
+    console.log(collector.collected);
     if (confirmedPlayers.length < 4) {
-      console.log(collector.collected.last);
-      console.log(i.user.toString());
-      console.log("Nu är confirmed players " + confirmedPlayers.length);
-      console.log("Confirmed Players " + confirmedPlayers);
       confirmedPlayers.push(i.user);
       await message.edit({
         embeds: [prettyEmbed(confirmedPlayers)],
