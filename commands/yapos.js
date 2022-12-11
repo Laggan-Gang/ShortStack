@@ -18,8 +18,9 @@ module.exports = {
 };
 //probably shouldn't be a loop
 async function setUp(interaction, dotaMessage) {
+  console.log("Nu är vi i setup");
   const confirmedPlayers = [interaction.member.toString()];
-
+  console.log("confirmedPlayer ser ut såhär: " + confirmedPlayers);
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
 
@@ -60,6 +61,7 @@ async function setUp(interaction, dotaMessage) {
 }
 
 async function prettyEmbed(confirmedPlayers) {
+  console.log("Nu är vi i prettyEmbed");
   const BLANK = "\u200b";
   const dotaPartySize = 5;
   const playerFields = [];
