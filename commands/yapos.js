@@ -138,14 +138,14 @@ function stackIt(message, confirmedPlayers) {
   });
   collector.on("collect", async (i) => {
     await message.edit({ components: [] });
-    console.log(confirmedPlayers);
     const choices = yapToStack(confirmedPlayers);
-    console.log(choices);
+    const shuffledChoices = shuffle(choices);
     try {
       await i.reply("Let's rock");
     } catch (error) {
       console.log(error);
     }
+    await badaBing.badaBing(i, shuffledChoices, standardTime, i.user.username);
   });
 
   collector.on("end", async (collected) => {});

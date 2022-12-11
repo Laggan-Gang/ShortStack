@@ -62,6 +62,43 @@ module.exports = {
       badaBing(interaction, shuffledChoices, pickTime, threadName);
     }
   },
+  badaBing: async function badaBing(
+    interaction,
+    choices,
+    pickTime,
+    threadName
+  ) {
+    interaction.deferReply();
+    const channel = await interaction.channel;
+    const playerArray = await Promise.all(
+      choices.map(async (choice) => {
+        const [player, preferred] = await Promise.all([
+          interaction.guild.members.fetch(choice),
+          getMyPreferences(choice),
+        ]);
+        return {
+          ...basePlayer,
+          player,
+          preferred,
+        };
+      })
+    );
+    console.log(
+      threadName,
+      "player",
+      playerArray.map((p) => p.player.id)
+    );
+    await interaction.deleteReply();
+    const thread = await channel.threads.create({
+      name: threadName + "'s Dota Party",
+      autoArchiveDuration: 60,
+      reason: "Time to set up your dota party!",
+    });
+    const message = await thread.send({
+      content: `${playerArray.map((b) => b.player).join("", " ")}`,
+    });
+    badaBoom(playerArray, message, pickTime);
+  },
 };
 
 async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
@@ -474,39 +511,6 @@ function availableRoles(objectArray) {
     }
   }
   return standardRoles;
-}
-
-async function badaBing(interaction, choices, pickTime, threadName) {
-  interaction.deferReply();
-  const channel = await interaction.channel;
-  const playerArray = await Promise.all(
-    choices.map(async (choice) => {
-      const [player, preferred] = await Promise.all([
-        interaction.guild.members.fetch(choice),
-        getMyPreferences(choice),
-      ]);
-      return {
-        ...basePlayer,
-        player,
-        preferred,
-      };
-    })
-  );
-  console.log(
-    threadName,
-    "player",
-    playerArray.map((p) => p.player.id)
-  );
-  await interaction.deleteReply();
-  const thread = await channel.threads.create({
-    name: threadName + "'s Dota Party",
-    autoArchiveDuration: 60,
-    reason: "Time to set up your dota party!",
-  });
-  const message = await thread.send({
-    content: `${playerArray.map((b) => b.player).join("", " ")}`,
-  });
-  badaBoom(playerArray, message, pickTime);
 }
 
 //Definierar en variabel som är en anonym funktion som gör att skrivs "rita(25, 32" så kommer det funka
