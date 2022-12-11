@@ -22,8 +22,23 @@ module.exports = {
 
   async execute(interaction) {
     console.log("Nu är vi i interaction grejen");
+    const confirmedPlayers = [interaction.member];
+    //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
+    for (let i = 2; i < 5; i++) {
+      if (interaction.options.getUser("p" + i)) {
+        const player = interaction.options.getUser("p" + i);
+        if (confirmedPlayers.includes(player)) {
+          await interaction.reply(
+            "Please provide unique players!\nLove, **ShortStack!**"
+          );
+          return;
+        }
+        confirmedPlayers.push(player);
+      } else {
+        break;
+      }
+    }
     interaction.deferReply();
-    const confirmedPlayers = await gamerCollection(interaction);
     interaction.deleteReply();
     await setUp(interaction, confirmedPlayers);
   },
@@ -82,25 +97,6 @@ async function setUp(interaction, confirmedPlayers) {
       });
     }
   });
-}
-async function gamerCollection(interaction) {
-  const confirmedPlayers = [interaction.member];
-  //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
-  for (let i = 2; i < 5; i++) {
-    if (interaction.options.getUser("p" + i)) {
-      const player = interaction.options.getUser("p" + i);
-      if (confirmedPlayers.includes(player)) {
-        await interaction.reply(
-          "Please provide unique players!\nLove, **ShortStack!**"
-        );
-        return;
-      }
-      confirmedPlayers.push(player);
-    } else {
-      break;
-    }
-  }
-  return confirmedPlayers;
 }
 
 function prettyEmbed(confirmedPlayers) {
