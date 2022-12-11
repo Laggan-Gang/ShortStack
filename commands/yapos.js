@@ -22,7 +22,8 @@ async function setUp(interaction, dotaMessage) {
   const confirmedPlayers = [interaction.member.toString()];
   console.log("confirmedPlayer ser ut såhär: " + confirmedPlayers);
   //Embed görare
-  const embed = prettyEmbed(confirmedPlayers);
+  const embed = await prettyEmbed(confirmedPlayers);
+  console.log(embed);
   const buttonRow = rowBoat();
 
   //<@&412260353699872768>
@@ -81,10 +82,6 @@ async function prettyEmbed(confirmedPlayers) {
     //image: {
     //  url: "attachment://dota-map.png",
     //},
-  };
-  const embedObject = {
-    embed: embed,
-    //file: art
   };
   return embed;
 }
