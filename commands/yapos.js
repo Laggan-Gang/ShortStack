@@ -73,7 +73,10 @@ async function prettyEmbed(confirmedPlayers) {
     //  url: "attachment://dota-map.png",
     //},
   };
-  const embedObject = { embed: embed, file: art };
+  const embedObject = {
+    embed: embed,
+    //file: art
+  };
   return embedObject;
 }
 
