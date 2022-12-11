@@ -99,7 +99,11 @@ async function setUp(interaction, confirmedPlayers) {
 
   collector.on("end", async (collected) => {
     if (confirmedPlayers.length < 4) {
-      message.edit({ content: "Looks like you ran out of time, darlings!" });
+      await message.edit({
+        content: "Looks like you ran out of time, darlings!",
+        components: [],
+      });
+
       //do thing with collected info
     } else {
       message.edit({
@@ -122,13 +126,14 @@ function stackIt(message) {
     //The interaction will be "failed" unless we do something with it
     try {
       await i.reply("This is not a thing just yet, sorry!!!");
-      message.edit({ components: [] });
     } catch (error) {
       console.log(error);
     }
   });
 
-  collector.on("end", async (collected) => {});
+  collector.on("end", async (collected) => {
+    await message.edit({ components: [] });
+  });
 }
 
 function prettyEmbed(confirmedPlayers) {
