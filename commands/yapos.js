@@ -63,7 +63,7 @@ async function setUp(interaction, confirmedPlayers) {
   const time = getTimestampInSeconds();
   const anHour = 60 * 60;
   const message = await interaction.channel.send({
-    content: `Yapos call, closes <t:${time + anHour}:R>`, //<@&412260353699872768>
+    content: `<@&412260353699872768> call, closes <t:${time + anHour}:R>`, //<@&412260353699872768>
     embeds: [embed],
     components: [buttonRow],
   });
@@ -140,11 +140,11 @@ function stackIt(message, confirmedPlayers) {
     await message.edit({ components: [] });
     const choices = yapToStack(confirmedPlayers);
     const shuffledChoices = shuffle(choices);
-    try {
-      await i.reply("Let's rock");
-    } catch (error) {
-      console.log(error);
-    }
+    //try {
+    //  await i.reply("Let's rock");
+    //} catch (error) {
+    //  console.log(error);
+    //}
     await badaBing.badaBing(i, shuffledChoices, standardTime, i.user.username);
   });
 
