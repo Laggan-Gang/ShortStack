@@ -59,9 +59,9 @@ async function setUp(interaction, confirmedPlayers) {
   //<@&412260353699872768>
   console.log("Nu är vi precis innan embed");
   const time = getTimestampInSeconds();
-  const anHour = 30 * 60 * 1000;
+  const anHour = 30 * 60; //it's actually 30 minutes lmao
   const message = await interaction.channel.send({
-    content: `Yapos call open for  <t:${time + anHour}:R>`, //<@&412260353699872768>
+    content: `Yapos call closes <t:${(time + anHour) / 60}:R>`, //<@&412260353699872768>
     embeds: [embed],
     components: [buttonRow],
   });
@@ -69,7 +69,7 @@ async function setUp(interaction, confirmedPlayers) {
     i.channel.id === message.channel.id && i.customId === "in";
   const collector = message.channel.createMessageComponentCollector({
     filter,
-    time: anHour, //Maybe 30 minutes is fine??
+    time: anHour * 1000, //Maybe 30 minutes is fine??
     max: 4,
   });
   collector.on("collect", async (i) => {
