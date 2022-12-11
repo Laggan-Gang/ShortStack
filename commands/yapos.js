@@ -13,6 +13,7 @@ module.exports = {
   async execute(interaction) {
     console.log("Nu är vi i interaction grejen");
     interaction.deferReply();
+    interaction.deleteReply();
     await setUp(interaction);
   },
 };
@@ -43,7 +44,14 @@ async function setUp(interaction, dotaMessage) {
   collector.on("collect", async (i) => {
     console.log(i.user.username);
     if (confirmedPlayers.length < 5) {
-      confirmedPlayers.append(collector.collected.last);
+      console.log(collector.collected.last);
+      console.log(i.user.toString());
+      console.log("Nu är confirmed players " + confirmedPlayers.length);
+      console.log("Confirmed Players " + confirmedPlayers);
+      confirmedPlayers.push(collector.collected.last);
+      await message.edit({
+        embeds: [prettyEmbed(confirmedPlayers)],
+      });
     }
 
     //The interaction will be "failed" unless we do something with it
