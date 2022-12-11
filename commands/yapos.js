@@ -81,6 +81,7 @@ async function setUp(interaction, confirmedPlayers) {
         embeds: [prettyEmbed(confirmedPlayers)],
       });
     } else {
+      confirmedPlayers.push(i.user);
       await message.edit({
         embeds: [prettyEmbed(confirmedPlayers)],
       });
