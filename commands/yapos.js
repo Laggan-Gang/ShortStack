@@ -5,6 +5,8 @@ const {
   ButtonStyle,
   AttachmentBuilder,
 } = require("discord.js");
+const badaBing = require("./commands/stack.js");
+const standardTime = 60;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -53,33 +55,33 @@ module.exports = {
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
-  const buttonRow = rowBoat("I'M IN");
+  const buttonRow = rowBoat("I'M IN", "in");
   console.log(buttonRow);
 
   //<@&412260353699872768>
   console.log("Nu är vi precis innan embed");
   const time = getTimestampInSeconds();
-  const anHour = 30 * 60; //it's actually 30 minutes lmao
+  const anHour = 60 * 60;
   const message = await interaction.channel.send({
     content: `Yapos call, closes <t:${time + anHour}:R>`, //<@&412260353699872768>
     embeds: [embed],
     components: [buttonRow],
   });
 
-  const threadName = interaction.user.username;
-  const channel = await interaction.channel;
-  const thread = await channel.threads.create({
-    name: threadName + "'s Yapos Call",
-    autoArchiveDuration: 60,
-    reason: "Gamers needed!",
-  });
-  const tMessage = await thread.send({ content: "Who's next?" });
+  //const threadName = interaction.user.username;
+  //const channel = await interaction.channel;
+  //const thread = await channel.threads.create({
+  //  name: threadName + "'s Yapos Call",
+  //  autoArchiveDuration: 60,
+  //  reason: "Gamers needed!",
+  //});
+  //const tMessage = await thread.send({ content: "Who's next?" });
 
   const filter = (i) =>
     i.channel.id === message.channel.id && i.customId === "in";
   const collector = message.channel.createMessageComponentCollector({
     filter,
-    time: anHour * 1000, //Maybe 30 minutes is fine??
+    time: anHour * 1000,
     max: 4,
   });
   collector.on("collect", async (i) => {
@@ -116,9 +118,9 @@ async function setUp(interaction, confirmedPlayers) {
     } else {
       message.edit({
         content: "Looks like we got a stack!",
-        components: [rowBoat("STACK IT, BABE")],
+        components: [rowBoat("STACK IT, BABE", "in")],
       });
-      stackIt(message);
+      stackIt(message, confirmedPlayers);
     }
   });
 }
@@ -127,7 +129,7 @@ function getTimestampInSeconds() {
   return Math.floor(Date.now() / 1000);
 }
 
-function stackIt(message) {
+function stackIt(message, confirmedPlayers) {
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
     filter,
@@ -135,17 +137,18 @@ function stackIt(message) {
     max: 1,
   });
   collector.on("collect", async (i) => {
-    //The interaction will be "failed" unless we do something with it
+    await message.edit({ components: [] });
+    console.log(confirmedPlayers);
+    const choices = yapToStack(confirmedPlayers);
+    console.log(choices);
     try {
-      await i.reply("This is not a thing just yet, sorry!!!");
+      await i.reply("Let's rock");
     } catch (error) {
       console.log(error);
     }
   });
 
-  collector.on("end", async (collected) => {
-    await message.edit({ components: [] });
-  });
+  collector.on("end", async (collected) => {});
 }
 
 function prettyEmbed(confirmedPlayers) {
@@ -170,12 +173,36 @@ function prettyEmbed(confirmedPlayers) {
   return embed;
 }
 
-function rowBoat(btnText) {
+function rowBoat(btnText, btnId) {
   const buttonRow = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
-      .setCustomId("in")
+      .setCustomId(btnId)
       .setLabel(btnText)
       .setStyle(ButtonStyle.Secondary)
   );
   return buttonRow;
+}
+
+function yapToStack(array) {
+  return array.map((p) => p.id);
+}
+
+function shuffle([...array]) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
 }
