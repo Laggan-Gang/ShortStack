@@ -70,7 +70,7 @@ async function setUp(interaction, confirmedPlayers) {
     max: 4,
   });
   collector.on("collect", async (i) => {
-    console.log(collector.collected);
+    console.log(collector.collected.customId);
     if (confirmedPlayers.length < 4) {
       confirmedPlayers.push(i.user);
       await message.edit({
