@@ -68,7 +68,10 @@ async function setUp(interaction, dotaMessage) {
       message.edit({ content: "Looks like you ran out of time, darlings!" });
       //do thing with collected info
     } else {
-      message.edit({ content: "Looks like we got a stack!" });
+      message.edit({
+        content: "Looks like we got a stack!",
+        components: [rowBoat("STACK IT, BABY")],
+      });
     }
   });
 }
