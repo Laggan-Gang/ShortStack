@@ -81,14 +81,14 @@ async function setUp(interaction) {
     } else {
       message.edit({
         content: "Looks like we got a stack!",
-        components: [rowBoat("STACK IT, BABY")],
+        components: [rowBoat("STACK IT, BABE")],
       });
     }
   });
 }
 function gamerCollection(interaction) {
   const confirmedPlayers = [interaction.member];
-  for (let i = 1; i < 5; i++) {
+  for (let i = 2; i < 5; i++) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
