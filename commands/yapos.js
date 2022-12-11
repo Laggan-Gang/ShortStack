@@ -22,7 +22,7 @@ async function setUp(interaction, dotaMessage) {
   const confirmedPlayers = [interaction.member.toString()];
   console.log("confirmedPlayer ser ut såhär: " + confirmedPlayers);
   //Embed görare
-  const embed = await prettyEmbed(confirmedPlayers);
+  const embed = prettyEmbed(confirmedPlayers);
   console.log(embed);
   const buttonRow = rowBoat();
 
@@ -63,7 +63,7 @@ async function setUp(interaction, dotaMessage) {
   });
 }
 
-async function prettyEmbed(confirmedPlayers) {
+function prettyEmbed(confirmedPlayers) {
   console.log("Nu är vi i prettyEmbed");
   const BLANK = "\u200b";
   const dotaPartySize = 5;
@@ -78,7 +78,7 @@ async function prettyEmbed(confirmedPlayers) {
   }
   const embed = {
     color: (Math.random() * 0xffffff) << 0,
-    fields: [{ name: "Who's up for DOTA: ", value: playerFields }],
+    fields: [{ name: "Who's up for DOTA: ", value: playerFields.join("\n") }],
     //image: {
     //  url: "attachment://dota-map.png",
     //},
