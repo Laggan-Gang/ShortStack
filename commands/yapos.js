@@ -12,6 +12,7 @@ module.exports = {
     .setDescription("Time to gauge dota interest"),
   async execute(interaction) {
     interaction.deferReply();
+    interaction.reply("Hej hej");
     await setUp(interaction);
     console.log("Nu är vi i interaction grejen");
   },
@@ -26,7 +27,7 @@ async function setUp(interaction, dotaMessage) {
   //<@&412260353699872768>
   const message = await interaction.channel.send({
     content: "Yapos",
-    embeds: embed,
+    embeds: [embed],
     components: rowBoat(),
   });
   const filter = (i) => i.channel.id === message.channel.id;
