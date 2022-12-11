@@ -51,15 +51,6 @@ module.exports = {
 };
 
 async function setUp(interaction, confirmedPlayers) {
-  const threadName = interaction.user.username;
-  const channel = await interaction.channel;
-  const thread = await channel.threads.create({
-    name: threadName + "'s Yapos Call",
-    autoArchiveDuration: 60,
-    reason: "Gamers needed!",
-  });
-  const tMessage = await thread.send({ content: "Who's next?" });
-
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
   const buttonRow = rowBoat("I'M IN");
@@ -74,6 +65,16 @@ async function setUp(interaction, confirmedPlayers) {
     embeds: [embed],
     components: [buttonRow],
   });
+
+  const threadName = interaction.user.username;
+  const channel = await interaction.channel;
+  const thread = await channel.threads.create({
+    name: threadName + "'s Yapos Call",
+    autoArchiveDuration: 60,
+    reason: "Gamers needed!",
+  });
+  const tMessage = await thread.send({ content: "Who's next?" });
+
   const filter = (i) =>
     i.channel.id === message.channel.id && i.customId === "in";
   const collector = message.channel.createMessageComponentCollector({
