@@ -106,12 +106,12 @@ async function setUp(interaction, confirmedPlayers) {
         content: "Looks like we got a stack!",
         components: [rowBoat("STACK IT, BABE")],
       });
-      stackIt();
+      stackIt(message);
     }
   });
 }
 
-function stackIt() {
+function stackIt(message) {
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
     filter,
