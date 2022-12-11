@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("dota")
+    .setName("yapos")
     .setDescription("Time to gauge dota interest"),
   async execute(interaction) {
     interaction.deferReply();
