@@ -25,7 +25,7 @@ async function setUp(interaction, dotaMessage) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
   console.log(embed);
-  const buttonRow = rowBoat();
+  const buttonRow = rowBoat("I'M IN");
   console.log(buttonRow);
 
   //<@&412260353699872768>
@@ -56,7 +56,7 @@ async function setUp(interaction, dotaMessage) {
 
     //The interaction will be "failed" unless we do something with it
     try {
-      await i.reply("Roger, babe!");
+      await i.reply("THEY'RE IN");
       await i.deleteReply();
     } catch (error) {
       console.log(error);
@@ -64,10 +64,11 @@ async function setUp(interaction, dotaMessage) {
   });
 
   collector.on("end", async (collected) => {
-    if (collected.last) {
+    if (confirmedPlayers.length < 4) {
+      message.edit({ content: "Looks like you ran out of time, darlings!" });
       //do thing with collected info
     } else {
-      //nothing was collected, time to end it all
+      message.edit({ content: "Looks like we got a stack!" });
     }
   });
 }
@@ -95,11 +96,11 @@ function prettyEmbed(confirmedPlayers) {
   return embed;
 }
 
-function rowBoat() {
+function rowBoat(btnText) {
   const buttonRow = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId("in")
-      .setLabel("I'M IN")
+      .setLabel(btnText)
       .setStyle(ButtonStyle.Secondary)
   );
   return buttonRow;
