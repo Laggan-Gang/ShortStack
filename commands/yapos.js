@@ -52,6 +52,7 @@ module.exports = {
 
 async function setUp(interaction, confirmedPlayers) {
   const threadName = interaction.user.username;
+  const channel = await interaction.channel;
   const thread = await channel.threads.create({
     name: threadName + "'s Yapos Call",
     autoArchiveDuration: 60,
