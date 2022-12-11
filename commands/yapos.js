@@ -152,7 +152,7 @@ function prettyEmbed(confirmedPlayers) {
   }
   const embed = {
     color: (Math.random() * 0xffffff) << 0,
-    fields: [{ name: "Who's up for DOTA: ", value: playerFields.join("\n") }],
+    fields: [{ name: "*Who's up for Dota?*", value: playerFields.join("\n") }],
     //image: {
     //  url: "attachment://dota-map.png",
     //},
