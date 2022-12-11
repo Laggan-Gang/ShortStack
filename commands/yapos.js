@@ -53,7 +53,6 @@ module.exports = {
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
-  console.log(embed);
   const buttonRow = rowBoat("I'M IN");
   console.log(buttonRow);
 
@@ -72,7 +71,7 @@ async function setUp(interaction, confirmedPlayers) {
   });
   collector.on("collect", async (i) => {
     console.log(i.user.username);
-    if (confirmedPlayers.length < 4) {
+    if (confirmedPlayers.length < 5) {
       console.log(collector.collected.last);
       console.log(i.user.toString());
       console.log("Nu är confirmed players " + confirmedPlayers.length);
@@ -108,7 +107,6 @@ async function setUp(interaction, confirmedPlayers) {
 }
 
 function prettyEmbed(confirmedPlayers) {
-  console.log("Nu är vi i prettyEmbed");
   const BLANK = "\u200b";
   const dotaPartySize = 5;
   const playerFields = [];
