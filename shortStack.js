@@ -24,6 +24,7 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   const command = client.commands.get(interaction.commandName);
+  console.log(command);
   if (!interaction.isChatInputCommand()) return;
   if (command) {
     if (!command == "yapos") {
