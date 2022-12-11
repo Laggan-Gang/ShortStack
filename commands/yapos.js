@@ -61,7 +61,7 @@ async function setUp(interaction, confirmedPlayers) {
   const time = getTimestampInSeconds();
   const anHour = 30 * 60; //it's actually 30 minutes lmao
   const message = await interaction.channel.send({
-    content: `Yapos call closes <t:${(time + anHour) / 60}:R>`, //<@&412260353699872768>
+    content: `Yapos call closes <t:${time + anHour}:R>`, //<@&412260353699872768>
     embeds: [embed],
     components: [buttonRow],
   });
