@@ -81,6 +81,8 @@ async function setUp(interaction, confirmedPlayers) {
       await message.edit({
         embeds: [prettyEmbed(confirmedPlayers)],
       });
+    } else {
+      collector.stop("That's enough!");
     }
 
     //The interaction will be "failed" unless we do something with it
