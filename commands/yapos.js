@@ -48,7 +48,7 @@ async function setUp(interaction) {
       console.log(i.user.toString());
       console.log("Nu är confirmed players " + confirmedPlayers.length);
       console.log("Confirmed Players " + confirmedPlayers);
-      confirmedPlayers.push(i.user());
+      confirmedPlayers.push(i.user);
       await message.edit({
         embeds: [prettyEmbed(confirmedPlayers)],
       });
