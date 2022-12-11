@@ -25,6 +25,7 @@ async function setUp(interaction, dotaMessage) {
   const embed = prettyEmbed(confirmedPlayers);
 
   //<@&412260353699872768>
+  console.log("Nu är vi precis innan embed");
   const message = await interaction.channel.send({
     content: "Yapos",
     embeds: [embed],
