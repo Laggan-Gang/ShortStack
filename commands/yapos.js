@@ -106,7 +106,30 @@ async function setUp(interaction, confirmedPlayers) {
         content: "Looks like we got a stack!",
         components: [rowBoat("STACK IT, BABE")],
       });
+      stackIt();
     }
+  });
+}
+
+function stackIt() {
+  const filter = (i) => i.channel.id === message.channel.id;
+  const collector = message.channel.createMessageComponentCollector({
+    filter,
+    time: 5 * 60 * 1000,
+    max: 1,
+  });
+  collector.on("collect", async (i) => {
+    //The interaction will be "failed" unless we do something with it
+    try {
+      await i.reply("THEY'RE IN");
+      await i.deleteReply();
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  collector.on("end", async (collected) => {
+    i.reply("This isn't a thing yet, sorry!");
   });
 }
 
