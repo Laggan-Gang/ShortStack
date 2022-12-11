@@ -63,7 +63,8 @@ async function setUp(interaction, confirmedPlayers) {
     embeds: [embed],
     components: [buttonRow],
   });
-  const filter = (i) => i.channel.id === message.channel.id;
+  const filter = (i) =>
+    i.channel.id === message.channel.id && i.customId === "in";
   const collector = message.channel.createMessageComponentCollector({
     filter,
     time: 30 * 60 * 1000, //Maybe 30 minutes is fine??
