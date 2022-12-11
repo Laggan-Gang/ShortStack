@@ -22,15 +22,15 @@ module.exports = {
 
   async execute(interaction) {
     console.log("Nu är vi i interaction grejen");
-    const confirmedPlayers = [interaction.member];
+    const confirmedPlayers = [interaction.user];
     //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
     for (let i = 2; i < 5; i++) {
       if (interaction.options.getUser("p" + i)) {
-        const player = interaction.options.getUser("p" + i).toString();
+        const player = interaction.options.getUser("p" + i);
         console.log("Confirmed players ser ut såhär: " + confirmedPlayers);
         console.log("Player ser ut såhär: " + player);
         if (confirmedPlayers.includes(player)) {
-          console.log("De är samma! ");
+          console.log("De är samma!");
           await interaction.reply(
             "Please provide unique players!\nLove, **ShortStack!**"
           );
