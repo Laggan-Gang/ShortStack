@@ -28,7 +28,7 @@ async function setUp(interaction, dotaMessage) {
   console.log("Nu är vi precis innan embed");
   const message = await interaction.channel.send({
     content: "Yapos",
-    embeds: [embed.embed],
+    embeds: [embed],
     components: rowBoat(),
   });
   const filter = (i) => i.channel.id === message.channel.id;
@@ -85,7 +85,7 @@ async function prettyEmbed(confirmedPlayers) {
     embed: embed,
     //file: art
   };
-  return embedObject;
+  return embed;
 }
 
 function rowBoat() {
