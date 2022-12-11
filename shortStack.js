@@ -27,7 +27,7 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   if (!command) return;
   if (!command.data.name == "yapos") {
-    if (!rightPlaceChecker(interaction)) return;
+    if (!(await rightPlaceChecker(interaction))) return;
   }
 
   try {
@@ -45,7 +45,7 @@ client.on("interactionCreate", async (interaction) => {
 client.login(token);
 
 //For whenever I manage to make a config file and stuff
-function rightPlaceChecker(interaction) {
+async function rightPlaceChecker(interaction) {
   if (interaction.channelId != "539847809004994560") {
     interaction.reply(
       `Please handle these kinds of things in ${interaction.guild.channels.cache
