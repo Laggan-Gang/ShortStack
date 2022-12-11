@@ -127,9 +127,7 @@ function stackIt(message) {
     }
   });
 
-  collector.on("end", async (collected) => {
-    i.reply("This isn't a thing yet, sorry!");
-  });
+  collector.on("end", async (collected) => {});
 }
 
 function prettyEmbed(confirmedPlayers) {
