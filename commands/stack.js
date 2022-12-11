@@ -55,6 +55,7 @@ module.exports = {
       }
       choices.push(id);
     }
+    console.log("Här är choices: " + choices);
     const shuffledChoices = shuffle(choices);
     badaBing(interaction, shuffledChoices, pickTime, threadName);
   },
