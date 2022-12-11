@@ -30,6 +30,7 @@ module.exports = {
         console.log("Confirmed players ser ut såhär: " + confirmedPlayers);
         console.log("Player ser ut såhär: " + player);
         if (confirmedPlayers.includes(player)) {
+          console.log("De är samma! ");
           await interaction.reply(
             "Please provide unique players!\nLove, **ShortStack!**"
           );
