@@ -26,6 +26,7 @@ client.on("interactionCreate", async (interaction) => {
   const command = client.commands.get(interaction.commandName);
   if (!interaction.isChatInputCommand()) return;
   if (!command) return;
+  console.log(command);
   //if (!command.data.name == "yapos") {
   if (!(await rightPlaceChecker(interaction))) return;
   //}
