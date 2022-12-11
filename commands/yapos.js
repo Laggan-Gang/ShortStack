@@ -121,7 +121,7 @@ function stackIt(message) {
   collector.on("collect", async (i) => {
     //The interaction will be "failed" unless we do something with it
     try {
-      await i.reply("THEY'RE IN");
+      await i.reply("This is not a thing just yet, sorry!!!");
     } catch (error) {
       console.log(error);
     }
