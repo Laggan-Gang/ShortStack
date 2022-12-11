@@ -30,7 +30,7 @@ async function setUp(interaction, dotaMessage) {
   const message = await interaction.channel.send({
     content: "Yapos",
     embeds: [embed],
-    components: buttonRow,
+    //components: [buttonRow],
   });
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
