@@ -9,7 +9,17 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("yapos")
-    .setDescription("Time to gauge dota interest"),
+    .setDescription("Time to gauge dota interest")
+    .addUserOption((option) =>
+      option.setName("p2").setDescription("Anyone else?").setRequired(false)
+    )
+    .addUserOption((option) =>
+      option.setName("p3").setDescription("Anyone else?").setRequired(false)
+    )
+    .addUserOption((option) =>
+      option.setName("p4").setDescription("Anyone else?").setRequired(false)
+    ),
+
   async execute(interaction) {
     console.log("Nu är vi i interaction grejen");
     interaction.deferReply();
@@ -17,10 +27,11 @@ module.exports = {
     await setUp(interaction);
   },
 };
-//probably shouldn't be a loop
+
 async function setUp(interaction) {
   console.log("Nu är vi i setup");
-  const confirmedPlayers = [interaction.member];
+
+  const confirmedPlayers = gamerCollection(interaction);
   console.log("confirmedPlayer ser ut såhär: " + confirmedPlayers);
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
@@ -74,6 +85,24 @@ async function setUp(interaction) {
       });
     }
   });
+}
+function gamerCollection(interaction) {
+  const confirmedPlayers = [interaction.member];
+  for (let i = 1; i < 5; i++) {
+    if (interaction.options.getUser("p" + i)) {
+      const player = interaction.options.getUser("p" + i);
+      if (confirmedPlayers.includes(player)) {
+        interaction.reply(
+          "Please provide 5 unique players!\nLove, **ShortStack!**"
+        );
+        return;
+      }
+      confirmedPlayers.push(player);
+    } else {
+      break;
+    }
+  }
+  return confirmedPlayers;
 }
 
 function prettyEmbed(confirmedPlayers) {
