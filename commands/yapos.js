@@ -11,10 +11,10 @@ module.exports = {
     .setName("yapos")
     .setDescription("Time to gauge dota interest"),
   async execute(interaction) {
+    console.log("Nu är vi i interaction grejen");
     interaction.deferReply();
     interaction.reply("Hej hej");
     await setUp(interaction);
-    console.log("Nu är vi i interaction grejen");
   },
 };
 //probably shouldn't be a loop
