@@ -52,7 +52,7 @@ async function setUp(interaction, dotaMessage) {
   });
 
   collector.on("end", async (collected) => {
-    if (collected.last()) {
+    if (collected.last) {
       //do thing with collected info
     } else {
       //nothing was collected, time to end it all
