@@ -26,7 +26,7 @@ module.exports = {
     //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
     for (let i = 2; i < 5; i++) {
       if (interaction.options.getUser("p" + i)) {
-        const player = interaction.options.getUser("p" + i);
+        const player = interaction.options.getUser("p" + i).toString();
         console.log("Confirmed players ser ut såhär: " + confirmedPlayers);
         console.log("Player ser ut såhär: " + player);
         if (confirmedPlayers.includes(player)) {
@@ -36,6 +36,9 @@ module.exports = {
           return;
         }
         confirmedPlayers.push(player);
+        console.log(
+          "Confirmed players ser ut såhär efter: " + confirmedPlayers
+        );
       } else {
         break;
       }
