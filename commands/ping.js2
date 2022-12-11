@@ -1,0 +1,11 @@
+const { SlashCommandBuilder } = require("discord.js");
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName("dota")
+    .setDescription("Time to gauge dota interest"),
+  async execute(interaction) {
+    console.log("Nu är vi i interaction grejen");
+    await interaction.reply("Pong!");
+  },
+};
