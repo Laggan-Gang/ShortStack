@@ -5,7 +5,7 @@ const {
   ButtonStyle,
   AttachmentBuilder,
 } = require("discord.js");
-const badaBing = require("./commands/stack.js");
+const badaBing = require("./stack.js");
 const standardTime = 60;
 
 module.exports = {
