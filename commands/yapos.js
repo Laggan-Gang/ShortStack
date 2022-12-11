@@ -25,6 +25,7 @@ async function setUp(interaction, dotaMessage) {
   const embed = prettyEmbed(confirmedPlayers);
   console.log(embed);
   const buttonRow = rowBoat();
+  console.log(buttonRow);
 
   //<@&412260353699872768>
   console.log("Nu är vi precis innan embed");
@@ -93,5 +94,5 @@ function rowBoat() {
       .setLabel("I'M IN")
       .setStyle(ButtonStyle.Secondary)
   );
-  return [buttonRow];
+  return buttonRow;
 }
