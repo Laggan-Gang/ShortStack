@@ -91,7 +91,7 @@ async function setUp(interaction, confirmedPlayers) {
         TRASH_CHANNEL
       );
       const queueThread = await channel.threads.create({
-        name: threadName + "'s Party Queue",
+        name: interaction.user.username + "'s Party Queue",
         autoArchiveDuration: 60,
         reason: "Time for stack!",
       });
