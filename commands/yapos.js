@@ -56,8 +56,6 @@ async function arrayMaker(interaction) {
 
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
-  console.log("I början av setUp ser det ut såhär");
-  console.log(confirmedPlayers);
   const embed = prettyEmbed(confirmedPlayers);
   const buttonRow = rowBoat("I'M IN", "in");
 
@@ -78,15 +76,12 @@ async function setUp(interaction, confirmedPlayers) {
     });
     collector.on("collect", async (i) => {
       if (confirmedPlayers.length < 4) {
-        console.log("Nu pushar vi ");
-        console.log(i.user);
-        console.log("Från rad 80 typ");
-        confirmedPlayers.push(i.user);
+        confirmedPlayers.push(i.member);
         await message.edit({
           embeds: [prettyEmbed(confirmedPlayers)],
         });
       } else {
-        confirmedPlayers.push(i.user);
+        confirmedPlayers.push(i.member);
         await message.edit({
           embeds: [prettyEmbed(confirmedPlayers)],
         });
@@ -117,7 +112,6 @@ async function setUp(interaction, confirmedPlayers) {
           message,
           confirmedPlayers
         );
-        console.log("We made it throug party!");
         await readyChecker(confirmedPlayers, party.message, party.thread);
         //stackIt(message, confirmedPlayers, queueThread);
       }
@@ -125,7 +119,6 @@ async function setUp(interaction, confirmedPlayers) {
   } else {
     //Time for a ready check
     const party = await pThreadCreator(interaction, message, confirmedPlayers);
-    console.log("We made it throug party!");
     await readyChecker(confirmedPlayers, party.message, party.thread);
     //stackIt(message, confirmedPlayers, queueThread);
   }
@@ -148,8 +141,6 @@ function rdyButtons() {
   return buttonRow;
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
-  console.log("Här är confirmed players");
-  console.log(confirmedPlayers);
   const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
   const embed = readyEmbed(readyArray);
   const buttons = rdyButtons();
@@ -265,8 +256,6 @@ function prettyEmbed(confirmedPlayers) {
 
 function readyEmbed(readyArray) {
   const playerFields = [];
-  console.log("This is ready array");
-  console.log(readyArray);
   for (let player of readyArray) {
     if (player.ready) {
       playerFields.push(player + "✅");
