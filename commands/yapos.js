@@ -176,33 +176,19 @@ function arrayPrettifier(confirmedPlayers) {
   const optimalStringLength = 39;
   const prettyArray = [];
   for (let player of confirmedPlayers) {
-    if (player.player.nickname) {
-      const neededFilling =
-        optimalStringLength -
-        (player.player.nickname.length + player.position.length);
-      prettyArray.push(
-        stringPrettifier(
-          player.player.nickname,
-          neededFilling,
-          player.position,
-          player.randomed
-        )
-      );
+    if (player.nickname) {
+      const neededFilling = optimalStringLength - player.nickname.length; //will have to add something here
+      prettyArray.push(stringPrettifier(player.nickname, neededFilling));
     } else {
-      const neededFilling =
-        optimalStringLength -
-        (player.player.user.username.length + player.position.length);
-      prettyArray.push(
-        stringPrettifier(
-          player.player.user.username,
-          neededFilling,
-          player.position,
-          player.randomed
-        )
-      );
+      const neededFilling = optimalStringLength - player.user.username.length;
+      prettyArray.push(stringPrettifier(player.user.username, neededFilling));
     }
   }
   return prettyArray;
+}
+function stringPrettifier(player, fillingNeeded) {
+  const stringFilling = " ".repeat(fillingNeeded + 1);
+  return `\`\`${player}${stringFilling}\`\``;
 }
 
 function rowBoat(btnText, btnId) {
