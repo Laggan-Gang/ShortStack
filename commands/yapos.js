@@ -175,7 +175,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       );
       if (player) {
         player.ready = true;
-        hasClicked.push(i.user.id);
+        //hasClicked.push(i.user.id); Maybe won't need this
         await partyMessage.edit({
           embeds: [readyEmbed(readyArray)],
         });
