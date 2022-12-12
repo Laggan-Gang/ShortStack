@@ -40,7 +40,7 @@ async function setUp(interaction, confirmedPlayers) {
   const time = getTimestampInSeconds();
   const anHour = 60 * 60;
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + anHour}:R>`, //<@&412260353699872768>
+    content: `Yapos call, closes <t:${time + anHour}:R>`, //<@&412260353699872768>
     embeds: [embed],
     components: [buttonRow],
   });
@@ -133,9 +133,9 @@ async function stackIt(message, confirmedPlayers) {
 }
 
 function prettyEmbed(confirmedPlayers) {
-  const dotaPartySize = 4; //MIGHT fix fia issue?
+  const maxLength = 3; //MIGHT fix fia issue?
   const playerFields = [];
-  for (let i = 0; i < dotaPartySize; i++) {
+  for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
       playerFields.push(`${confirmedPlayers[i].toString()}`);
     } else {
