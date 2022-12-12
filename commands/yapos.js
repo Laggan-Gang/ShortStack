@@ -259,9 +259,9 @@ function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(player.user.username + "✅");
+      playerFields.push(player.username + "✅");
     } else {
-      playerFields.push(player.user.username + "❌");
+      playerFields.push(player.username + "❌");
     }
   }
   const embed = {
