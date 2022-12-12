@@ -135,11 +135,8 @@ async function stackIt(message, confirmedPlayers) {
 function prettyEmbed(confirmedPlayers) {
   const maxLength = 5;
   const playerFields = [];
-  console.log(confirmedPlayers);
-  console.log(confirmedPlayers.length);
   for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
-      console.log(confirmedPlayers[i]);
       playerFields.push(`${confirmedPlayers[i].toString()}`);
     } else {
       playerFields.push(`${`\`\`Open slot\`\``}`);
