@@ -105,6 +105,21 @@ async function setUp(interaction, confirmedPlayers) {
       }
     });
   } else {
+    const channel = await interaction.member.guild.channels.cache.get(
+      TRASH_CHANNEL
+    );
+    const queueThread = await channel.threads.create({
+      name: interaction.user.username + "'s Party Thread",
+      autoArchiveDuration: 60,
+      reason: "Time for stack!",
+    });
+
+    message.edit({
+      content:
+        "Looks like we got a stack! Ready check is running in the Party Thread!",
+      components: [linkButton(message, queueThread, "Party Thread")],
+    });
+    stackIt(message, confirmedPlayers, queueThread);
   }
 }
 
