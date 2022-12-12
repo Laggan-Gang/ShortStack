@@ -8,6 +8,7 @@ const {
 const badaBing = require("./stack.js");
 const standardTime = 60;
 const TRASH_CHANNEL = "539847809004994560";
+const TRASH_GUILD = "209707792314007552";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -145,6 +146,7 @@ async function stackIt(message, confirmedPlayers) {
       reason: "Time for stack!",
     });
 
+    console.log(queueThread);
     const buttons = linkButtons(stackThread.id, queueThread.id);
     await message.edit({ components: [buttons] });
     await badaBing.badaBing(
