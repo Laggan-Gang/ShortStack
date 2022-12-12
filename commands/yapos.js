@@ -21,6 +21,9 @@ module.exports = {
     )
     .addUserOption((option) =>
       option.setName("p4").setDescription("Anyone else?").setRequired(false)
+    )
+    .addUserOption((option) =>
+      option.setName("p5").setDescription("Anyone else?").setRequired(false)
     ),
 
   async execute(interaction) {
@@ -84,6 +87,7 @@ async function setUp(interaction, confirmedPlayers) {
       //do thing with collected info
     } else {
       //Time for a ready check
+      const channel = await i.member.guild.channels.cache.get(TRASH_CHANNEL);
       const queueThread = await channel.threads.create({
         name: threadName + "'s Party Queue",
         autoArchiveDuration: 60,
@@ -93,7 +97,7 @@ async function setUp(interaction, confirmedPlayers) {
         content: "Looks like we got a stack!",
         components: [rowBoat("STACK IT, BABE", "in")],
       });
-      stackIt(message, confirmedPlayers);
+      stackIt(message, confirmedPlayers, queueThread);
     }
   });
 }
