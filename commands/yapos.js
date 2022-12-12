@@ -87,22 +87,22 @@ async function setUp(interaction, confirmedPlayers) {
         //do thing with collected info
       } else {
         //Time for a ready check
-        pThreadCreator(interaction, message);
-        stackIt(message, confirmedPlayers, queueThread);
+        pThreadCreator(interaction, message, confirmedPlayers);
+        //stackIt(message, confirmedPlayers, queueThread);
       }
     });
   } else {
     //Time for a ready check
-    pThreadCreator(interaction, message);
-    stackIt(message, confirmedPlayers, queueThread);
+    pThreadCreator(interaction, message, confirmedPlayers);
+    //stackIt(message, confirmedPlayers, queueThread);
   }
 }
 
-async function pThreadCreator(interaction, message) {
+async function pThreadCreator(interaction, message, confirmedPlayers) {
   const channel = await interaction.member.guild.channels.cache.get(
     TRASH_CHANNEL
   );
-  const queueThread = await channel.threads.create({
+  const partyThread = await channel.threads.create({
     name: interaction.user.username + "'s Party Thread",
     autoArchiveDuration: 60,
     reason: "Time for stack!",
@@ -111,11 +111,12 @@ async function pThreadCreator(interaction, message) {
   message.edit({
     content:
       "Looks like we got a stack! Ready check is running in the Party Thread!",
-    components: [linkButton(message, queueThread, "Party Thread")],
+    components: [linkButton(message, partyThread, "Party Thread")],
   });
+  const partyMessage = partyThread.send({ content: confirmedPlayers.join() });
 }
 
-async function stackIt(message, confirmedPlayers, queueThread) {
+async function stackIt(message, confirmedPlayers, partyThread) {
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
     filter,
