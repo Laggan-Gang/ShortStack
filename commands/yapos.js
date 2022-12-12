@@ -155,7 +155,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     i.channel.id === partyMessage.channel.id &&
     (i.customId === "rdy" || "stop"); //make sure to make this
   //might add && confirmedPlayers.includes(i.member)
-  const collector = message.channel.createMessageComponentCollector({
+  const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
     time: 5 * 60 * 1000,
     max: 5,
@@ -257,6 +257,7 @@ function prettyEmbed(confirmedPlayers) {
 
 function readyEmbed(readyArray) {
   const playerFields = [];
+  console.log(readyArray);
   for (let player of readyArray) {
     if (player.ready) {
       playerFields.push(player.toString() + ":white_check_mark:");
