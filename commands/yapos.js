@@ -4,7 +4,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-const badaBing = require("./utils/badaBing.js");
+const badaBing = require("../badaBing.js");
 const standardTime = 60;
 const TRASH_CHANNEL = "539847809004994560";
 const TRASH_GUILD = "209707792314007552";

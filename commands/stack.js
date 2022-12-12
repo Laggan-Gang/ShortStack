@@ -2,7 +2,7 @@
 //Consistency in playerArray/updatedArray/objectArray
 
 const { SlashCommandBuilder } = require("discord.js");
-const badaBing = require("./utils/badaBing.js");
+const badaBing = require("../badaBing.js");
 const standardTime = 60;
 
 module.exports = {
