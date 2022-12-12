@@ -87,40 +87,32 @@ async function setUp(interaction, confirmedPlayers) {
         //do thing with collected info
       } else {
         //Time for a ready check
-        const channel = await interaction.member.guild.channels.cache.get(
-          TRASH_CHANNEL
-        );
-        const queueThread = await channel.threads.create({
-          name: interaction.user.username + "'s Party Thread",
-          autoArchiveDuration: 60,
-          reason: "Time for stack!",
-        });
-
-        message.edit({
-          content:
-            "Looks like we got a stack! Ready check is running in the Party Thread!",
-          components: [linkButton(message, queueThread, "Party Thread")],
-        });
+        pThreadCreator(interaction, message);
         stackIt(message, confirmedPlayers, queueThread);
       }
     });
   } else {
-    const channel = await interaction.member.guild.channels.cache.get(
-      TRASH_CHANNEL
-    );
-    const queueThread = await channel.threads.create({
-      name: interaction.user.username + "'s Party Thread",
-      autoArchiveDuration: 60,
-      reason: "Time for stack!",
-    });
-
-    message.edit({
-      content:
-        "Looks like we got a stack! Ready check is running in the Party Thread!",
-      components: [linkButton(message, queueThread, "Party Thread")],
-    });
+    //Time for a ready check
+    pThreadCreator(interaction, message);
     stackIt(message, confirmedPlayers, queueThread);
   }
+}
+
+async function pThreadCreator(interaction, message) {
+  const channel = await interaction.member.guild.channels.cache.get(
+    TRASH_CHANNEL
+  );
+  const queueThread = await channel.threads.create({
+    name: interaction.user.username + "'s Party Thread",
+    autoArchiveDuration: 60,
+    reason: "Time for stack!",
+  });
+
+  message.edit({
+    content:
+      "Looks like we got a stack! Ready check is running in the Party Thread!",
+    components: [linkButton(message, queueThread, "Party Thread")],
+  });
 }
 
 async function stackIt(message, confirmedPlayers, queueThread) {
