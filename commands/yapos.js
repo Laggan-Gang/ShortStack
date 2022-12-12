@@ -142,7 +142,7 @@ function rdyButtons() {
   return buttonRow;
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
-  const readyArray = confirmedPlayers.forEach((cP) => (cP.ready = false));
+  const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
   const embed = readyEmbed(readyArray);
   const buttons = rdyButtons();
   await partyMessage.edit({
