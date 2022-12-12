@@ -216,13 +216,13 @@ function linkButtons(stackId, queueId) {
   const buttonRow = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${TRASH_CHANNEL}/${stackId}`)
+        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${stackId}`)
         .setLabel("Stack thread")
         .setStyle(ButtonStyle.Link)
     )
     .addComponents(
       new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${TRASH_CHANNEL}/${queueId}`)
+        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${queueId}`)
         .setLabel("Queue thread")
         .setStyle(ButtonStyle.Link)
     );
