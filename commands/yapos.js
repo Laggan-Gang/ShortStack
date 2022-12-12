@@ -173,12 +173,12 @@ async function arrayMaker(interaction) {
         await interaction.reply(
           "Please provide unique players!\nLove, **ShortStack!**"
         );
-        return;
+        return confirmedPlayers;
       }
       confirmedPlayers.push(player);
       console.log("Confirmed players ser ut såhär efter: " + confirmedPlayers);
     } else {
-      return;
+      return confirmedPlayers;
     }
   }
 }
