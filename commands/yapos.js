@@ -26,28 +26,7 @@ module.exports = {
 
   async execute(interaction) {
     console.log("Nu är vi i interaction grejen");
-    const confirmedPlayers = [interaction.user];
-    //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
-    for (let i = 2; i < 5; i++) {
-      if (interaction.options.getUser("p" + i)) {
-        const player = interaction.options.getUser("p" + i);
-        console.log("Confirmed players ser ut såhär: " + confirmedPlayers);
-        console.log("Player ser ut såhär: " + player);
-        if (confirmedPlayers.includes(player)) {
-          console.log("De är samma!");
-          await interaction.reply(
-            "Please provide unique players!\nLove, **ShortStack!**"
-          );
-          return;
-        }
-        confirmedPlayers.push(player);
-        console.log(
-          "Confirmed players ser ut såhär efter: " + confirmedPlayers
-        );
-      } else {
-        break;
-      }
-    }
+    const confirmedPlayers = arrayMaker(interaction);
     interaction.deferReply();
     interaction.deleteReply();
     await setUp(interaction, confirmedPlayers);
@@ -59,8 +38,6 @@ async function setUp(interaction, confirmedPlayers) {
   const embed = prettyEmbed(confirmedPlayers);
   const buttonRow = rowBoat("I'M IN", "in");
 
-  //<@&412260353699872768>
-  console.log("Nu är vi precis innan embed");
   const time = getTimestampInSeconds();
   const anHour = 60 * 60;
   const message = await interaction.channel.send({
@@ -117,10 +94,6 @@ async function setUp(interaction, confirmedPlayers) {
   });
 }
 
-function getTimestampInSeconds() {
-  return Math.floor(Date.now() / 1000);
-}
-
 async function stackIt(message, confirmedPlayers) {
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
@@ -146,7 +119,6 @@ async function stackIt(message, confirmedPlayers) {
       reason: "Time for stack!",
     });
 
-    console.log(queueThread);
     const buttons = linkButtons(stackThread.id, queueThread.id);
     await message.edit({ components: [buttons] });
     await badaBing.badaBing(
@@ -162,7 +134,6 @@ async function stackIt(message, confirmedPlayers) {
 }
 
 function prettyEmbed(confirmedPlayers) {
-  const BLANK = "\u200b";
   const dotaPartySize = 5;
   const playerFields = [];
   for (let i = 0; i < dotaPartySize; i++) {
@@ -192,6 +163,47 @@ function rowBoat(btnText, btnId) {
   return buttonRow;
 }
 
+async function arrayMaker(interaction) {
+  const confirmedPlayers = [interaction.user];
+  //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
+  for (let i = 2; i < 5; i++) {
+    if (interaction.options.getUser("p" + i)) {
+      const player = interaction.options.getUser("p" + i);
+      if (confirmedPlayers.includes(player)) {
+        await interaction.reply(
+          "Please provide unique players!\nLove, **ShortStack!**"
+        );
+        return;
+      }
+      confirmedPlayers.push(player);
+      console.log("Confirmed players ser ut såhär efter: " + confirmedPlayers);
+    } else {
+      return;
+    }
+  }
+}
+
+function linkButtons(stackId, queueId) {
+  const buttonRow = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${stackId}`)
+        .setLabel("Stack thread")
+        .setStyle(ButtonStyle.Link)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${queueId}`)
+        .setLabel("Queue thread")
+        .setStyle(ButtonStyle.Link)
+    );
+  return buttonRow;
+}
+
+function getTimestampInSeconds() {
+  return Math.floor(Date.now() / 1000);
+}
+
 function shuffle([...array]) {
   let currentIndex = array.length,
     randomIndex;
@@ -210,21 +222,4 @@ function shuffle([...array]) {
   }
 
   return array;
-}
-
-function linkButtons(stackId, queueId) {
-  const buttonRow = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${stackId}`)
-        .setLabel("Stack thread")
-        .setStyle(ButtonStyle.Link)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${queueId}`)
-        .setLabel("Queue thread")
-        .setStyle(ButtonStyle.Link)
-    );
-  return buttonRow;
 }
