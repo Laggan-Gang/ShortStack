@@ -87,7 +87,9 @@ async function setUp(interaction, confirmedPlayers) {
       //do thing with collected info
     } else {
       //Time for a ready check
-      const channel = await i.member.guild.channels.cache.get(TRASH_CHANNEL);
+      const channel = await interaction.member.guild.channels.cache.get(
+        TRASH_CHANNEL
+      );
       const queueThread = await channel.threads.create({
         name: threadName + "'s Party Queue",
         autoArchiveDuration: 60,
