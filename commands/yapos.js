@@ -181,8 +181,8 @@ function arrayPrettifier(confirmedPlayers) {
       const neededFilling = optimalStringLength - player.nickname.length; //will have to add something here
       prettyArray.push(stringPrettifier(player.nickname, neededFilling));
     } else {
-      const neededFilling = optimalStringLength - player.user.username.length;
-      prettyArray.push(stringPrettifier(player.user.username, neededFilling));
+      const neededFilling = optimalStringLength - player.username.length;
+      prettyArray.push(stringPrettifier(player.username, neededFilling));
     }
   }
   return prettyArray;
