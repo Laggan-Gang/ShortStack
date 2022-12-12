@@ -34,6 +34,25 @@ module.exports = {
   },
 };
 
+async function arrayMaker(interaction) {
+  const confirmedPlayers = [interaction.member];
+  //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
+  for (let i = 2; i < 7; i++) {
+    if (interaction.options.getUser("p" + i)) {
+      const player = interaction.options.getUser("p" + i);
+      if (confirmedPlayers.includes(player)) {
+        await interaction.reply(
+          "Please provide unique players!\nLove, **ShortStack!**"
+        );
+        return confirmedPlayers;
+      }
+      confirmedPlayers.push(player);
+    } else {
+      return confirmedPlayers;
+    }
+  }
+}
+
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
@@ -93,57 +112,66 @@ async function setUp(interaction, confirmedPlayers) {
     });
   } else {
     //Time for a ready check
-    await pThreadCreator(interaction, message, confirmedPlayers);
+    const party = await pThreadCreator(interaction, message, confirmedPlayers);
+    console.log("We made it throug party!");
+    await readyChecker(confirmedPlayers, party.message, party.thread);
     //stackIt(message, confirmedPlayers, queueThread);
   }
 }
 
-async function readyChecker(confirmedPlayers) {
+function rdyButtons() {
+  const buttonRow = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("rdy")
+        .setLabel(":white_check_mark:")
+        .setStyle(ButtonStyle.Success)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("stop")
+        .setLabel("Stop check")
+        .setStyle(ButtonStyle.Danger)
+    );
+  return buttonRow;
+}
+async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = confirmedPlayers.map((cP) => (cP.ready = false));
+  const embed = readyEmbed(readyArray);
+  const buttons = rdyButtons();
+  await partyMessage.edit({
+    content: "",
+    embeds: [embed],
+    components: [buttons],
+  });
+
   const filter = (i) =>
-    i.channel.id === message.channel.id && i.customId === "rdy"; //make sure to make this
+    i.channel.id === partyMessage.channel.id &&
+    (i.customId === "rdy" || "stop"); //make sure to make this
+  //might add && confirmedPlayers.includes(i.member)
   const collector = message.channel.createMessageComponentCollector({
     filter,
     time: 5 * 60 * 1000,
     max: 5,
   });
   collector.on("collect", async (i) => {
-    if (confirmedPlayers.length < 4) {
-      confirmedPlayers.push(i.user);
-      await message.edit({
-        embeds: [prettyEmbed(confirmedPlayers)],
+    if (i.customId === "rdy") {
+      const player = readyArray.find((e) => e == i.member);
+      player.ready = true;
+      await partyMessage.edit({
+        embeds: [readyEmbed(readyArray)],
       });
-    } else {
-      confirmedPlayers.push(i.user);
-      await message.edit({
-        embeds: [prettyEmbed(confirmedPlayers)],
-      });
-      collector.stop("That's enough!");
     }
-
     //The interaction will be "failed" unless we do something with it
     try {
-      await i.reply("THEY'RE IN");
+      await i.reply("THEY'RE READY");
       await i.deleteReply();
     } catch (error) {
       console.log(error);
     }
   });
 
-  collector.on("end", async (collected) => {
-    if (confirmedPlayers.length < 5) {
-      await message.edit({
-        content: "Looks like you ran out of time, darlings!",
-        components: [],
-      });
-
-      //do thing with collected info
-    } else {
-      //Time for a ready check
-      await pThreadCreator(interaction, message, confirmedPlayers);
-      //stackIt(message, confirmedPlayers, queueThread);
-    }
-  });
+  collector.on("end", async (collected) => {});
 }
 
 async function pThreadCreator(interaction, message, confirmedPlayers) {
@@ -164,7 +192,8 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   const partyMessage = await partyThread.send({
     content: confirmedPlayers.join(),
   });
-  await partyMessage.edit({ content: "", embeds: [embed] });
+
+  return { thread: partyThread, message: partyMessage };
 }
 
 async function stackIt(message, confirmedPlayers, partyThread) {
@@ -220,6 +249,27 @@ function prettyEmbed(confirmedPlayers) {
   return embed;
 }
 
+function readyEmbed(readyArray) {
+  const playerFields = [];
+  for (let player of readyArray) {
+    if (player.ready) {
+      playerFields.push(player.toString() + ":white_check_mark:");
+    } else {
+      playerFields.push(player.toString() + ":x:");
+    }
+  }
+  const embed = {
+    color: (Math.random() * 0xffffff) << 0,
+    fields: [
+      { name: "**R E A D Y  C H E C K**", value: playerFields.join("\n") },
+    ],
+    //image: {
+    //  url: "attachment://dota-map.png",
+    //},
+  };
+  return embed;
+}
+
 //function stringPrettifier(player) {
 //  const optimalStringLength = 39;
 //  if (player.nickname) {
@@ -242,25 +292,6 @@ function rowBoat(btnText, btnId) {
       .setStyle(ButtonStyle.Secondary)
   );
   return buttonRow;
-}
-
-async function arrayMaker(interaction) {
-  const confirmedPlayers = [interaction.member];
-  //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
-  for (let i = 2; i < 7; i++) {
-    if (interaction.options.getUser("p" + i)) {
-      const player = interaction.options.getUser("p" + i);
-      if (confirmedPlayers.includes(player)) {
-        await interaction.reply(
-          "Please provide unique players!\nLove, **ShortStack!**"
-        );
-        return confirmedPlayers;
-      }
-      confirmedPlayers.push(player);
-    } else {
-      return confirmedPlayers;
-    }
-  }
 }
 
 function linkButton(message, thread, label) {
