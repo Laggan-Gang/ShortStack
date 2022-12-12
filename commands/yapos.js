@@ -75,7 +75,7 @@ async function setUp(interaction, confirmedPlayers) {
   });
 
   collector.on("end", async (collected) => {
-    if (confirmedPlayers.length < 4) {
+    if (confirmedPlayers.length < 5) {
       await message.edit({
         content: "Looks like you ran out of time, darlings!",
         components: [],
