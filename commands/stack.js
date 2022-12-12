@@ -154,6 +154,9 @@ async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
 
   //Discord requires a filter for collectors
   //TURNS OUT THE FILTERS ARE ACTUALLY REALLY GOOD! Now we make sure we can only edit 1 embed thingy in case of multiples
+  console.log(message.channel.id);
+  console.log("Här kommer bara message");
+  console.log(message);
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
     filter,
