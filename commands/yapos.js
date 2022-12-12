@@ -257,12 +257,13 @@ function prettyEmbed(confirmedPlayers) {
 
 function readyEmbed(readyArray) {
   const playerFields = [];
+  console.log("This is ready array");
   console.log(readyArray);
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(player.toString() + ":white_check_mark:");
+      playerFields.push(player + "✅");
     } else {
-      playerFields.push(player.toString() + ":x:");
+      playerFields.push(player + "❌");
     }
   }
   const embed = {
