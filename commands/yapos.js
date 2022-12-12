@@ -56,6 +56,8 @@ async function arrayMaker(interaction) {
 
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
+  console.log("I början av setUp ser det ut såhär");
+  console.log(confirmedPlayers);
   const embed = prettyEmbed(confirmedPlayers);
   const buttonRow = rowBoat("I'M IN", "in");
 
