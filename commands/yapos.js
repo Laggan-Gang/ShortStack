@@ -175,13 +175,14 @@ function prettyEmbed(confirmedPlayers) {
 function stringPrettifier(player) {
   const optimalStringLength = 39;
   if (player.nickname) {
+    console.log(player.nickname);
     const neededFilling = optimalStringLength - player.nickname.length;
-    const stringFilling = "\u200b".repeat(neededFilling + 1);
-    return `${player}${stringFilling} prutt prutt`;
+    const stringFilling = " ".repeat(neededFilling + 1);
+    return `${player}${stringFilling}`;
   } else {
     const neededFilling = optimalStringLength - player.username.length;
-    const stringFilling = "\u200b".repeat(neededFilling + 1);
-    return `${player}${stringFilling} prutt prutt`;
+    const stringFilling = " ".repeat(neededFilling + 1);
+    return `${player}${stringFilling}`;
   }
 }
 
