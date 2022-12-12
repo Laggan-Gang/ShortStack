@@ -42,7 +42,7 @@ async function setUp(interaction, confirmedPlayers) {
   const time = getTimestampInSeconds();
   const anHour = 60 * 60;
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + anHour}:R>`, //<@&412260353699872768> yapos
+    content: `Yapos call, closes <t:${time + anHour}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
     components: [buttonRow],
   });
@@ -91,13 +91,15 @@ async function setUp(interaction, confirmedPlayers) {
         TRASH_CHANNEL
       );
       const queueThread = await channel.threads.create({
-        name: interaction.user.username + "'s Party Queue",
+        name: interaction.user.username + "'s Party Thread",
         autoArchiveDuration: 60,
         reason: "Time for stack!",
       });
+
       message.edit({
-        content: "Looks like we got a stack!",
-        components: [rowBoat("STACK IT, BABE", "in")],
+        content:
+          "Looks like we got a stack! Ready check is running in the Party Thread!",
+        components: [linkButton(message, queueThread, "Party Thread")],
       });
       stackIt(message, confirmedPlayers, queueThread);
     }
@@ -123,7 +125,7 @@ async function stackIt(message, confirmedPlayers, queueThread) {
       reason: "Time for stack!",
     });
 
-    const buttons = linkButtons(message, stackThread, queueThread, i);
+    const buttons = linkButton(message, stackThread, queueThread, i); //this one's fucked
     await message.edit({ components: [buttons] });
     await badaBing.badaBing(
       i,
@@ -186,20 +188,13 @@ async function arrayMaker(interaction) {
   }
 }
 
-function linkButtons(message, stack, queue) {
-  const buttonRow = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${message.guildId}/${stack.id}`)
-        .setLabel("Stack thread")
-        .setStyle(ButtonStyle.Link)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${message.guildId}/${queue.id}`)
-        .setLabel("Queue thread")
-        .setStyle(ButtonStyle.Link)
-    );
+function linkButton(message, thread, label) {
+  const buttonRow = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setURL(`https://discord.com/channels/${message.guildId}/${thread.id}`)
+      .setLabel(label)
+      .setStyle(ButtonStyle.Link)
+  );
   return buttonRow;
 }
 
