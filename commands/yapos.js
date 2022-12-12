@@ -249,7 +249,6 @@ async function stackIt(message, confirmedPlayers, partyThread) {
 }
 
 function prettyEmbed(confirmedPlayers) {
-  console.log(confirmedPlayers);
   const maxLength = 5;
   const playerFields = [];
   for (let i = 0; i < maxLength; i++) {
