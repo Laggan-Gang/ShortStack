@@ -142,6 +142,8 @@ function rdyButtons() {
   return buttonRow;
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
+  console.log("Här är confirmed players");
+  console.log(confirmedPlayers);
   const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
   const embed = readyEmbed(readyArray);
   const buttons = rdyButtons();
