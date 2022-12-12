@@ -7,6 +7,7 @@ const {
 } = require("discord.js");
 const badaBing = require("./stack.js");
 const standardTime = 60;
+const TRASH_CHANNEL = "539847809004994560";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -119,7 +120,7 @@ function getTimestampInSeconds() {
   return Math.floor(Date.now() / 1000);
 }
 
-function stackIt(message, confirmedPlayers) {
+async function stackIt(message, confirmedPlayers) {
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
     filter,
@@ -127,33 +128,31 @@ function stackIt(message, confirmedPlayers) {
     max: 1,
   });
   collector.on("collect", async (i) => {
-    await message.edit({ components: [] });
-    const choices = yapToStack(confirmedPlayers);
+    const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
     const shuffledChoices = shuffle(choices);
-    //try {
-    //  await i.reply("Let's rock");
-    //} catch (error) {
-    //  console.log(error);
-    //}
+
     const threadName = i.user.username;
-    console.log("i");
-    console.log(i);
-    console.log("i.channel");
-    console.log(i.channel);
-    const channel = await i.member.guild.channels.cache.get(
-      "539847809004994560"
-    );
-    const thread = await channel.threads.create({
+    const channel = await i.member.guild.channels.cache.get(TRASH_CHANNEL);
+    const stackThread = await channel.threads.create({
       name: threadName + "'s Dota Party",
       autoArchiveDuration: 60,
       reason: "Time for stack!",
     });
+
+    const queueThread = await channel.threads.create({
+      name: threadName + "'s Party Queue",
+      autoArchiveDuration: 60,
+      reason: "Time for stack!",
+    });
+
+    const buttons = linkButtons(stackThread.id, queueThread.id);
+    await message.edit({ components: [buttons] });
     await badaBing.badaBing(
       i,
       shuffledChoices,
       standardTime,
       i.user.username,
-      thread
+      stackThread
     );
   });
 
@@ -165,7 +164,6 @@ function prettyEmbed(confirmedPlayers) {
   const dotaPartySize = 5;
   const playerFields = [];
   for (let i = 0; i < dotaPartySize; i++) {
-    //do things with the dota party
     if (confirmedPlayers[i]) {
       playerFields.push(`${confirmedPlayers[i].toString()}`);
     } else {
@@ -192,10 +190,6 @@ function rowBoat(btnText, btnId) {
   return buttonRow;
 }
 
-function yapToStack(array) {
-  return array.map((p) => p.id);
-}
-
 function shuffle([...array]) {
   let currentIndex = array.length,
     randomIndex;
@@ -214,4 +208,21 @@ function shuffle([...array]) {
   }
 
   return array;
+}
+
+function linkButtons(stackId, queueId) {
+  const buttonRow = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setURL(`https://discord.com/channels/${TRASH_CHANNEL}/${stackId}`)
+        .setLabel("Stack thread")
+        .setStyle(ButtonStyle.Link)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setURL(`https://discord.com/channels/${TRASH_CHANNEL}/${queueId}`)
+        .setLabel("Queue thread")
+        .setStyle(ButtonStyle.Link)
+    );
+  return buttonRow;
 }
