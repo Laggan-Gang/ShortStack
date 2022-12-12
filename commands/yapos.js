@@ -133,7 +133,7 @@ async function stackIt(message, confirmedPlayers) {
 }
 
 function prettyEmbed(confirmedPlayers) {
-  const dotaPartySize = 5;
+  const dotaPartySize = 4; //MIGHT fix fia issue?
   const playerFields = [];
   for (let i = 0; i < dotaPartySize; i++) {
     if (confirmedPlayers[i]) {
