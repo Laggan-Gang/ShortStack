@@ -46,64 +46,62 @@ async function setUp(interaction, confirmedPlayers) {
     embeds: [embed],
     components: [buttonRow],
   });
+  if (confirmedPlayers.length < 5) {
+    const filter = (i) =>
+      i.channel.id === message.channel.id && i.customId === "in";
+    const collector = message.channel.createMessageComponentCollector({
+      filter,
+      time: anHour * 1000,
+      max: 4,
+    });
+    collector.on("collect", async (i) => {
+      if (confirmedPlayers.length < 4) {
+        confirmedPlayers.push(i.user);
+        await message.edit({
+          embeds: [prettyEmbed(confirmedPlayers)],
+        });
+      } else {
+        confirmedPlayers.push(i.user);
+        await message.edit({
+          embeds: [prettyEmbed(confirmedPlayers)],
+        });
+        collector.stop("That's enough!");
+      }
 
-  const filter = (i) =>
-    i.channel.id === message.channel.id && i.customId === "in";
-  const collector = message.channel.createMessageComponentCollector({
-    filter,
-    time: anHour * 1000,
-    max: 4,
+      //The interaction will be "failed" unless we do something with it
+      try {
+        await i.reply("THEY'RE IN");
+        await i.deleteReply();
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    collector.on("end", async (collected) => {
+      if (confirmedPlayers.length < 5) {
+        await message.edit({
+          content: "Looks like you ran out of time, darlings!",
+          components: [],
+        });
+      }
+    });
+  }
+  //Time for a ready check
+  const channel = await interaction.member.guild.channels.cache.get(
+    TRASH_CHANNEL
+  );
+  const queueThread = await channel.threads.create({
+    name: interaction.user.username + "'s Party Thread",
+    autoArchiveDuration: 60,
+    reason: "Time for stack!",
   });
-  collector.on("collect", async (i) => {
-    if (confirmedPlayers.length < 4) {
-      confirmedPlayers.push(i.user);
-      await message.edit({
-        embeds: [prettyEmbed(confirmedPlayers)],
-      });
-    } else {
-      confirmedPlayers.push(i.user);
-      await message.edit({
-        embeds: [prettyEmbed(confirmedPlayers)],
-      });
-      collector.stop("That's enough!");
-    }
 
-    //The interaction will be "failed" unless we do something with it
-    try {
-      await i.reply("THEY'RE IN");
-      await i.deleteReply();
-    } catch (error) {
-      console.log(error);
-    }
+  message.edit({
+    content:
+      "Looks like we got a stack! Ready check is running in the Party Thread!",
+    components: [linkButton(message, queueThread, "Party Thread")],
   });
-
-  collector.on("end", async (collected) => {
-    if (confirmedPlayers.length < 5) {
-      await message.edit({
-        content: "Looks like you ran out of time, darlings!",
-        components: [],
-      });
-
-      //do thing with collected info
-    } else {
-      //Time for a ready check
-      const channel = await interaction.member.guild.channels.cache.get(
-        TRASH_CHANNEL
-      );
-      const queueThread = await channel.threads.create({
-        name: interaction.user.username + "'s Party Thread",
-        autoArchiveDuration: 60,
-        reason: "Time for stack!",
-      });
-
-      message.edit({
-        content:
-          "Looks like we got a stack! Ready check is running in the Party Thread!",
-        components: [linkButton(message, queueThread, "Party Thread")],
-      });
-      stackIt(message, confirmedPlayers, queueThread);
-    }
-  });
+  stackIt(message, confirmedPlayers, queueThread);
 }
 
 async function stackIt(message, confirmedPlayers, queueThread) {
