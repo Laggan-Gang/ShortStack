@@ -179,10 +179,10 @@ function arrayPrettifier(confirmedPlayers) {
   for (let player of confirmedPlayers) {
     if (player.nickname) {
       const neededFilling = optimalStringLength - player.nickname.length; //will have to add something here
-      prettyArray.push(stringPrettifier(player.nickname, neededFilling));
+      prettyArray.push(stringPrettifier(player, neededFilling));
     } else {
       const neededFilling = optimalStringLength - player.username.length;
-      prettyArray.push(stringPrettifier(player.username, neededFilling));
+      prettyArray.push(stringPrettifier(player, neededFilling));
     }
   }
   return prettyArray;
