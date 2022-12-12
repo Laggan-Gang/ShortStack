@@ -35,7 +35,7 @@ module.exports = {
 };
 
 async function arrayMaker(interaction) {
-  const confirmedPlayers = [interaction.member];
+  const confirmedPlayers = [interaction.user];
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
@@ -76,12 +76,12 @@ async function setUp(interaction, confirmedPlayers) {
     });
     collector.on("collect", async (i) => {
       if (confirmedPlayers.length < 4) {
-        confirmedPlayers.push(i.member);
+        confirmedPlayers.push(i.user);
         await message.edit({
           embeds: [prettyEmbed(confirmedPlayers)],
         });
       } else {
-        confirmedPlayers.push(i.member);
+        confirmedPlayers.push(i.user);
         await message.edit({
           embeds: [prettyEmbed(confirmedPlayers)],
         });
