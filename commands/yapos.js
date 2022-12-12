@@ -137,12 +137,14 @@ function rdyButtons() {
         .setCustomId("stop")
         .setLabel("Stop check")
         .setStyle(ButtonStyle.Danger)
+        .setDisabled(true)
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("sudo")
         .setLabel("FORCE READY")
         .setStyle(ButtonStyle.Danger)
+        .setDisabled(true)
     );
   return buttonRow;
 }
@@ -165,7 +167,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
     time: 5 * 60 * 1000,
-    max: 5,
   });
   collector.on("collect", async (i) => {
     if (i.customId === "rdy") {
