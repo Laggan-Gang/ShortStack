@@ -136,6 +136,12 @@ function stackIt(message, confirmedPlayers) {
     //  console.log(error);
     //}
     const threadName = i.user.username;
+    console.log("i");
+    console.log(i);
+    console.log("i.channels");
+    console.log(i.channels);
+    console.log("i.channel");
+    console.log(i.channel);
     const channel = await i.channels.cache.get("539847809004994560");
     const thread = await channel.threads.create({
       name: threadName + "'s Dota Party",
