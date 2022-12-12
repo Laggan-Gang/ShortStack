@@ -235,6 +235,7 @@ async function stackIt(message, confirmedPlayers, partyThread) {
 }
 
 function prettyEmbed(confirmedPlayers) {
+  console.log(confirmedPlayers);
   const maxLength = 5;
   const playerFields = [];
   for (let i = 0; i < maxLength; i++) {
@@ -258,9 +259,9 @@ function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(player.username + "✅");
+      playerFields.push(player.user.username + "✅");
     } else {
-      playerFields.push(player.username + "❌");
+      playerFields.push(player.user.username + "❌");
     }
   }
   const embed = {
