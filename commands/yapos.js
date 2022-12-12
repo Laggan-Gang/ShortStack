@@ -162,7 +162,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   collector.on("collect", async (i) => {
     if (i.customId === "rdy") {
       const player = readyArray.find((e) => e.user.username == i.user.username);
-      console.log(player);
       player.ready = true;
       await partyMessage.edit({
         embeds: [readyEmbed(readyArray)],
@@ -258,8 +257,6 @@ function prettyEmbed(confirmedPlayers) {
 function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
-    console.log("Player looks like this");
-    console.log(player);
     if (player.ready) {
       playerFields.push(player.user.username + "✅");
     } else {
