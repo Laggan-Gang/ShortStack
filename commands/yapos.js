@@ -46,6 +46,8 @@ async function arrayMaker(interaction) {
         );
         return confirmedPlayers;
       }
+      console.log("Pushing this player");
+      console.log(player);
       confirmedPlayers.push(player);
     } else {
       return confirmedPlayers;
