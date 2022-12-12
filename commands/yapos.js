@@ -98,6 +98,54 @@ async function setUp(interaction, confirmedPlayers) {
   }
 }
 
+async function readyChecker(confirmedPlayers) {
+  const readyArray = confirmedPlayers.map((cP) => (cP.ready = false));
+  const filter = (i) =>
+    i.channel.id === message.channel.id && i.customId === "rdy"; //make sure to make this
+  const collector = message.channel.createMessageComponentCollector({
+    filter,
+    time: 5 * 60 * 1000,
+    max: 5,
+  });
+  collector.on("collect", async (i) => {
+    if (confirmedPlayers.length < 4) {
+      confirmedPlayers.push(i.user);
+      await message.edit({
+        embeds: [prettyEmbed(confirmedPlayers)],
+      });
+    } else {
+      confirmedPlayers.push(i.user);
+      await message.edit({
+        embeds: [prettyEmbed(confirmedPlayers)],
+      });
+      collector.stop("That's enough!");
+    }
+
+    //The interaction will be "failed" unless we do something with it
+    try {
+      await i.reply("THEY'RE IN");
+      await i.deleteReply();
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  collector.on("end", async (collected) => {
+    if (confirmedPlayers.length < 5) {
+      await message.edit({
+        content: "Looks like you ran out of time, darlings!",
+        components: [],
+      });
+
+      //do thing with collected info
+    } else {
+      //Time for a ready check
+      await pThreadCreator(interaction, message, confirmedPlayers);
+      //stackIt(message, confirmedPlayers, queueThread);
+    }
+  });
+}
+
 async function pThreadCreator(interaction, message, confirmedPlayers) {
   const channel = await interaction.member.guild.channels.cache.get(
     TRASH_CHANNEL
@@ -157,7 +205,7 @@ function prettyEmbed(confirmedPlayers) {
   const playerFields = [];
   for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
-      playerFields.push(stringPrettifier(confirmedPlayers[i]));
+      playerFields.push(confirmedPlayers[i]);
     } else {
       playerFields.push(`${`\`\`Open slot\`\``}`);
     }
@@ -172,19 +220,19 @@ function prettyEmbed(confirmedPlayers) {
   return embed;
 }
 
-function stringPrettifier(player) {
-  const optimalStringLength = 39;
-  if (player.nickname) {
-    console.log(player.nickname);
-    const neededFilling = optimalStringLength - player.nickname.length;
-    const stringFilling = "/".repeat(neededFilling + 1);
-    return `${player}${stringFilling}`;
-  } else {
-    const neededFilling = optimalStringLength - player.username.length;
-    const stringFilling = "/".repeat(neededFilling + 1);
-    return `${player}${stringFilling}`;
-  }
-}
+//function stringPrettifier(player) {
+//  const optimalStringLength = 39;
+//  if (player.nickname) {
+//    console.log(player.nickname);
+//    const neededFilling = optimalStringLength - player.nickname.length;
+//    const stringFilling = "".repeat(neededFilling + 1);
+//    return `${player}${stringFilling}`;
+//  } else {
+//    const neededFilling = optimalStringLength - player.username.length;
+//    const stringFilling = "".repeat(neededFilling + 1);
+//    return `${player}${stringFilling}`;
+//  }
+//}
 
 function rowBoat(btnText, btnId) {
   const buttonRow = new ActionRowBuilder().addComponents(
