@@ -260,9 +260,9 @@ function readyEmbed(readyArray) {
     console.log("Player looks like this");
     console.log(player);
     if (player.ready) {
-      playerFields.push(player.toString() + "✅");
+      playerFields.push(player.user.username + "✅");
     } else {
-      playerFields.push(player.toString() + "❌");
+      playerFields.push(player.user.username + "❌");
     }
   }
   const embed = {
