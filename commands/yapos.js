@@ -133,7 +133,7 @@ async function stackIt(message, confirmedPlayers) {
 }
 
 function prettyEmbed(confirmedPlayers) {
-  const maxLength = 4;
+  const maxLength = 5;
   const playerFields = [];
   console.log(confirmedPlayers);
   console.log(confirmedPlayers.length);
@@ -168,7 +168,7 @@ function rowBoat(btnText, btnId) {
 async function arrayMaker(interaction) {
   const confirmedPlayers = [interaction.user];
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
-  for (let i = 2; i < 5; i++) {
+  for (let i = 2; i < 6; i++) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
@@ -178,7 +178,6 @@ async function arrayMaker(interaction) {
         return confirmedPlayers;
       }
       confirmedPlayers.push(player);
-      console.log("Confirmed players ser ut såhär efter: " + confirmedPlayers);
     } else {
       return confirmedPlayers;
     }
