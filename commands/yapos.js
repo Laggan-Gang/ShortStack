@@ -162,7 +162,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   collector.on("collect", async (i) => {
     if (i.customId === "rdy") {
       console.log(i);
-      const player = readyArray.find((e) => e.id === i.id);
+      const player = readyArray.find((e) => e.id === i.member.user.id);
       player.ready = true;
       await partyMessage.edit({
         embeds: [readyEmbed(readyArray)],
