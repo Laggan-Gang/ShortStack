@@ -154,10 +154,10 @@ async function stackIt(message, confirmedPlayers, partyThread) {
 
 function prettyEmbed(confirmedPlayers) {
   const maxLength = 5;
-  const playerFields = arrayPrettifier(confirmedPlayers);
+  const playerFields = [];
   for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
-      playerFields.push(`${confirmedPlayers[i].toString()}`);
+      playerFields.push(stringPrettifier(confirmedPlayers[i]));
     } else {
       playerFields.push(`${`\`\`Open slot\`\``}`);
     }
@@ -172,24 +172,17 @@ function prettyEmbed(confirmedPlayers) {
   return embed;
 }
 
-function arrayPrettifier(confirmedPlayers) {
-  console.log(confirmedPlayers);
+function stringPrettifier(player) {
   const optimalStringLength = 39;
-  const prettyArray = [];
-  for (let player of confirmedPlayers) {
-    if (player.nickname) {
-      const neededFilling = optimalStringLength - player.nickname.length; //will have to add something here
-      prettyArray.push(stringPrettifier(player, neededFilling));
-    } else {
-      const neededFilling = optimalStringLength - player.username.length;
-      prettyArray.push(stringPrettifier(player, neededFilling));
-    }
+  if (player.nickname) {
+    const neededFilling = optimalStringLength - player.nickname.length;
+    const stringFilling = " ".repeat(neededFilling + 1);
+    return `${player}${stringFilling}`;
+  } else {
+    const neededFilling = optimalStringLength - player.username.length;
+    const stringFilling = " ".repeat(neededFilling + 1);
+    return `${player}${stringFilling}`;
   }
-  return prettyArray;
-}
-function stringPrettifier(player, fillingNeeded) {
-  const stringFilling = " ".repeat(fillingNeeded + 1);
-  return `\`\`${player}${stringFilling}\`\``;
 }
 
 function rowBoat(btnText, btnId) {
@@ -203,7 +196,7 @@ function rowBoat(btnText, btnId) {
 }
 
 async function arrayMaker(interaction) {
-  const confirmedPlayers = [interaction.user];
+  const confirmedPlayers = [interaction.member];
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
