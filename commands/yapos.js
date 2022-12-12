@@ -137,6 +137,12 @@ function rdyButtons() {
         .setCustomId("stop")
         .setLabel("Stop check")
         .setStyle(ButtonStyle.Danger)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("sudo")
+        .setLabel("FORCE READY")
+        .setStyle(ButtonStyle.Danger)
     );
   return buttonRow;
 }
@@ -144,6 +150,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
   const embed = readyEmbed(readyArray);
   const buttons = rdyButtons();
+  const hasClicked = [];
   await partyMessage.edit({
     content: "",
     embeds: [embed],
@@ -152,7 +159,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
   const filter = (i) =>
     i.channel.id === partyMessage.channel.id &&
-    (i.customId === "rdy" || "stop"); //make sure to make this
+    (i.customId === "rdy" || "stop") &&
+    !hasClicked.includes(i.user.id); //make sure to make this
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
@@ -161,14 +169,16 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
   collector.on("collect", async (i) => {
     if (i.customId === "rdy") {
-      console.log(i);
       const player = readyArray.find(
         (e) => e.id === i.member.user.id && e.ready === false
       );
-      player.ready = true;
-      await partyMessage.edit({
-        embeds: [readyEmbed(readyArray)],
-      });
+      if (player) {
+        player.ready = true;
+        hasClicked.push(i.user.id);
+        await partyMessage.edit({
+          embeds: [readyEmbed(readyArray)],
+        });
+      }
     }
     //The interaction will be "failed" unless we do something with it
     try {
