@@ -46,8 +46,7 @@ async function arrayMaker(interaction) {
         );
         return confirmedPlayers;
       }
-      console.log("Pushing this player");
-      console.log(player);
+      //THIS IS NOT WHERE THINGS GO WRONG
       confirmedPlayers.push(player);
     } else {
       return confirmedPlayers;
@@ -77,6 +76,9 @@ async function setUp(interaction, confirmedPlayers) {
     });
     collector.on("collect", async (i) => {
       if (confirmedPlayers.length < 4) {
+        console.log("Nu pushar vi ");
+        console.log(i.user);
+        console.log("Från rad 80 typ");
         confirmedPlayers.push(i.user);
         await message.edit({
           embeds: [prettyEmbed(confirmedPlayers)],
