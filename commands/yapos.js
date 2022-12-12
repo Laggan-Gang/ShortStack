@@ -47,7 +47,6 @@ async function setUp(interaction, confirmedPlayers) {
     components: [buttonRow],
   });
   if (confirmedPlayers.length < 5) {
-    console.log("Vi är i rätt ställe iaf! ");
     const filter = (i) =>
       i.channel.id === message.channel.id && i.customId === "in";
     const collector = message.channel.createMessageComponentCollector({
@@ -84,25 +83,29 @@ async function setUp(interaction, confirmedPlayers) {
           content: "Looks like you ran out of time, darlings!",
           components: [],
         });
+
+        //do thing with collected info
+      } else {
+        //Time for a ready check
+        const channel = await interaction.member.guild.channels.cache.get(
+          TRASH_CHANNEL
+        );
+        const queueThread = await channel.threads.create({
+          name: interaction.user.username + "'s Party Thread",
+          autoArchiveDuration: 60,
+          reason: "Time for stack!",
+        });
+
+        message.edit({
+          content:
+            "Looks like we got a stack! Ready check is running in the Party Thread!",
+          components: [linkButton(message, queueThread, "Party Thread")],
+        });
+        stackIt(message, confirmedPlayers, queueThread);
       }
     });
+  } else {
   }
-  //Time for a ready check
-  const channel = await interaction.member.guild.channels.cache.get(
-    TRASH_CHANNEL
-  );
-  const queueThread = await channel.threads.create({
-    name: interaction.user.username + "'s Party Thread",
-    autoArchiveDuration: 60,
-    reason: "Time for stack!",
-  });
-
-  message.edit({
-    content:
-      "Looks like we got a stack! Ready check is running in the Party Thread!",
-    components: [linkButton(message, queueThread, "Party Thread")],
-  });
-  stackIt(message, confirmedPlayers, queueThread);
 }
 
 async function stackIt(message, confirmedPlayers, queueThread) {
