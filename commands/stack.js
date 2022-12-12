@@ -96,7 +96,7 @@ module.exports = {
       });
       badaBoom(playerArray, message, pickTime);
     } else {
-      const message = await thread.send({
+      const message = await threadPar.send({
         content: `${playerArray.map((b) => b.player).join("", " ")}`,
       });
       badaBoom(playerArray, message, pickTime);
