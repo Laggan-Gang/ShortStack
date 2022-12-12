@@ -135,8 +135,8 @@ function stackIt(message, confirmedPlayers) {
     //} catch (error) {
     //  console.log(error);
     //}
-    const threadName = interaction.user.username;
-    const channel = interaction.channels.cache.get("539847809004994560");
+    const threadName = i.user.username;
+    const channel = i.channels.cache.get("539847809004994560");
     const thread = await channel.threads.create({
       name: threadName + "'s Dota Party",
       autoArchiveDuration: 60,
