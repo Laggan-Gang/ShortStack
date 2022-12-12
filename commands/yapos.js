@@ -25,7 +25,6 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    console.log("Nu är vi i interaction grejen");
     const confirmedPlayers = await arrayMaker(interaction);
     interaction.deferReply();
     interaction.deleteReply();
