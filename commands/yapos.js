@@ -177,11 +177,11 @@ function stringPrettifier(player) {
   if (player.nickname) {
     const neededFilling = optimalStringLength - player.nickname.length;
     const stringFilling = "\u200b".repeat(neededFilling + 1);
-    return `${player}${stringFilling}`;
+    return `${player}${stringFilling} prutt prutt`;
   } else {
     const neededFilling = optimalStringLength - player.username.length;
     const stringFilling = "\u200b".repeat(neededFilling + 1);
-    return `${player}${stringFilling}`;
+    return `${player}${stringFilling} prutt prutt`;
   }
 }
 
