@@ -47,6 +47,7 @@ async function setUp(interaction, confirmedPlayers) {
     components: [buttonRow],
   });
   if (confirmedPlayers.length < 5) {
+    console.log("Vi är i rätt ställe iaf! ");
     const filter = (i) =>
       i.channel.id === message.channel.id && i.customId === "in";
     const collector = message.channel.createMessageComponentCollector({
