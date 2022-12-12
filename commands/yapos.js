@@ -257,6 +257,8 @@ function prettyEmbed(confirmedPlayers) {
 function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
+    console.log("Player looks like this");
+    console.log(player);
     if (player.ready) {
       playerFields.push(player + "✅");
     } else {
