@@ -173,6 +173,7 @@ function prettyEmbed(confirmedPlayers) {
 }
 
 function arrayPrettifier(confirmedPlayers) {
+  console.log(confirmedPlayers);
   const optimalStringLength = 39;
   const prettyArray = [];
   for (let player of confirmedPlayers) {
