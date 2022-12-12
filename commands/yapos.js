@@ -129,7 +129,7 @@ function rdyButtons() {
     .addComponents(
       new ButtonBuilder()
         .setCustomId("rdy")
-        .setLabel(":white_check_mark:")
+        .setLabel("✅")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
@@ -161,7 +161,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
   collector.on("collect", async (i) => {
     if (i.customId === "rdy") {
-      const player = readyArray.find((e) => e == i.member);
+      const player = readyArray.find((e) => e.user.username == i.user.username);
+      console.log(player);
       player.ready = true;
       await partyMessage.edit({
         embeds: [readyEmbed(readyArray)],
