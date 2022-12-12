@@ -10,7 +10,7 @@ const {
 const Canvas = require("@napi-rs/canvas");
 const { request } = require("undici");
 const axios = require("axios");
-const { laggStatsBaseUrl } = require("../config.json");
+const { laggStatsBaseUrl } = require("./config.json");
 
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
 const basePlayer = { position: "Has not picked yet", randomed: 0 };
