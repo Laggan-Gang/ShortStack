@@ -106,7 +106,13 @@ async function setUp(interaction, confirmedPlayers) {
         //do thing with collected info
       } else {
         //Time for a ready check
-        await pThreadCreator(interaction, message, confirmedPlayers);
+        const party = await pThreadCreator(
+          interaction,
+          message,
+          confirmedPlayers
+        );
+        console.log("We made it throug party!");
+        await readyChecker(confirmedPlayers, party.message, party.thread);
         //stackIt(message, confirmedPlayers, queueThread);
       }
     });
