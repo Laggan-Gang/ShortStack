@@ -87,13 +87,13 @@ async function setUp(interaction, confirmedPlayers) {
         //do thing with collected info
       } else {
         //Time for a ready check
-        pThreadCreator(interaction, message, confirmedPlayers);
+        await pThreadCreator(interaction, message, confirmedPlayers);
         //stackIt(message, confirmedPlayers, queueThread);
       }
     });
   } else {
     //Time for a ready check
-    pThreadCreator(interaction, message, confirmedPlayers);
+    await pThreadCreator(interaction, message, confirmedPlayers);
     //stackIt(message, confirmedPlayers, queueThread);
   }
 }
@@ -113,7 +113,10 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
       "Looks like we got a stack! Ready check is running in the Party Thread!",
     components: [linkButton(message, partyThread, "Party Thread")],
   });
-  const partyMessage = partyThread.send({ content: confirmedPlayers.join() });
+  const partyMessage = await partyThread.send({
+    content: confirmedPlayers.join(),
+  });
+  await partyMessage.edit({ content: "", embeds: [embed] });
 }
 
 async function stackIt(message, confirmedPlayers, partyThread) {
@@ -151,7 +154,7 @@ async function stackIt(message, confirmedPlayers, partyThread) {
 
 function prettyEmbed(confirmedPlayers) {
   const maxLength = 5;
-  const playerFields = [];
+  const playerFields = arrayPrettifier(confirmedPlayers);
   for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
       playerFields.push(`${confirmedPlayers[i].toString()}`);
@@ -167,6 +170,39 @@ function prettyEmbed(confirmedPlayers) {
     //},
   };
   return embed;
+}
+
+function arrayPrettifier(confirmedPlayers) {
+  const optimalStringLength = 39;
+  const prettyArray = [];
+  for (let player of confirmedPlayers) {
+    if (player.player.nickname) {
+      const neededFilling =
+        optimalStringLength -
+        (player.player.nickname.length + player.position.length);
+      prettyArray.push(
+        stringPrettifier(
+          player.player.nickname,
+          neededFilling,
+          player.position,
+          player.randomed
+        )
+      );
+    } else {
+      const neededFilling =
+        optimalStringLength -
+        (player.player.user.username.length + player.position.length);
+      prettyArray.push(
+        stringPrettifier(
+          player.player.user.username,
+          neededFilling,
+          player.position,
+          player.randomed
+        )
+      );
+    }
+  }
+  return prettyArray;
 }
 
 function rowBoat(btnText, btnId) {
