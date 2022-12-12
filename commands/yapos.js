@@ -182,7 +182,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           });
         }
         var i = 0;
-        for (let player of playerArray) {
+        for (let player of readyArray) {
           if (player.ready) {
             i++;
           }
