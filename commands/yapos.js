@@ -56,26 +56,16 @@ async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
   const buttonRow = rowBoat("I'M IN", "in");
-  console.log(buttonRow);
 
   //<@&412260353699872768>
   console.log("Nu är vi precis innan embed");
   const time = getTimestampInSeconds();
   const anHour = 60 * 60;
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + anHour}:R>`, //<@&412260353699872768>
+    content: `Yapos call, closes <t:${time + anHour}:R>`, //<@&412260353699872768>
     embeds: [embed],
     components: [buttonRow],
   });
-
-  //const threadName = interaction.user.username;
-  //const channel = await interaction.channel;
-  //const thread = await channel.threads.create({
-  //  name: threadName + "'s Yapos Call",
-  //  autoArchiveDuration: 60,
-  //  reason: "Gamers needed!",
-  //});
-  //const tMessage = await thread.send({ content: "Who's next?" });
 
   const filter = (i) =>
     i.channel.id === message.channel.id && i.customId === "in";
@@ -145,7 +135,20 @@ function stackIt(message, confirmedPlayers) {
     //} catch (error) {
     //  console.log(error);
     //}
-    await badaBing.badaBing(i, shuffledChoices, standardTime, i.user.username);
+    const threadName = interaction.user.username;
+    const channel = interaction.channels.cache.get("539847809004994560");
+    const thread = await channel.threads.create({
+      name: threadName + "'s Dota Party",
+      autoArchiveDuration: 60,
+      reason: "Time for stack!",
+    });
+    await badaBing.badaBing(
+      i,
+      shuffledChoices,
+      standardTime,
+      i.user.username,
+      thread
+    );
   });
 
   collector.on("end", async (collected) => {});

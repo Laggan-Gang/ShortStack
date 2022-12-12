@@ -66,7 +66,8 @@ module.exports = {
     interaction,
     choices,
     pickTime,
-    threadName
+    threadName,
+    threadPar
   ) {
     interaction.deferReply();
     const channel = await interaction.channel;
@@ -83,21 +84,23 @@ module.exports = {
         };
       })
     );
-    console.log(
-      threadName,
-      "player",
-      playerArray.map((p) => p.player.id)
-    );
     await interaction.deleteReply();
-    const thread = await channel.threads.create({
-      name: threadName + "'s Dota Party",
-      autoArchiveDuration: 60,
-      reason: "Time to set up your dota party!",
-    });
-    const message = await thread.send({
-      content: `${playerArray.map((b) => b.player).join("", " ")}`,
-    });
-    badaBoom(playerArray, message, pickTime);
+    if (!threadPar) {
+      const thread = await channel.threads.create({
+        name: threadName + "'s Dota Party",
+        autoArchiveDuration: 60,
+        reason: "Time to set up your dota party!",
+      });
+      const message = await thread.send({
+        content: `${playerArray.map((b) => b.player).join("", " ")}`,
+      });
+      badaBoom(playerArray, message, pickTime);
+    } else {
+      const message = await thread.send({
+        content: `${playerArray.map((b) => b.player).join("", " ")}`,
+      });
+      badaBoom(playerArray, message, pickTime);
+    }
   },
 };
 
