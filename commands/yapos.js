@@ -169,17 +169,32 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     time: 5 * 60 * 1000,
   });
   collector.on("collect", async (i) => {
-    if (i.customId === "rdy") {
-      const player = readyArray.find(
-        (e) => e.id === i.member.user.id && e.ready === false
-      );
-      if (player) {
-        player.ready = true;
-        //hasClicked.push(i.user.id); Maybe won't need this
-        await partyMessage.edit({
-          embeds: [readyEmbed(readyArray)],
-        });
-      }
+    switch (i.customId) {
+      case "rdy":
+        const player = readyArray.find(
+          (e) => e.id === i.member.user.id && e.ready === false
+        );
+        if (player) {
+          player.ready = true;
+          //hasClicked.push(i.user.id); Maybe won't need this
+          await partyMessage.edit({
+            embeds: [readyEmbed(readyArray)],
+          });
+        }
+        var i = 0;
+        for (let player of playerArray) {
+          if (player.ready) {
+            i++;
+          }
+        }
+        if (i > 4) {
+          collector.stop();
+        }
+        break;
+      case "stop":
+        break;
+      case "sudo":
+        break;
     }
     //The interaction will be "failed" unless we do something with it
     try {
@@ -190,7 +205,9 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     }
   });
 
-  collector.on("end", async (collected) => {});
+  collector.on("end", async (collected) => {
+    await stackIt(partyMessage, confirmedPlayers, partyThread);
+  });
 }
 
 async function pThreadCreator(interaction, message, confirmedPlayers) {
@@ -234,7 +251,7 @@ async function stackIt(message, confirmedPlayers, partyThread) {
       reason: "Time for stack!",
     });
 
-    const buttons = linkButton(message, stackThread, queueThread, i); //this one's fucked
+    const buttons = linkButton(message, stackThread, partyThread, i); //this one's fucked
     await message.edit({ components: [buttons] });
     await badaBing.badaBing(
       i,
