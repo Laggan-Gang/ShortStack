@@ -83,6 +83,12 @@ async function setUp(interaction, confirmedPlayers) {
 
       //do thing with collected info
     } else {
+      //Time for a ready check
+      const queueThread = await channel.threads.create({
+        name: threadName + "'s Party Queue",
+        autoArchiveDuration: 60,
+        reason: "Time for stack!",
+      });
       message.edit({
         content: "Looks like we got a stack!",
         components: [rowBoat("STACK IT, BABE", "in")],
@@ -92,7 +98,7 @@ async function setUp(interaction, confirmedPlayers) {
   });
 }
 
-async function stackIt(message, confirmedPlayers) {
+async function stackIt(message, confirmedPlayers, queueThread) {
   const filter = (i) => i.channel.id === message.channel.id;
   const collector = message.channel.createMessageComponentCollector({
     filter,
@@ -111,13 +117,7 @@ async function stackIt(message, confirmedPlayers) {
       reason: "Time for stack!",
     });
 
-    const queueThread = await channel.threads.create({
-      name: threadName + "'s Party Queue",
-      autoArchiveDuration: 60,
-      reason: "Time for stack!",
-    });
-
-    const buttons = linkButtons(stackThread.id, queueThread.id);
+    const buttons = linkButtons(message, stackThread, queueThread, i);
     await message.edit({ components: [buttons] });
     await badaBing.badaBing(
       i,
@@ -180,17 +180,17 @@ async function arrayMaker(interaction) {
   }
 }
 
-function linkButtons(stackId, queueId) {
+function linkButtons(message, stack, queue) {
   const buttonRow = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${stackId}`)
+        .setURL(`https://discord.com/channels/${message.guildId}/${stack.id}`)
         .setLabel("Stack thread")
         .setStyle(ButtonStyle.Link)
     )
     .addComponents(
       new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${TRASH_GUILD}/${queueId}`)
+        .setURL(`https://discord.com/channels/${message.guildId}/${queue.id}`)
         .setLabel("Queue thread")
         .setStyle(ButtonStyle.Link)
     );
