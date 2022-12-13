@@ -198,12 +198,12 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
     }
     //The interaction will be "failed" unless we do something with it
-    //try {
-    //  await i.reply("THEY'RE READY");
-    //  await i.deleteReply();
-    //} catch (error) {
-    //  console.log(error);
-    //}
+    try {
+      await i.reply("THEY'RE READY");
+      await i.deleteReply();
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   collector.on("end", async (collected) => {
