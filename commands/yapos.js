@@ -153,7 +153,6 @@ function rdyButtons() {
   return [buttonRow, row2];
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
-  var rCount = 0;
   const readyArray = [];
   const time = getTimestampInSeconds();
   for (let player of confirmedPlayers) {
@@ -177,6 +176,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     filter,
     time: NINETYSECONDS * 1000,
   });
+
   collector.on("collect", async (i) => {
     switch (i.customId) {
       case "rdy":
@@ -190,12 +190,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
             embeds: [readyEmbed(readyArray)],
           });
         }
-        for (let player of readyArray) {
-          if (player.ready) {
-            rCount++;
-          }
-        }
-        if (rCount > 4) {
+        if (everyoneReady(readyArray)) {
           console.log("Now stopping");
           collector.stop("That's enough");
         }
@@ -219,13 +214,14 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   collector.on("end", async (collected) => {
     const redoButton = rowBoat("Re-Check", "redo");
     const time = getTimestampInSeconds();
-    if (rCount < 4) {
+    if (!everyoneReady(readyArray)) {
       switch (collected.last().customId) {
         case "sudo":
           const stackButton = rowBoat("Stack it!", "stack");
           await partyMessage.edit({ components: [stackButton] });
           await stackIt(partyMessage, confirmedPlayers, partyThread);
           break;
+
         case "stop":
           await partyMessage.edit({
             content: `${collected
@@ -237,6 +233,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           });
           await redoCollector(partyMessage, confirmedPlayers, partyThread);
           break;
+
         default:
           await partyMessage.edit({
             content: `Ready check failed after 90 seconds. Option to Re-Check closes <t:${
@@ -253,6 +250,18 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       await stackIt(partyMessage, confirmedPlayers, partyThread);
     }
   });
+}
+
+function everyoneReady(readyArray) {
+  var rCount = 0;
+  for (let player of readyArray) {
+    if (player.ready) {
+      console.log(player.gamer + " is ready");
+      rCount++;
+      console.log("Ready count is " + rCount);
+    }
+  }
+  return rCount > 4;
 }
 
 async function pingMessage(readyArray, partyThread) {
