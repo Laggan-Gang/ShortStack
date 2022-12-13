@@ -129,22 +129,23 @@ function rdyButtons() {
     )
     .addComponents(
       new ButtonBuilder()
-        .setCustomId("stop")
-        .setLabel("Stop check")
-        .setStyle(ButtonStyle.Danger)
-        .setDisabled(false)
-    )
-    .addComponents(
-      new ButtonBuilder()
         .setCustomId("sudo")
         .setLabel("FORCE READY")
-        .setStyle(ButtonStyle.Danger)
+        .setStyle(ButtonStyle.Primary)
         .setDisabled(false)
     );
-  return buttonRow;
+  const row2 = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId("stop")
+      .setLabel("Stop check")
+      .setStyle(ButtonStyle.Danger)
+      .setDisabled(false)
+  );
+  return buttonRow, row2;
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
+  const arrayCopy = [...readyArray];
   const embed = readyEmbed(readyArray);
   const buttons = rdyButtons();
   const hasClicked = [];
@@ -161,7 +162,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
-    time: 5 * 60 * 1000,
+    time: 3 * 60 * 1000,
   });
   collector.on("collect", async (i) => {
     switch (i.customId) {
@@ -171,6 +172,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         );
         if (player) {
           await handleIt(i, "READY");
+          const index = arrayCopy.findIndex((e) => e === player);
           player.ready = true;
           //hasClicked.push(i.user.id); Maybe won't need this
           await partyMessage.edit({
@@ -201,11 +203,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   collector.on("end", async (collected) => {
-    console.log("Här är collected");
-    console.log(collected);
-    console.log("Här är collected.last");
-    console.log(collected.last);
-    if (collected.last().customId != "stop") {
+    if (collected.last().customId === "rdy" || "sudo") {
       const stackButton = rowBoat("Stack it!", "stack");
       await partyMessage.edit({ components: [stackButton] });
       await stackIt(partyMessage, confirmedPlayers, partyThread);
@@ -213,6 +211,11 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       await partyMessage.edit({
         content:
           collected.last().member.toString() + " stopped the ready check",
+        components: [],
+      });
+    } else {
+      await partyMessage.edit({
+        content: "Time ran out!",
         components: [],
       });
     }
