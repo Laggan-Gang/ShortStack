@@ -65,7 +65,7 @@ async function setUp(interaction, confirmedPlayers) {
 
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
-    content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
     components: [inButton, outButton],
   });
