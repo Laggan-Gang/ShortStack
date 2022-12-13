@@ -92,6 +92,7 @@ async function setUp(interaction, confirmedPlayers) {
       time: ONEHOUR * 1000,
     });
     collector.on("collect", async (i) => {
+      console.log(i.user.username + " clicked " + i.customId);
       if (i.customId === "in") {
         if (confirmedPlayers.length < 4) {
           confirmedPlayers.push(i.user);
