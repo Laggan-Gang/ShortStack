@@ -201,6 +201,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   collector.on("end", async (collected) => {
+    console.log("Här är collected");
+    console.log(collected);
+    console.log("Här är collected.last");
+    console.log(collected.last);
     if (collected.last.customId != "stop") {
       const stackButton = rowBoat("Stack it!", "stack");
       await partyMessage.edit({ components: [stackButton] });
