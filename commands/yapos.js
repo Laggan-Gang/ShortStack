@@ -233,21 +233,25 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   collector.on("end", async (collected) => {
     console.log("Här är senaste collected");
     console.log(collected.last().customId);
-    if (collected.last().customId === ("rdy" || "sudo")) {
-      const stackButton = rowBoat("Stack it!", "stack");
-      await partyMessage.edit({ components: [stackButton] });
-      await stackIt(partyMessage, confirmedPlayers, partyThread);
-    } else if (collected.last().customId === "stop") {
-      await partyMessage.edit({
-        content:
-          collected.last().member.toString() + " stopped the ready check",
-        components: [],
-      });
-    } else {
-      await partyMessage.edit({
-        content: "Time ran out!",
-        components: [],
-      });
+    switch (collected.last().customId) {
+      case "rdy":
+      case "sudo":
+        const stackButton = rowBoat("Stack it!", "stack");
+        await partyMessage.edit({ components: [stackButton] });
+        await stackIt(partyMessage, confirmedPlayers, partyThread);
+        break;
+      case "stop":
+        await partyMessage.edit({
+          content:
+            collected.last().member.toString() + " stopped the ready check",
+          components: [],
+        });
+        break;
+      default:
+        await partyMessage.edit({
+          content: "Time ran out!",
+          components: [],
+        });
     }
   });
 }
