@@ -274,8 +274,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
 function forceReady(readyArray, pickTime, miliTime) {
   for (player of readyArray) {
-    player.ready = true;
-    player.pickTime = pickTime - miliTime;
+    if (!player.ready) {
+      player.ready = true;
+      player.pickTime = pickTime - miliTime;
+    }
   }
 }
 
