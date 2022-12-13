@@ -172,7 +172,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
-    time: 3 * 60 * 1000,
+    time: 5 * 60 * 1000,
   });
   collector.on("collect", async (i) => {
     switch (i.customId) {
@@ -249,7 +249,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
       default:
         await partyMessage.edit({
-          content: "Time ran out!",
+          content: "Ready check incomplete after 5 minutes.",
           components: [],
         });
     }
@@ -336,9 +336,9 @@ function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(player.gamer.toString() + "✅");
+      playerFields.push(stringPrettifier(player.gamer.toString()) + "✅");
     } else {
-      playerFields.push(player.gamer.toString() + "❌");
+      playerFields.push(stringPrettifier(player.gamer.toString()) + "❌");
     }
   }
   const embed = {
