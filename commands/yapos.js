@@ -205,7 +205,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     console.log(collected);
     console.log("Här är collected.last");
     console.log(collected.last);
-    if (collected.last.customId != "stop") {
+    if (collected.last().customId != "stop") {
       const stackButton = rowBoat("Stack it!", "stack");
       await partyMessage.edit({ components: [stackButton] });
       await stackIt(partyMessage, confirmedPlayers, partyThread);
