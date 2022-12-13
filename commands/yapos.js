@@ -266,9 +266,7 @@ function everyoneReady(readyArray) {
   var rCount = 0;
   for (let player of readyArray) {
     if (player.ready) {
-      console.log(player.gamer + " is ready");
       rCount++;
-      console.log("Ready count is " + rCount);
     }
   }
   return rCount > 4;
