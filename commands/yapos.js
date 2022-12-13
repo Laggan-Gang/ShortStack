@@ -403,7 +403,7 @@ function readyEmbed(readyArray) {
     if (player.ready) {
       playerFields.push(
         `${stringPrettifier(player.gamer.toString())}\`\`readied in ${
-          player.pickTime
+          player.pickTime / 1000
         }\`\`✅`
       );
     } else {
