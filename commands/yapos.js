@@ -90,7 +90,6 @@ async function setUp(interaction, confirmedPlayers) {
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: ONEHOUR * 1000,
-      max: 4,
     });
     collector.on("collect", async (i) => {
       if (i.customId === "in") {
@@ -111,7 +110,8 @@ async function setUp(interaction, confirmedPlayers) {
         await handleIt(i, "THEY'RE IN");
       } else if (i.customId === "out") {
         const index = confirmedPlayers.indexOf(i.user);
-        if (index > 0) {
+        console.log("Index " + index);
+        if (index > -1) {
           confirmedPlayers.splice(index, 1);
           await message.edit({
             embeds: [prettyEmbed(confirmedPlayers)],
