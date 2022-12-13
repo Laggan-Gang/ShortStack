@@ -109,7 +109,7 @@ async function setUp(interaction, confirmedPlayers) {
 
         //The interaction will be "failed" unless we do something with it
         await handleIt(i, "THEY'RE IN");
-      } else {
+      } else if (i.customId === "out") {
         const index = confirmedPlayers.indexOf(i.user);
         if (index > 0) {
           confirmedPlayers.splice(index, 1);
