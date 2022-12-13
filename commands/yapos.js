@@ -141,7 +141,7 @@ function rdyButtons() {
       .setStyle(ButtonStyle.Danger)
       .setDisabled(false)
   );
-  return buttonRow, row2;
+  return [buttonRow, row2];
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
@@ -151,7 +151,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   await partyMessage.edit({
     content: "",
     embeds: [embed],
-    components: [rdyButtons()],
+    components: rdyButtons(),
   });
 
   const filter = (i) =>
