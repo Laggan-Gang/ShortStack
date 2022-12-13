@@ -129,23 +129,36 @@ function rdyButtons() {
     )
     .addComponents(
       new ButtonBuilder()
+        .setCustomId("stop")
+        .setLabel("Cancel")
+        .setStyle(ButtonStyle.Danger)
+        .setDisabled(false)
+    );
+  const row2 = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
         .setCustomId("sudo")
         .setLabel("FORCE READY")
         .setStyle(ButtonStyle.Primary)
         .setDisabled(false)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("ping")
+        .setLabel("Ping")
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(false)
     );
-  const row2 = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setCustomId("stop")
-      .setLabel("Stop check")
-      .setStyle(ButtonStyle.Danger)
-      .setDisabled(false)
-  );
   return [buttonRow, row2];
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
-  const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
-  const arrayCopy = [...readyArray];
+  const readyArray = [];
+  for (let player of confirmedPlayers) {
+    readyArray.push({ gamer: player, ready: false });
+  }
+
+  //const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
+  //const arrayCopy = [...readyArray];
   const embed = readyEmbed(readyArray);
   const hasClicked = [];
   await partyMessage.edit({
@@ -167,13 +180,12 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     switch (i.customId) {
       case "rdy":
         const player = readyArray.find(
-          (e) => e.id === i.member.user.id && e.ready === false
+          (e) => e.gamer.id === i.member.user.id && e.ready === false
         );
         if (player) {
           await handleIt(i, "READY");
-          const index = arrayCopy.findIndex((e) => e === player);
+          //const index = arrayCopy.findIndex((e) => e === player);
           player.ready = true;
-          //hasClicked.push(i.user.id); Maybe won't need this
           await partyMessage.edit({
             embeds: [readyEmbed(readyArray)],
           });
@@ -197,9 +209,15 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         await handleIt(i, "``sudo ready``");
         collector.stop();
         break;
+      case "ping":
+        await handleIt(i, "Sending a gentle reminder...");
+        await pingMessage(readyArray, partyThread);
+        break;
     }
     //The interaction will be "failed" unless we do something with it
   });
+
+  async function pingMessage(readyArray, partyThread) {}
 
   collector.on("end", async (collected) => {
     console.log("Här är senaste collected");
@@ -303,9 +321,9 @@ function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(player.username + "✅");
+      playerFields.push(player.gamer + "✅");
     } else {
-      playerFields.push(player.username + "❌");
+      playerFields.push(player.gamer + "❌");
     }
   }
   const embed = {
