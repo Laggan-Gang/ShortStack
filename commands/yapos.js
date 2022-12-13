@@ -63,13 +63,13 @@ function inOut() {
       new ButtonBuilder()
         .setCustomId("in")
         .setLabel("I'M IN'")
-        .setStyle(ButtonStyle.Secondary)
+        .setStyle(ButtonStyle.Success)
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("out")
         .setLabel("I'M OUT")
-        .setStyle(ButtonStyle.Secondary)
+        .setStyle(ButtonStyle.Danger)
     );
   return buttonRow;
 }
