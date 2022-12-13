@@ -62,7 +62,7 @@ function inOut() {
     .addComponents(
       new ButtonBuilder()
         .setCustomId("in")
-        .setLabel("I'M IN'")
+        .setLabel("I'M IN")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
