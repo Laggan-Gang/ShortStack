@@ -180,12 +180,14 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   collector.on("collect", async (i) => {
     switch (i.customId) {
       case "rdy":
-        const player = readyArray.find(
-          (e) => e.gamer.id === i.member.user.id && e.ready === false
-        );
+        const player = readyArray.find((e) => {
+          return e.gamer.id === i.member.user.id && e.ready === false;
+        });
+        const pickTime = getTimestampInSeconds();
         if (player) {
           await handleIt(i, "READY");
           player.ready = true;
+          player.pickTime = pickTime - time;
           await partyMessage.edit({
             embeds: [readyEmbed(readyArray)],
           });
@@ -227,7 +229,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
             components: [stackButton],
           });
           await stackIt(partyMessage, confirmedPlayers, partyThread);
-          break;
+          return;
 
         case "stop":
           await partyMessage.edit({
@@ -239,7 +241,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
             components: [redoButton],
           });
           await redoCollector(partyMessage, confirmedPlayers, partyThread);
-          break;
+          return;
 
         default:
           await partyMessage.edit({
@@ -249,7 +251,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
             components: [redoButton],
           });
           await redoCollector(partyMessage, confirmedPlayers, partyThread);
-          break;
+          return;
       }
     } else {
       const stackButton = rowBoat("Stack it!", "stack");
@@ -366,7 +368,12 @@ async function stackIt(message, confirmedPlayers, partyThread) {
     );
   });
 
-  collector.on("end", async (collected) => {});
+  collector.on("end", async (collected) => {
+    await message.edit({
+      content: "You actually don't seem all that ready.",
+      components: [],
+    });
+  });
 }
 
 function prettyEmbed(confirmedPlayers) {
@@ -393,9 +400,13 @@ function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(stringPrettifier(player.gamer.toString()) + "✅");
+      playerFields.push(
+        `${stringPrettifier(player.gamer.toString())}\`\`readied in ${
+          player.pickTime
+        }\`\`✅`
+      );
     } else {
-      playerFields.push(stringPrettifier(player.gamer.toString()) + "❌");
+      playerFields.push(`${stringPrettifier(player.gamer.toString())}❌`);
     }
   }
   const embed = {
