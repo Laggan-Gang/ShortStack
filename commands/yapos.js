@@ -10,7 +10,7 @@ const TRASH_CHANNEL = "539847809004994560";
 const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
-const NINETYSECONDS = 90;
+const READYTIME = 120;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -163,7 +163,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   //const arrayCopy = [...readyArray];
   const embed = readyEmbed(readyArray);
   await partyMessage.edit({
-    content: `Ready check closes <t:${time + NINETYSECONDS}:R>`,
+    content: `Ready check closes <t:${time + READYTIME}:R>`,
     embeds: [embed],
     components: rdyButtons(),
   });
@@ -174,7 +174,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
-    time: NINETYSECONDS * 1000,
+    time: READYTIME * 1000,
   });
 
   collector.on("collect", async (i) => {
@@ -218,7 +218,14 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       switch (collected.last().customId) {
         case "sudo":
           const stackButton = rowBoat("Stack it!", "stack");
-          await partyMessage.edit({ components: [stackButton] });
+          await partyMessage.edit({
+            content: `${collected
+              .last()
+              .member.toString()} Used FORCED READY! You should be safe to stack, if not blame ${collected
+              .last()
+              .member.toString()}`,
+            components: [stackButton],
+          });
           await stackIt(partyMessage, confirmedPlayers, partyThread);
           break;
 
