@@ -299,9 +299,9 @@ function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(player.toString() + "✅");
+      playerFields.push(player.username + "✅");
     } else {
-      playerFields.push(player.toString() + "❌");
+      playerFields.push(player.username + "❌");
     }
   }
   const embed = {
@@ -316,19 +316,12 @@ function readyEmbed(readyArray) {
   return embed;
 }
 
-//function stringPrettifier(player) {
-//  const optimalStringLength = 39;
-//  if (player.nickname) {
-//    console.log(player.nickname);
-//    const neededFilling = optimalStringLength - player.nickname.length;
-//    const stringFilling = "".repeat(neededFilling + 1);
-//    return `${player}${stringFilling}`;
-//  } else {
-//    const neededFilling = optimalStringLength - player.username.length;
-//    const stringFilling = "".repeat(neededFilling + 1);
-//    return `${player}${stringFilling}`;
-//  }
-//}
+function stringPrettifier(string) {
+  const optimalStringLength = 39;
+  const neededFilling = optimalStringLength - string.length;
+  const stringFilling = " ".repeat(neededFilling + 1);
+  return `\`\`${string}${stringFilling}\`\``;
+}
 
 function rowBoat(btnText, btnId) {
   const buttonRow = new ActionRowBuilder().addComponents(
