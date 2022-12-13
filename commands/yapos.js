@@ -160,7 +160,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   //const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
   //const arrayCopy = [...readyArray];
   const embed = readyEmbed(readyArray);
-  const hasClicked = [];
   await partyMessage.edit({
     content: "",
     embeds: [embed],
@@ -169,8 +168,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
   const filter = (i) =>
     i.channel.id === partyMessage.channel.id &&
-    i.customId === ("rdy" || "stop" || "sudo") &&
-    !hasClicked.includes(i.user.id); //make sure to make this
+    (i.customId === "rdy" || "stop" || "sudo"); //make sure to make this
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
