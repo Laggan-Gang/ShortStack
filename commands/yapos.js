@@ -200,15 +200,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     //The interaction will be "failed" unless we do something with it
   });
 
-  async function handleIt(i, flavourText) {
-    try {
-      await i.reply(flavourText);
-      await i.deleteReply();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   collector.on("end", async (collected) => {
     if (collected.last != "stop") {
       const stackButton = rowBoat("Stack it!", "stack");
@@ -371,4 +362,13 @@ function shuffle([...array]) {
   }
 
   return array;
+}
+
+async function handleIt(i, flavourText) {
+  try {
+    await i.reply(flavourText);
+    await i.deleteReply();
+  } catch (error) {
+    console.log(error);
+  }
 }
