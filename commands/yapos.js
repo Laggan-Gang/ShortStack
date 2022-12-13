@@ -63,7 +63,7 @@ async function setUp(interaction, confirmedPlayers) {
   const inButton = rowBoat("I'M IN", "in");
   const outButton = rowBoat("'M OUT", "out");
 
-  const time = getTimestampInSeconds();
+  const time = getTimestamp(1000);
   const message = await interaction.channel.send({
     content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
@@ -154,7 +154,8 @@ function rdyButtons() {
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = [];
-  const time = getTimestampInSeconds();
+  const time = getTimestamp(1000);
+  const miliTime = getTimestamp(1);
   for (let player of confirmedPlayers) {
     readyArray.push({ gamer: player, ready: false });
   }
@@ -183,11 +184,11 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         const player = readyArray.find((e) => {
           return e.gamer.id === i.member.user.id && e.ready === false;
         });
-        const pickTime = getTimestampInSeconds();
+        const pickTime = getTimestamp(1);
         if (player) {
           await handleIt(i, "READY");
           player.ready = true;
-          player.pickTime = pickTime - time;
+          player.pickTime = pickTime - miliTime;
           await partyMessage.edit({
             embeds: [readyEmbed(readyArray)],
           });
@@ -215,7 +216,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
   collector.on("end", async (collected) => {
     const redoButton = rowBoat("Re-Check", "redo");
-    const time = getTimestampInSeconds();
+    const time = getTimestamp(1000);
     if (!everyoneReady(readyArray)) {
       switch (collected.last().customId) {
         case "sudo":
@@ -448,8 +449,8 @@ function linkButton(message, thread, label) {
   return buttonRow;
 }
 
-function getTimestampInSeconds() {
-  return Math.floor(Date.now() / 1000);
+function getTimestamp(mod) {
+  return Math.floor(Date.now() / mod);
 }
 
 function shuffle([...array]) {
