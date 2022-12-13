@@ -8,6 +8,9 @@ const badaBing = require("../badaBing.js");
 const standardTime = 60;
 const TRASH_CHANNEL = "539847809004994560";
 const TRASH_GUILD = "209707792314007552";
+const ONEHOUR = 60 * 60;
+const FIVEMINUTES = 5 * 60;
+const NINETYSECONDS = 90;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -60,9 +63,8 @@ async function setUp(interaction, confirmedPlayers) {
   const buttonRow = rowBoat("I'M IN", "in");
 
   const time = getTimestampInSeconds();
-  const anHour = 60 * 60;
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + anHour}:R>`, //<@&412260353699872768> yapos
+    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
     components: [buttonRow],
   });
@@ -71,7 +73,7 @@ async function setUp(interaction, confirmedPlayers) {
       i.channel.id === message.channel.id && i.customId === "in";
     const collector = message.channel.createMessageComponentCollector({
       filter,
-      time: anHour * 1000,
+      time: ONEHOUR * 1000,
       max: 4,
     });
     collector.on("collect", async (i) => {
@@ -108,14 +110,12 @@ async function setUp(interaction, confirmedPlayers) {
           confirmedPlayers
         );
         await readyChecker(confirmedPlayers, party.message, party.thread);
-        //stackIt(message, confirmedPlayers, queueThread);
       }
     });
   } else {
     //Time for a ready check
     const party = await pThreadCreator(interaction, message, confirmedPlayers);
     await readyChecker(confirmedPlayers, party.message, party.thread);
-    //stackIt(message, confirmedPlayers, queueThread);
   }
 }
 
@@ -153,6 +153,7 @@ function rdyButtons() {
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = [];
+  const time = getTimestampInSeconds();
   for (let player of confirmedPlayers) {
     readyArray.push({ gamer: player, ready: false });
   }
@@ -161,18 +162,18 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   //const arrayCopy = [...readyArray];
   const embed = readyEmbed(readyArray);
   await partyMessage.edit({
-    content: "",
+    content: `Ready check closes <t:${time + NINETYSECONDS}:R>`,
     embeds: [embed],
     components: rdyButtons(),
   });
 
   const filter = (i) =>
     i.channel.id === partyMessage.channel.id &&
-    (i.customId === "rdy" || "stop" || "sudo"); //make sure to make this
+    (i.customId === "rdy" || "stop" || "sudo"); //I HOPE this logic works
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
-    time: 5 * 60 * 1000,
+    time: NINETYSECONDS * 1000,
   });
   collector.on("collect", async (i) => {
     switch (i.customId) {
@@ -231,6 +232,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   }
 
   collector.on("end", async (collected) => {
+    const redoButton = rowBoat("Re-Check", "redo");
+    const time = getTimestampInSeconds();
     switch (collected.last().customId) {
       case "rdy":
       case "sudo":
@@ -240,20 +243,54 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
       case "stop":
         await partyMessage.edit({
-          content:
-            collected.last().member.toString() + " stopped the ready check",
-          components: [],
+          content: `${collected
+            .last()
+            .member.toString()} stopped the ready check. Option to Re-Check closes <t:${
+            time + FIVEMINUTES
+          }:R>`,
+          components: [redoButton],
         });
+        await redoCollector(partyMessage, confirmedPlayers, partyThread);
         break;
       default:
         await partyMessage.edit({
-          content: "Ready check incomplete after 5 minutes.",
-          components: [],
+          content: `Ready check failed after 90 seconds. Option to Re-Check closes <t:${
+            time + FIVEMINUTES
+          }:R>`,
+          components: [redoButton],
         });
+        await redoCollector(partyMessage, confirmedPlayers, partyThread);
+        break;
     }
   });
 }
 
+async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
+  const filter = (i) =>
+    i.channel.id === partyMessage.channel.id && i.customId === "redo";
+  const collector = partyMessage.channel.createMessageComponentCollector({
+    filter,
+    time: 5 * 60 * 1000,
+    max: 1,
+  });
+  collector.on("collect", async (i) => {
+    await handleIt(i, "Again!");
+  });
+
+  collector.on("end", async (collected) => {
+    switch (collected.last().customId) {
+      case "redo":
+        await readyChecker(confirmedPlayers, partyMessage, partyThread);
+        break;
+      default:
+        await partyMessage.edit({
+          content: "Ready check failed.",
+          components: [],
+        });
+        break;
+    }
+  });
+}
 async function pThreadCreator(interaction, message, confirmedPlayers) {
   const channel = await interaction.member.guild.channels.cache.get(
     TRASH_CHANNEL
