@@ -57,42 +57,70 @@ async function arrayMaker(interaction) {
   }
 }
 
+function inOut() {
+  const buttonRow = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("in")
+        .setLabel("I'M IN'")
+        .setStyle(ButtonStyle.Secondary)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("out")
+        .setLabel("I'M OUT")
+        .setStyle(ButtonStyle.Secondary)
+    );
+  return buttonRow;
+}
+
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
-  const inButton = rowBoat("I'M IN", "in");
-  const outButton = rowBoat("'M OUT", "out");
-
+  const inOutButtons = inOut();
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
     content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
-    components: [inButton, outButton],
+    components: [inOutButtons],
   });
   if (confirmedPlayers.length < 5) {
     const filter = (i) =>
-      i.channel.id === message.channel.id && i.customId === "in";
+      i.channel.id === message.channel.id && ["in", "out"].includes(i.customId);
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: ONEHOUR * 1000,
       max: 4,
     });
     collector.on("collect", async (i) => {
-      if (confirmedPlayers.length < 4) {
-        confirmedPlayers.push(i.user);
-        await message.edit({
-          embeds: [prettyEmbed(confirmedPlayers)],
-        });
-      } else {
-        confirmedPlayers.push(i.user);
-        await message.edit({
-          embeds: [prettyEmbed(confirmedPlayers)],
-        });
-        collector.stop("That's enough!");
-      }
+      if (i.customId === "in") {
+        if (confirmedPlayers.length < 4) {
+          confirmedPlayers.push(i.user);
+          await message.edit({
+            embeds: [prettyEmbed(confirmedPlayers)],
+          });
+        } else {
+          confirmedPlayers.push(i.user);
+          await message.edit({
+            embeds: [prettyEmbed(confirmedPlayers)],
+          });
+          collector.stop("That's enough!");
+        }
 
-      //The interaction will be "failed" unless we do something with it
-      await handleIt(i, "THEY'RE IN");
+        //The interaction will be "failed" unless we do something with it
+        await handleIt(i, "THEY'RE IN");
+      } else {
+        const index = confirmedPlayers.indexOf(i.user);
+        if (index > 0) {
+          confirmedPlayers.splice(index, 1);
+          await message.edit({
+            embeds: [prettyEmbed(confirmedPlayers)],
+          });
+          await handleIt(i, "THEY'RE OUT");
+        } else {
+          await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
+        }
+      }
     });
 
     collector.on("end", async (collected) => {
@@ -171,7 +199,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
   const filter = (i) =>
     i.channel.id === partyMessage.channel.id &&
-    (i.customId === "rdy" || "stop" || "sudo"); //I HOPE this logic works
+    ["rdy", "stop", "sudo", "ping"].includes(i.customId); //I HOPE this logic works
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
