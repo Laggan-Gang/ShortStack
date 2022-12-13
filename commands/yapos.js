@@ -180,6 +180,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
   collector.on("collect", async (i) => {
     const pickTime = getTimestamp(1);
+    console.log(i.user.username + " clicked " + i.customId);
     switch (i.customId) {
       case "rdy":
         const player = readyArray.find((e) => {
