@@ -156,7 +156,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
   const filter = (i) =>
     i.channel.id === partyMessage.channel.id &&
-    (i.customId === "rdy" || "stop") &&
+    (i.customId === "rdy" || "stop" || "sudo") &&
     !hasClicked.includes(i.user.id); //make sure to make this
   //might add && confirmedPlayers.includes(i.member)
   const collector = partyMessage.channel.createMessageComponentCollector({
@@ -201,7 +201,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   collector.on("end", async (collected) => {
-    if (collected.last != "stop") {
+    if (collected.last.customId != "stop") {
       const stackButton = rowBoat("Stack it!", "stack");
       await partyMessage.edit({ components: [stackButton] });
       await stackIt(partyMessage, confirmedPlayers, partyThread);
