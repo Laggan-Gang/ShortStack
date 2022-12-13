@@ -209,6 +209,11 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       const stackButton = rowBoat("Stack it!", "stack");
       await partyMessage.edit({ components: [stackButton] });
       await stackIt(partyMessage, confirmedPlayers, partyThread);
+    } else if (collected.last().customId === "stop") {
+      await partyMessage.edit({
+        content: collected.last().user + " stopped the ready check",
+        components: [],
+      });
     }
   });
 }
