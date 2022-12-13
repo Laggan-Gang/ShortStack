@@ -179,12 +179,12 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   collector.on("collect", async (i) => {
+    const pickTime = getTimestamp(1);
     switch (i.customId) {
       case "rdy":
         const player = readyArray.find((e) => {
           return e.gamer.id === i.member.user.id && e.ready === false;
         });
-        const pickTime = getTimestamp(1);
         if (player) {
           await handleIt(i, "READY");
           player.ready = true;
@@ -204,6 +204,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
       case "sudo":
         await handleIt(i, "``sudo ready``");
+        forceReady(readyArray, pickTime, miliTime);
         collector.stop();
         break;
       case "ping":
@@ -219,19 +220,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     const time = getTimestamp(1000);
     if (!everyoneReady(readyArray)) {
       switch (collected.last().customId) {
-        case "sudo":
-          const stackButton = rowBoat("Stack it!", "stack");
-          await partyMessage.edit({
-            content: `${collected
-              .last()
-              .member.toString()} Used FORCED READY! You should be safe to stack, if not blame ${collected
-              .last()
-              .member.toString()}`,
-            components: [stackButton],
-          });
-          await stackIt(partyMessage, confirmedPlayers, partyThread);
-          return;
-
         case "stop":
           await partyMessage.edit({
             content: `${collected
@@ -256,13 +244,36 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       }
     } else {
       const stackButton = rowBoat("Stack it!", "stack");
-      await partyMessage.edit({
-        content: "Everyopne's ready!",
-        components: [stackButton],
-      });
-      await stackIt(partyMessage, confirmedPlayers, partyThread);
+      switch (collected.last().customId) {
+        case "sudo":
+          await partyMessage.edit({
+            content: `${collected
+              .last()
+              .member.toString()} Used FORCED READY! You should be safe to stack, if not blame ${collected
+              .last()
+              .member.toString()}`,
+            components: [stackButton],
+          });
+          await stackIt(partyMessage, confirmedPlayers, partyThread);
+          return;
+
+        case "rdy":
+          await partyMessage.edit({
+            content: "Everyopne's ready!",
+            components: [stackButton],
+          });
+          await stackIt(partyMessage, confirmedPlayers, partyThread);
+          return;
+      }
     }
   });
+}
+
+function forceReady(readyArray, pickTime, miliTime) {
+  for (player of readyArray) {
+    player.ready = true;
+    player.pickTime = pickTime - miliTime;
+  }
 }
 
 function everyoneReady(readyArray) {
@@ -370,10 +381,14 @@ async function stackIt(message, confirmedPlayers, partyThread) {
   });
 
   collector.on("end", async (collected) => {
-    await message.edit({
-      content: "You actually don't seem all that ready.",
-      components: [],
-    });
+    if (collected.last()) {
+      await message.edit({ content: "Stack is running in the Stack Thread!" });
+    } else {
+      await message.edit({
+        content: "You actually don't seem all that ready.",
+        components: [],
+      });
+    }
   });
 }
 
