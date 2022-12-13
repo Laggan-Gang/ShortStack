@@ -188,7 +188,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           }
         }
         if (i > 4) {
-          collector.stop();
+          console.log("Now stopping");
+          collector.stop("That's enough");
         }
         break;
       case "stop":
@@ -206,6 +207,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   collector.on("end", async (collected) => {
+    await partyMessage.edit({ components: rowBoat("Stack it!", "stack") });
     await stackIt(partyMessage, confirmedPlayers, partyThread);
   });
 }
@@ -233,7 +235,8 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
 }
 
 async function stackIt(message, confirmedPlayers, partyThread) {
-  const filter = (i) => i.channel.id === message.channel.id;
+  const filter = (i) =>
+    i.channel.id === message.channel.id && i.customId === "stack";
   const collector = message.channel.createMessageComponentCollector({
     filter,
     time: 5 * 60 * 1000,
