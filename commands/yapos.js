@@ -246,7 +246,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       }
     } else {
       const stackButton = rowBoat("Stack it!", "stack");
-      await partyMessage.edit({ components: [stackButton] });
+      await partyMessage.edit({
+        content: "Everyopne's ready!",
+        components: [stackButton],
+      });
       await stackIt(partyMessage, confirmedPlayers, partyThread);
     }
   });
