@@ -211,7 +211,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       await stackIt(partyMessage, confirmedPlayers, partyThread);
     } else if (collected.last().customId === "stop") {
       await partyMessage.edit({
-        content: collected.last().user + " stopped the ready check",
+        content: collected.last().member + " stopped the ready check",
         components: [],
       });
     }
