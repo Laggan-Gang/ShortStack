@@ -231,8 +231,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   }
 
   collector.on("end", async (collected) => {
-    console.log("Här är senaste collected");
-    console.log(collected.last().customId);
     switch (collected.last().customId) {
       case "rdy":
       case "sudo":
