@@ -357,7 +357,7 @@ function stringPrettifier(string) {
   const optimalStringLength = 39;
   const neededFilling = optimalStringLength - string.length;
   const stringFilling = " ".repeat(neededFilling + 1);
-  return `\`\`${string}${stringFilling}\`\``;
+  return `${string}${stringFilling}`;
 }
 
 function rowBoat(btnText, btnId) {
