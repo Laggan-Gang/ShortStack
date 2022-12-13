@@ -61,7 +61,7 @@ async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
   const inButton = rowBoat("I'M IN", "in");
-  const outButton = rowbout("'M OUT", "out");
+  const outButton = rowBoat("'M OUT", "out");
 
   const time = getTimestampInSeconds();
   const message = await interaction.channel.send({
