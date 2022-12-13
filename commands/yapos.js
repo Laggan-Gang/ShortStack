@@ -67,7 +67,7 @@ async function setUp(interaction, confirmedPlayers) {
   const message = await interaction.channel.send({
     content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
-    components: [inButton + outButton],
+    components: [inButton, outButton],
   });
   if (confirmedPlayers.length < 5) {
     const filter = (i) =>
