@@ -60,13 +60,14 @@ async function arrayMaker(interaction) {
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const embed = prettyEmbed(confirmedPlayers);
-  const buttonRow = rowBoat("I'M IN", "in");
+  const inButton = rowBoat("I'M IN", "in");
+  const outButton = rowbout("'M OUT", "out");
 
   const time = getTimestampInSeconds();
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
-    components: [buttonRow],
+    components: [inButton + outButton],
   });
   if (confirmedPlayers.length < 5) {
     const filter = (i) =>
@@ -152,6 +153,7 @@ function rdyButtons() {
   return [buttonRow, row2];
 }
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
+  var rCount = 0;
   const readyArray = [];
   const time = getTimestampInSeconds();
   for (let player of confirmedPlayers) {
@@ -183,19 +185,17 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         );
         if (player) {
           await handleIt(i, "READY");
-          //const index = arrayCopy.findIndex((e) => e === player);
           player.ready = true;
           await partyMessage.edit({
             embeds: [readyEmbed(readyArray)],
           });
         }
-        var i = 0;
         for (let player of readyArray) {
           if (player.ready) {
-            i++;
+            rCount++;
           }
         }
-        if (i > 4) {
+        if (rCount > 4) {
           console.log("Now stopping");
           collector.stop("That's enough");
         }
@@ -216,53 +216,58 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     //The interaction will be "failed" unless we do something with it
   });
 
-  async function pingMessage(readyArray, partyThread) {
-    const shitList = [];
-    for (let player of readyArray) {
-      if (!player.ready) {
-        const gentleReminder = await partyThread.send(
-          player.gamer.toString() + " TAKING OUR SWEET TIME, HUH?"
-        );
-        shitList.push(gentleReminder);
-      }
-    }
-    for (let message of shitList) {
-      await message.delete();
-    }
-  }
-
   collector.on("end", async (collected) => {
     const redoButton = rowBoat("Re-Check", "redo");
     const time = getTimestampInSeconds();
-    switch (collected.last().customId) {
-      case "rdy":
-      case "sudo":
-        const stackButton = rowBoat("Stack it!", "stack");
-        await partyMessage.edit({ components: [stackButton] });
-        await stackIt(partyMessage, confirmedPlayers, partyThread);
-        break;
-      case "stop":
-        await partyMessage.edit({
-          content: `${collected
-            .last()
-            .member.toString()} stopped the ready check. Option to Re-Check closes <t:${
-            time + FIVEMINUTES
-          }:R>`,
-          components: [redoButton],
-        });
-        await redoCollector(partyMessage, confirmedPlayers, partyThread);
-        break;
-      default:
-        await partyMessage.edit({
-          content: `Ready check failed after 90 seconds. Option to Re-Check closes <t:${
-            time + FIVEMINUTES
-          }:R>`,
-          components: [redoButton],
-        });
-        await redoCollector(partyMessage, confirmedPlayers, partyThread);
-        break;
+    if (rCount < 4) {
+      switch (collected.last().customId) {
+        case "sudo":
+          const stackButton = rowBoat("Stack it!", "stack");
+          await partyMessage.edit({ components: [stackButton] });
+          await stackIt(partyMessage, confirmedPlayers, partyThread);
+          break;
+        case "stop":
+          await partyMessage.edit({
+            content: `${collected
+              .last()
+              .member.toString()} stopped the ready check. Option to Re-Check closes <t:${
+              time + FIVEMINUTES
+            }:R>`,
+            components: [redoButton],
+          });
+          await redoCollector(partyMessage, confirmedPlayers, partyThread);
+          break;
+        default:
+          await partyMessage.edit({
+            content: `Ready check failed after 90 seconds. Option to Re-Check closes <t:${
+              time + FIVEMINUTES
+            }:R>`,
+            components: [redoButton],
+          });
+          await redoCollector(partyMessage, confirmedPlayers, partyThread);
+          break;
+      }
+    } else {
+      const stackButton = rowBoat("Stack it!", "stack");
+      await partyMessage.edit({ components: [stackButton] });
+      await stackIt(partyMessage, confirmedPlayers, partyThread);
     }
   });
+}
+
+async function pingMessage(readyArray, partyThread) {
+  const shitList = [];
+  for (let player of readyArray) {
+    if (!player.ready) {
+      const gentleReminder = await partyThread.send(
+        player.gamer.toString() + " TAKING OUR SWEET TIME, HUH?"
+      );
+      shitList.push(gentleReminder);
+    }
+  }
+  for (let message of shitList) {
+    await message.delete();
+  }
 }
 
 async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
@@ -270,7 +275,7 @@ async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
     i.channel.id === partyMessage.channel.id && i.customId === "redo";
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
-    time: 5 * 60 * 1000,
+    time: FIVEMINUTES * 1000,
     max: 1,
   });
   collector.on("collect", async (i) => {
