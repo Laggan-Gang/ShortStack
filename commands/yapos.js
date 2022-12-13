@@ -202,6 +202,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   collector.on("end", async (collected) => {
+    console.log("Här är senaste collected");
+    console.log(collected.last().customId);
     if (collected.last().customId === "rdy" || "sudo") {
       const stackButton = rowBoat("Stack it!", "stack");
       await partyMessage.edit({ components: [stackButton] });
