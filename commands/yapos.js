@@ -356,7 +356,9 @@ function arrayPrettifier(playerArray) {
         stringPrettifier(player.gamer.nickname, neededFilling, player.ready)
       );
     } else {
-      const neededFilling = optimalStringLength - player.gamer.username.length;
+      console.log(player.gamer);
+      const neededFilling =
+        optimalStringLength - player.gamer.user.username.length;
       prettyArray.push(
         stringPrettifier(
           player.gamer.user.username,
