@@ -255,7 +255,7 @@ async function stackIt(message, confirmedPlayers, partyThread) {
       reason: "Time for stack!",
     });
 
-    const buttons = linkButton(message, stackThread, partyThread, i); //this one's fucked
+    const buttons = linkButton(message, stackThread, "Stack Thread"); //this one's fucked
     await message.edit({ components: [buttons] });
     await badaBing.badaBing(
       i,
