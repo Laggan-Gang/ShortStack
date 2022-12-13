@@ -205,6 +205,9 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       case "sudo":
         await handleIt(i, "``sudo ready``");
         forceReady(readyArray, pickTime, miliTime);
+        await partyMessage.edit({
+          embeds: [readyEmbed(readyArray)],
+        });
         collector.stop();
         break;
       case "ping":
