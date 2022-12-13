@@ -215,7 +215,20 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     //The interaction will be "failed" unless we do something with it
   });
 
-  async function pingMessage(readyArray, partyThread) {}
+  async function pingMessage(readyArray, partyThread) {
+    const shitList = [];
+    for (let player of readyArray) {
+      if (!player.ready) {
+        const gentleReminder = await partyThread.send(
+          player.gamer.toString() + " TAKING OUR SWEET TIME, HUH?"
+        );
+        shitList.push(gentleReminder);
+      }
+    }
+    for (let message of shitList) {
+      await message.delete();
+    }
+  }
 
   collector.on("end", async (collected) => {
     console.log("Här är senaste collected");
