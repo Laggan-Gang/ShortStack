@@ -321,9 +321,9 @@ function readyEmbed(readyArray) {
   const playerFields = [];
   for (let player of readyArray) {
     if (player.ready) {
-      playerFields.push(player.gamer + "✅");
+      playerFields.push(player.gamer.toString() + "✅");
     } else {
-      playerFields.push(player.gamer + "❌");
+      playerFields.push(player.gamer.toString() + "❌");
     }
   }
   const embed = {
