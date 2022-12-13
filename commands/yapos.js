@@ -147,12 +147,11 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
   const arrayCopy = [...readyArray];
   const embed = readyEmbed(readyArray);
-  const buttons = rdyButtons();
   const hasClicked = [];
   await partyMessage.edit({
     content: "",
     embeds: [embed],
-    components: [buttons],
+    components: [rdyButtons()],
   });
 
   const filter = (i) =>
