@@ -198,16 +198,17 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
     }
     //The interaction will be "failed" unless we do something with it
-    try {
-      await i.reply("THEY'RE READY");
-      await i.deleteReply();
-    } catch (error) {
-      console.log(error);
-    }
+    //try {
+    //  await i.reply("THEY'RE READY");
+    //  await i.deleteReply();
+    //} catch (error) {
+    //  console.log(error);
+    //}
   });
 
   collector.on("end", async (collected) => {
-    await partyMessage.edit({ components: rowBoat("Stack it!", "stack") });
+    const stackButton = rowBoat("Stack it!", "stack");
+    await partyMessage.edit({ components: stackButton });
     await stackIt(partyMessage, confirmedPlayers, partyThread);
   });
 }
