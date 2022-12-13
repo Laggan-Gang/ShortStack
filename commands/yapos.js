@@ -89,12 +89,7 @@ async function setUp(interaction, confirmedPlayers) {
       }
 
       //The interaction will be "failed" unless we do something with it
-      try {
-        await i.reply("THEY'RE IN");
-        await i.deleteReply();
-      } catch (error) {
-        console.log(error);
-      }
+      await handleIt(i, "THEY'RE IN");
     });
 
     collector.on("end", async (collected) => {
@@ -137,14 +132,14 @@ function rdyButtons() {
         .setCustomId("stop")
         .setLabel("Stop check")
         .setStyle(ButtonStyle.Danger)
-        .setDisabled(true)
+        .setDisabled(false)
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("sudo")
         .setLabel("FORCE READY")
         .setStyle(ButtonStyle.Danger)
-        .setDisabled(true)
+        .setDisabled(false)
     );
   return buttonRow;
 }
@@ -175,6 +170,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           (e) => e.id === i.member.user.id && e.ready === false
         );
         if (player) {
+          await handleIt(i, "READY");
           player.ready = true;
           //hasClicked.push(i.user.id); Maybe won't need this
           await partyMessage.edit({
@@ -193,23 +189,32 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         }
         break;
       case "stop":
+        await handleIt(i, "ABORTING!!!");
+        collector.stop("Someone wants out!");
         break;
       case "sudo":
+        await handleIt(i, "``sudo ready``");
+        collector.stop();
         break;
     }
     //The interaction will be "failed" unless we do something with it
+  });
+
+  async function handleIt(i, flavourText) {
     try {
-      await i.reply("THEY'RE READY");
+      await i.reply(flavourText);
       await i.deleteReply();
     } catch (error) {
       console.log(error);
     }
-  });
+  }
 
   collector.on("end", async (collected) => {
-    const stackButton = rowBoat("Stack it!", "stack");
-    await partyMessage.edit({ components: [stackButton] });
-    await stackIt(partyMessage, confirmedPlayers, partyThread);
+    if (collected.last != "stop") {
+      const stackButton = rowBoat("Stack it!", "stack");
+      await partyMessage.edit({ components: [stackButton] });
+      await stackIt(partyMessage, confirmedPlayers, partyThread);
+    }
   });
 }
 
