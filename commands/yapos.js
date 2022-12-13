@@ -333,14 +333,7 @@ function prettyEmbed(confirmedPlayers) {
 }
 
 function readyEmbed(readyArray) {
-  const playerFields = [];
-  for (let player of readyArray) {
-    if (player.ready) {
-      playerFields.push(stringPrettifier(player.gamer.toString()) + "✅");
-    } else {
-      playerFields.push(stringPrettifier(player.gamer.toString()) + "❌");
-    }
-  }
+  const playerFields = arrayPrettifier(readyArray);
   const embed = {
     color: (Math.random() * 0xffffff) << 0,
     fields: [
@@ -353,12 +346,45 @@ function readyEmbed(readyArray) {
   return embed;
 }
 
-function stringPrettifier(string) {
+function arrayPrettifier(playerArray) {
   const optimalStringLength = 39;
-  const neededFilling = optimalStringLength - string.length;
-  const stringFilling = "᲼".repeat(neededFilling + 1);
-  return `${string}${stringFilling}`;
+  const prettyArray = [];
+  for (let player of playerArray) {
+    if (player.gamer.nickname) {
+      const neededFilling = optimalStringLength - player.gamer.nickname.length;
+      prettyArray.push(
+        stringPrettifier(player.gamer.nickname, neededFilling, player.ready)
+      );
+    } else {
+      const neededFilling =
+        optimalStringLength - player.gamer.user.username.length;
+      prettyArray.push(
+        stringPrettifier(
+          player.gamer.user.username,
+          neededFilling,
+          player.ready
+        )
+      );
+    }
+  }
+  return prettyArray;
 }
+
+function stringPrettifier(playerName, fillingNeeded, ready) {
+  const stringFilling = "᲼".repeat(fillingNeeded);
+  if (ready) {
+    return `${playerName}${stringFilling}✅`;
+  } else {
+    return `${playerName}${stringFilling}❌`;
+  }
+}
+
+//function stringPrettifier(string) {
+//  const optimalStringLength = 39;
+//  const neededFilling = optimalStringLength - string.length;
+//  const stringFilling = "᲼".repeat(neededFilling + 1);
+//  return `${string}${stringFilling}`;
+//}
 
 function rowBoat(btnText, btnId) {
   const buttonRow = new ActionRowBuilder().addComponents(
