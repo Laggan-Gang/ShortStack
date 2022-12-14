@@ -111,7 +111,6 @@ async function setUp(interaction, confirmedPlayers) {
         await handleIt(i, "THEY'RE IN");
       } else if (i.customId === "out") {
         const index = confirmedPlayers.indexOf(i.user);
-        console.log("Index " + index);
         if (index > -1) {
           confirmedPlayers.splice(index, 1);
           await message.edit({
@@ -243,6 +242,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       case "ping":
         await handleIt(i, "Sending a gentle reminder...");
         await pingMessage(readyArray, partyThread);
+        if (everyoneReady(readyArray)) {
+          console.log("Now stopping");
+          collector.stop("That's enough");
+        }
         break;
     }
     //The interaction will be "failed" unless we do something with it
