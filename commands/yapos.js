@@ -242,16 +242,18 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       case "ping":
         await handleIt(i, "Sending a gentle reminder...");
         await pingMessage(readyArray, partyThread);
-        if (everyoneReady(readyArray)) {
-          console.log("Now stopping");
-          collector.stop("That's enough");
-        }
         break;
     }
     //The interaction will be "failed" unless we do something with it
   });
 
   collector.on("end", async (collected) => {
+    console.log("Now stopping, the final interaction was: ");
+    if (collected.last()) {
+      console.log(collected.last().customId);
+    } else {
+      console.log("Nothing!");
+    }
     const redoButton = rowBoat("Re-Check", "redo");
     const time = getTimestamp(1000);
     if (!everyoneReady(readyArray)) {
@@ -294,6 +296,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           return;
 
         case "rdy":
+        case "ping": //in freak cases "ping" can be the last one
           await partyMessage.edit({
             content: "Everyopne's ready!",
             components: [stackButton],
