@@ -364,7 +364,7 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
     content: confirmedPlayers.join(),
   });
   const memberArray = userToMember(confirmedPlayers, interaction);
-  ljudGöraren(memberArray);
+  ljudGöraren.ljudGöraren(memberArray);
   return { thread: partyThread, message: partyMessage };
 }
 
