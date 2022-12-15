@@ -6,7 +6,7 @@ const {
 } = require("@discordjs/voice");
 
 module.exports = {
-  ljudGöraren: async function ljudGöraren(meddelande, aleaIactaEst) {
+  ljudGöraren: async function ljudGöraren(confirmedPlayers) {
     const aleaIactaEst = Math.floor(Math.random() * 50);
     let ljudfil = "bow bow.wav";
     switch (true) {
