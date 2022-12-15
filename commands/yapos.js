@@ -64,7 +64,7 @@ async function setUp(interaction, confirmedPlayers) {
   const inOutButtons = inOut();
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
     components: [inOutButtons],
   });
@@ -78,16 +78,11 @@ async function setUp(interaction, confirmedPlayers) {
     collector.on("collect", async (i) => {
       console.log(i.user.username + " clicked " + i.customId);
       if (i.customId === "in") {
-        if (confirmedPlayers.length < 4) {
-          confirmedPlayers.push(i.user);
-          await message.edit({
-            embeds: [prettyEmbed(confirmedPlayers)],
-          });
-        } else {
-          confirmedPlayers.push(i.user);
-          await message.edit({
-            embeds: [prettyEmbed(confirmedPlayers)],
-          });
+        confirmedPlayers.push(i.user);
+        await message.edit({
+          embeds: [prettyEmbed(confirmedPlayers)],
+        });
+        if (confirmedPlayers.length > 4) {
           collector.stop("That's enough!");
         }
 
@@ -376,7 +371,7 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   return { thread: partyThread, message: partyMessage };
 }
 
-async function stackIt(message, confirmedPlayers, partyThread) {
+async function stackIt(message, confirmedPlayers) {
   const filter = (i) =>
     i.channel.id === message.channel.id && i.customId === "stack";
   const collector = message.channel.createMessageComponentCollector({
