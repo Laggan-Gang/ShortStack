@@ -55,14 +55,14 @@ module.exports = {
         console.log("default");
         break;
     }
-    let channel = meddelande.member.voice.channel;
 
+    const channel = channelFinder(memberArray);
     if (channel == undefined) {
       return;
     }
 
     const player = createAudioPlayer();
-    let resource = createAudioResource("./ljudklipp/" + ljudfil);
+    const resource = createAudioResource("./ljudklipp/" + ljudfil);
     const connection = joinVoiceChannel({
       channelId: channel.id,
       guildId: channel.guild.id,
@@ -87,4 +87,13 @@ function löftesKollaren(player) {
     });
   });
   return ed;
+}
+
+function channelFinder(memberArray) {
+  for (let member of memberArray) {
+    const channel = member.voice.channel;
+    if (channel) {
+      return channel;
+    }
+  }
 }

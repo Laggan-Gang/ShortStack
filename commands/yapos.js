@@ -363,8 +363,8 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   const partyMessage = await partyThread.send({
     content: confirmedPlayers.join(),
   });
-  userToMember(confirmedPlayers, interaction);
-  //ljudGöraren(confirmedPlayers);
+  const memberArray = userToMember(confirmedPlayers, interaction);
+  ljudGöraren(memberArray);
   return { thread: partyThread, message: partyMessage };
 }
 
