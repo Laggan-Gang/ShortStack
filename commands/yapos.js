@@ -40,10 +40,6 @@ module.exports = {
 
 async function arrayMaker(interaction) {
   const confirmedPlayers = [interaction.user];
-  console.log("Här är interaction.user");
-  console.log(interaction.user);
-  console.log("Här är interaction.member");
-  console.log(interaction.member);
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
@@ -82,7 +78,7 @@ async function setUp(interaction, confirmedPlayers) {
     collector.on("collect", async (i) => {
       console.log(i.user.username + " clicked " + i.customId);
       if (i.customId === "in") {
-        confirmedPlayers.push(i);
+        confirmedPlayers.push(i.user);
         await message.edit({
           embeds: [prettyEmbed(confirmedPlayers)],
         });
@@ -91,7 +87,7 @@ async function setUp(interaction, confirmedPlayers) {
         }
         await handleIt(i, "THEY'RE IN");
       } else if (i.customId === "out") {
-        const index = confirmedPlayers.indexOf(i);
+        const index = confirmedPlayers.indexOf(i.user);
         if (index > -1) {
           confirmedPlayers.splice(index, 1);
           await message.edit({
@@ -367,10 +363,24 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   const partyMessage = await partyThread.send({
     content: confirmedPlayers.join(),
   });
-  console.log("Här är confirmed player 0");
-  console.log(confirmedPlayers[0]);
+  userToMember(confirmedPlayers, interaction);
   //ljudGöraren(confirmedPlayers);
   return { thread: partyThread, message: partyMessage };
+}
+
+function userToMember(array, interaction) {
+  const memberArray = [];
+  for (let user of array) {
+    console.log("Här är user: ");
+    console.log(user);
+    const member = interaction.guild.members.cache.find(
+      (member) => member.id === user
+    );
+    console.log("Här är member: ");
+    console.log(member);
+    memberArray.push(member);
+  }
+  return memberArray;
 }
 
 async function stackIt(message, confirmedPlayers) {
@@ -399,7 +409,7 @@ async function stackIt(message, confirmedPlayers) {
       i,
       shuffledChoices,
       standardTime,
-      threadName,
+      i.user.username,
       stackThread
     );
   });
