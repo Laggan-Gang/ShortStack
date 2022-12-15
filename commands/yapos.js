@@ -40,6 +40,10 @@ module.exports = {
 
 async function arrayMaker(interaction) {
   const confirmedPlayers = [interaction.user];
+  console.log("Här är interaction.user");
+  console.log(interaction.user);
+  console.log("Här är interaction.member");
+  console.log(interaction.member);
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
@@ -78,18 +82,16 @@ async function setUp(interaction, confirmedPlayers) {
     collector.on("collect", async (i) => {
       console.log(i.user.username + " clicked " + i.customId);
       if (i.customId === "in") {
-        confirmedPlayers.push(i.user);
+        confirmedPlayers.push(i);
         await message.edit({
           embeds: [prettyEmbed(confirmedPlayers)],
         });
         if (confirmedPlayers.length > 4) {
           collector.stop("That's enough!");
         }
-
-        //The interaction will be "failed" unless we do something with it
         await handleIt(i, "THEY'RE IN");
       } else if (i.customId === "out") {
-        const index = confirmedPlayers.indexOf(i.user);
+        const index = confirmedPlayers.indexOf(i);
         if (index > -1) {
           confirmedPlayers.splice(index, 1);
           await message.edit({
@@ -397,7 +399,7 @@ async function stackIt(message, confirmedPlayers) {
       i,
       shuffledChoices,
       standardTime,
-      i.user.username,
+      threadName,
       stackThread
     );
   });
