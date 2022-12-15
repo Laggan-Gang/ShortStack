@@ -7,6 +7,7 @@ const {
 
 module.exports = {
   ljudGöraren: async function ljudGöraren(meddelande, aleaIactaEst) {
+    const aleaIactaEst = Math.floor(Math.random() * 50);
     let ljudfil = "bow bow.wav";
     switch (true) {
       case inRange(aleaIactaEst, 0, 0):

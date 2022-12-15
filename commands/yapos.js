@@ -4,6 +4,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
+const ljudGöraren = require("../jukeBox.js");
 const badaBing = require("../badaBing.js");
 const standardTime = 60;
 const TRASH_CHANNEL = "539847809004994560";
@@ -55,23 +56,6 @@ async function arrayMaker(interaction) {
       return confirmedPlayers;
     }
   }
-}
-
-function inOut() {
-  const buttonRow = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("in")
-        .setLabel("I'M IN")
-        .setStyle(ButtonStyle.Success)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("out")
-        .setLabel("I'M OUT")
-        .setStyle(ButtonStyle.Danger)
-    );
-  return buttonRow;
 }
 
 async function setUp(interaction, confirmedPlayers) {
@@ -386,7 +370,9 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   const partyMessage = await partyThread.send({
     content: confirmedPlayers.join(),
   });
-
+  console.log("Här är confirmed player 0");
+  console.log(confirmedPlayers[0]);
+  //ljudGöraren(confirmedPlayers);
   return { thread: partyThread, message: partyMessage };
 }
 
@@ -502,6 +488,23 @@ function linkButton(message, thread, label) {
       .setLabel(label)
       .setStyle(ButtonStyle.Link)
   );
+  return buttonRow;
+}
+
+function inOut() {
+  const buttonRow = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("in")
+        .setLabel("I'M IN")
+        .setStyle(ButtonStyle.Success)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("out")
+        .setLabel("I'M OUT")
+        .setStyle(ButtonStyle.Danger)
+    );
   return buttonRow;
 }
 
