@@ -257,7 +257,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     const redoButton = rowBoat("Re-Check", "redo");
     const time = getTimestamp(1000);
     if (!everyoneReady(readyArray)) {
-      switch (collected.last().customId) {
+      switch (collected.last()?.customId) {
         case "stop":
           await partyMessage.edit({
             content: `${collected
@@ -531,6 +531,7 @@ function shuffle([...array]) {
 
 async function handleIt(i, flavourText) {
   try {
+    console.log("Handling it!");
     await i.reply(flavourText);
     await i.deleteReply();
   } catch (error) {
