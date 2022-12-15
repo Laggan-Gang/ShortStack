@@ -458,7 +458,7 @@ function readyEmbed(readyArray) {
   for (let player of readyArray) {
     if (player.ready) {
       playerFields.push(
-        `${stringPrettifier(player.gamer.toString())}\`\`readied in ${
+        `${stringPrettifier(player.gamer.toString())} \`\`readied in ${
           player.pickTime / 1000
         }\`\`✅`
       );
