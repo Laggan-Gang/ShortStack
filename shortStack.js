@@ -4,9 +4,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const {
   Client,
+  Intents,
   Collection,
   GatewayIntentBits,
-  Intents,
 } = require("discord.js");
 const { token } = require("./config.json");
 
