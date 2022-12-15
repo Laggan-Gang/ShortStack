@@ -371,13 +371,9 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
 function userToMember(array, interaction) {
   const memberArray = [];
   for (let user of array) {
-    console.log("Här är user: ");
-    console.log(user);
     const member = interaction.guild.members.cache.find(
       (member) => member.id === user.id
     );
-    console.log("Här är member: ");
-    console.log(member);
     memberArray.push(member);
   }
   return memberArray;

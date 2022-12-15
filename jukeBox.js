@@ -68,6 +68,7 @@ module.exports = {
       guildId: channel.guild.id,
       adapterCreator: channel.guild.voiceAdapterCreator,
     });
+    console.log(resource);
     const subscription = connection.subscribe(player);
     player.play(resource);
     await löftesKollaren(player);
