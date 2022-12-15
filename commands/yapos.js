@@ -374,7 +374,7 @@ function userToMember(array, interaction) {
     console.log("Här är user: ");
     console.log(user);
     const member = interaction.guild.members.cache.find(
-      (member) => member.id === user
+      (member) => member.id === user.id
     );
     console.log("Här är member: ");
     console.log(member);
