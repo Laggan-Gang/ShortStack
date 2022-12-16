@@ -3,6 +3,9 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } = require("discord.js");
 const ljudGöraren = require("../jukeBox.js");
 const badaBing = require("../badaBing.js");
@@ -621,3 +624,32 @@ const readyColours = {
   3: 0xa3ff00,
   4: 0x2cba00,
 };
+
+async function modalThing(interaction) {
+  // Create the modal
+  const modal = new ModalBuilder()
+    .setCustomId("textCollector")
+    .setTitle("Ok, buddy");
+
+  // Add components to modal
+
+  // Create the text input components
+  const favoriteColorInput = new TextInputBuilder()
+    .setCustomId("reason")
+    // The label is the prompt the user sees for this input
+    .setLabel("What's the holdup?")
+    // Short means only a single line of text
+    .setStyle(TextInputStyle.Short);
+
+  // An action row only holds one text input,
+  // so you need one action row per text input.
+  const textInput = new ActionRowBuilder().addComponents(favoriteColorInput);
+
+  // Add inputs to the modal
+  modal.addComponents(textInput);
+
+  // Show the modal to the user
+  await interaction.showModal(modal);
+  //det här är obvi inte samma interaction, den måste komma sen
+}
+// const reason = interaction.fields.getTextInputValue("reason");
