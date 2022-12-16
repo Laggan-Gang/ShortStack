@@ -65,7 +65,7 @@ async function setUp(interaction, confirmedPlayers) {
   const inOutButtons = inOut();
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
     components: inOutButtons,
   });
@@ -81,18 +81,24 @@ async function setUp(interaction, confirmedPlayers) {
       console.log(i.user.username + " clicked " + i.customId);
       switch (i.customId) {
         case "in":
-          confirmedPlayers.push(i.user);
-          await message.edit({
-            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          });
-          if (confirmedPlayers.length > 4) {
-            collector.stop("That's enough!");
+          if (!confirmedPlayers.includes(i.user)) {
+            eRemover(condiPlayers, i); //remove player from Condi if they're in it
+            confirmedPlayers.push(i.user);
+            await message.edit({
+              embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+            });
+            if (confirmedPlayers.length > 4) {
+              collector.stop("That's enough!");
+            }
+            await handleIt(i, "THEY'RE IN!");
+          } else {
+            await handleIt(i, "YOU'RE ALREADY IN!");
           }
-          await handleIt(i, "THEY'RE IN");
           break;
 
         case "condi":
-          condiPlayers.push(i.user);
+          eRemover(confirmedPlayers, i);
+          condiPlayers.push(i.user); //remove player from IN if they're in it
           await message.edit({
             embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
           });
@@ -100,8 +106,8 @@ async function setUp(interaction, confirmedPlayers) {
           break;
 
         case "out":
-          const pInOut = eRemover(confirmedPlayers, i);
           const pConOut = eRemover(condiPlayers, i);
+          const pInOut = eRemover(confirmedPlayers, i);
           if (pInOut || pConOut) {
             await message.edit({
               embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
