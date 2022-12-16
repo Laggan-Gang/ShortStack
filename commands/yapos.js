@@ -309,7 +309,7 @@ async function pingMessage(readyArray, partyThread) {
   for (let player of readyArray) {
     if (!player.ready) {
       const gentleReminder = await partyThread.send(
-        `${player.gamer.toString()}${shuffle(REMINDERS[0])}`
+        `${player.gamer.toString()}${shuffle(REMINDERS)[0]}`
       );
       shitList.push(gentleReminder);
     }
