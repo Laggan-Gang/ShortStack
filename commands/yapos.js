@@ -249,7 +249,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
         default:
           await partyMessage.edit({
-            content: `Ready check failed after 90 seconds. Option to Re-Check closes <t:${
+            content: `Ready check failed after ${READYTIME.toString()} seconds. Option to Re-Check closes <t:${
               time + FIVEMINUTES
             }:R>`,
             components: [redoButton],
