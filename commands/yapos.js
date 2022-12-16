@@ -309,7 +309,7 @@ async function pingMessage(readyArray, partyThread) {
   for (let player of readyArray) {
     if (!player.ready) {
       const gentleReminder = await partyThread.send(
-        player.gamer.toString() + " TAKING OUR SWEET TIME, HUH?"
+        `${player.gamer.toString()}${shuffle(REMINDERS[0])}`
       );
       shitList.push(gentleReminder);
     }
@@ -544,3 +544,18 @@ async function handleIt(i, flavourText) {
     console.log(error);
   }
 }
+
+const REMINDERS = [
+  " TAKING OUR SWEET TIME, HUH?",
+  " **JALLA, BITCH!**",
+  " CHOP CHOP!",
+  " NU SKET DU ALLT I DET BLÅ SKÅPET",
+  " Hur lång tid kan det ta...",
+  " WHAT'S TAKING YOU???",
+  " THIS GAME AIN'T GONNA THROW ITSELF",
+  " A LITTLE LESS CONVERSATION, A LITTLE MORE ACTION PLEASE",
+  " LESS TALK, MORE COCK",
+  " LESS STALL, MORE /STACK",
+  " POOP FASTER!!!",
+  " ***TODAY MB???***",
+];
