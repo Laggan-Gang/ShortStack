@@ -332,7 +332,7 @@ async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
   });
 
   collector.on("end", async (collected) => {
-    switch (collected.last().customId) {
+    switch (collected.last()?.customId) {
       case "redo":
         await readyChecker(confirmedPlayers, partyMessage, partyThread);
         break;
