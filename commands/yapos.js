@@ -60,13 +60,14 @@ async function arrayMaker(interaction) {
 
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
-  const embed = prettyEmbed(confirmedPlayers);
+  const condiPlayers = [];
+  const embed = prettyEmbed(confirmedPlayers, condiPlayers);
   const inOutButtons = inOut();
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
-    components: [inOutButtons],
+    components: inOutButtons,
   });
   if (confirmedPlayers.length < 5) {
     const filter = (i) =>
@@ -77,26 +78,38 @@ async function setUp(interaction, confirmedPlayers) {
     });
     collector.on("collect", async (i) => {
       console.log(i.user.username + " clicked " + i.customId);
-      if (i.customId === "in") {
-        confirmedPlayers.push(i.user);
-        await message.edit({
-          embeds: [prettyEmbed(confirmedPlayers)],
-        });
-        if (confirmedPlayers.length > 4) {
-          collector.stop("That's enough!");
-        }
-        await handleIt(i, "THEY'RE IN");
-      } else if (i.customId === "out") {
-        const index = confirmedPlayers.indexOf(i.user);
-        if (index > -1) {
-          confirmedPlayers.splice(index, 1);
+      switch (i.customId) {
+        case "in":
+          confirmedPlayers.push(i.user);
           await message.edit({
-            embeds: [prettyEmbed(confirmedPlayers)],
+            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
           });
-          await handleIt(i, "THEY'RE OUT");
-        } else {
-          await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
-        }
+          if (confirmedPlayers.length > 4) {
+            collector.stop("That's enough!");
+          }
+          await handleIt(i, "THEY'RE IN");
+          break;
+
+        case "condi":
+          condiPlayers.push(i.user);
+          await message.edit({
+            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          });
+          await handleIt(i, "They're IN, but being annoying about it");
+          break;
+
+        case "out":
+          const index = confirmedPlayers.indexOf(i.user);
+          if (index > -1) {
+            confirmedPlayers.splice(index, 1);
+            await message.edit({
+              embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+            });
+            await handleIt(i, "THEY'RE OUT");
+          } else {
+            await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
+          }
+          break;
       }
     });
 
@@ -422,9 +435,11 @@ async function stackIt(message, confirmedPlayers) {
   });
 }
 
-function prettyEmbed(confirmedPlayers) {
+function prettyEmbed(confirmedPlayers, condiPlayers) {
   const maxLength = 5;
   const playerFields = [];
+  const conditionalFields = [];
+  const embedFields = [];
   for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
       playerFields.push(confirmedPlayers[i]);
@@ -432,9 +447,24 @@ function prettyEmbed(confirmedPlayers) {
       playerFields.push(`${`\`\`Open slot\`\``}`);
     }
   }
+  embedFields.push({
+    name: "*Who's up for Dota?*",
+    value: playerFields.join("\n"),
+  });
+
+  if (condiPlayers[0]) {
+    condiPlayers.map((e) => {
+      conditionalFields.push(e);
+    });
+    embedFields.push({
+      name: "Conditionally IN",
+      value: conditionalFields.join("\n"),
+    });
+  }
+
   const embed = {
-    color: (Math.random() * 0xffffff) << 0,
-    fields: [{ name: "*Who's up for Dota?*", value: playerFields.join("\n") }],
+    color: readyColours[confirmedPlayers.length],
+    fields: embedFields,
     //image: {
     //  url: "attachment://dota-map.png",
     //},
@@ -495,7 +525,7 @@ function linkButton(message, thread, label) {
 }
 
 function inOut() {
-  const buttonRow = new ActionRowBuilder()
+  const row1 = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
         .setCustomId("in")
@@ -508,7 +538,13 @@ function inOut() {
         .setLabel("I'M OUT")
         .setStyle(ButtonStyle.Danger)
     );
-  return buttonRow;
+  const row2 = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId("condi")
+      .setLabel("I'm in, but...")
+      .setStyle(ButtonStyle.Secondary)
+  );
+  return [row1, row2];
 }
 
 function getTimestamp(mod) {
@@ -559,3 +595,11 @@ const REMINDERS = [
   " POOP FASTER!!!",
   " ***TODAY MB???***",
 ];
+
+const readyColours = {
+  0: 0xff0000,
+  1: 0xffa700,
+  2: 0xfff400,
+  3: 0xa3ff00,
+  4: 0x2cba00,
+};
