@@ -101,7 +101,8 @@ async function setUp(interaction, confirmedPlayers) {
 
         case "out":
           const pInOut = eRemover(confirmedPlayers, i);
-          if (pInOut) {
+          const pConOut = eRemover(condiPlayers, i);
+          if (pInOut || pConOut) {
             await message.edit({
               embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
             });
@@ -141,7 +142,7 @@ async function setUp(interaction, confirmedPlayers) {
 function eRemover(array, interaction) {
   const index = array.indexOf(interaction.user);
   if (index > -1) {
-    array.splice(index, 1); //maybe this is dumb and dangerous?
+    array.splice(index, 1); //Return the array instead probably
     return true;
   } else {
     return false;
