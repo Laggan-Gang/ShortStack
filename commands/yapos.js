@@ -65,7 +65,7 @@ async function setUp(interaction, confirmedPlayers) {
   const inOutButtons = inOut();
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
-    content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
     components: inOutButtons,
   });
@@ -100,9 +100,8 @@ async function setUp(interaction, confirmedPlayers) {
           break;
 
         case "out":
-          const index = confirmedPlayers.indexOf(i.user);
-          if (index > -1) {
-            confirmedPlayers.splice(index, 1);
+          const pInOut = eRemover(confirmedPlayers, i);
+          if (pInOut) {
             await message.edit({
               embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
             });
@@ -139,38 +138,16 @@ async function setUp(interaction, confirmedPlayers) {
   }
 }
 
-function rdyButtons() {
-  const buttonRow = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("rdy")
-        .setLabel("✅")
-        .setStyle(ButtonStyle.Success)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("stop")
-        .setLabel("Cancel")
-        .setStyle(ButtonStyle.Danger)
-        .setDisabled(false)
-    );
-  const row2 = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("sudo")
-        .setLabel("FORCE READY")
-        .setStyle(ButtonStyle.Primary)
-        .setDisabled(false)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("ping")
-        .setLabel("Ping")
-        .setStyle(ButtonStyle.Secondary)
-        .setDisabled(false)
-    );
-  return [buttonRow, row2];
+function eRemover(array, interaction) {
+  const index = array.indexOf(interaction.user);
+  if (index > -1) {
+    array.splice(index, 1); //maybe this is dumb and dangerous?
+    return true;
+  } else {
+    return false;
+  }
 }
+
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = [];
   const time = getTimestamp(1000);
@@ -458,7 +435,7 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
       conditionalFields.push(e);
     });
     embedFields.push({
-      name: "Conditionally IN",
+      name: "*Conditionally In*",
       value: conditionalFields.join("\n"),
     });
   }
@@ -542,10 +519,43 @@ function inOut() {
   const row2 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId("condi")
-      .setLabel("I'm in, but...")
+      .setLabel("I'm In, but...")
       .setStyle(ButtonStyle.Secondary)
   );
   return [row1, row2];
+}
+
+function rdyButtons() {
+  const buttonRow = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("rdy")
+        .setLabel("✅")
+        .setStyle(ButtonStyle.Success)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("stop")
+        .setLabel("Cancel")
+        .setStyle(ButtonStyle.Danger)
+        .setDisabled(false)
+    );
+  const row2 = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("sudo")
+        .setLabel("FORCE READY")
+        .setStyle(ButtonStyle.Primary)
+        .setDisabled(false)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("ping")
+        .setLabel("Ping")
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(false)
+    );
+  return [buttonRow, row2];
 }
 
 function getTimestamp(mod) {
