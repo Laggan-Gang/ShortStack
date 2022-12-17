@@ -101,7 +101,6 @@ async function setUp(interaction, confirmedPlayers) {
           if (!condiPlayers.find(playerIdentity(i))) {
             eRemover(confirmedPlayers, i); //remove player from IN if they're in it
             const condition = await modalThing(i);
-            console.log("Här kommer modal thing return");
             console.log(condition);
             condiPlayers.push({ player: i.user, condition: condition });
             await message.edit({
@@ -629,7 +628,7 @@ async function modalThing(interaction) {
   const submitted = await interaction
     .awaitModalSubmit({
       // Timeout after readytime of not receiving any valid Modals
-      time: READYTIME * 1000,
+      time: 15 * 1000,
       // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
       filter: (i) => i.user.id === interaction.user.id,
     })
