@@ -6,7 +6,6 @@ const {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
-  StringSelectMenuBuilder,
 } = require("discord.js");
 const ljudGöraren = require("../jukeBox.js");
 const badaBing = require("../badaBing.js");
@@ -426,26 +425,8 @@ async function modalThing(interaction) {
     .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
     .setMaxLength(280)
     .setStyle(TextInputStyle.Short);
-  const etaInput = new StringSelectMenuBuilder()
-    .setCustomId("select")
-    .setPlaceholder("Nothing selected")
-    .addOptions(
-      {
-        label: "Select me",
-        description: "This is a description",
-        value: "first_option",
-      },
-      {
-        label: "You can select me too",
-        description: "This is also a description",
-        value: "second_option",
-      }
-    );
 
-  const modalInput = new ActionRowBuilder().addComponents(
-    reasionInput,
-    etaInput
-  );
+  const modalInput = new ActionRowBuilder().addComponents(reasionInput);
   modal.addComponents(modalInput);
   await interaction.showModal(modal);
   // Get the Modal Submit Interaction that is emitted once the User submits the Modal
@@ -460,7 +441,8 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
-  const reason = submitted.fields.getTextInputValue("reason");
+  const time = getTimestamp(1);
+  const reason = submitted.fields.getTextInputValue("reason") + hMTime(time);
   if (reason) {
     await submitted.reply(`Oh "${reason}" huh, I see`);
     await submitted.deleteReply();
@@ -469,6 +451,19 @@ async function modalThing(interaction) {
     await submitted.reply(`Type faster!`);
     await submitted.deleteReply();
   }
+}
+
+function hMTime(timestamp) {
+  // Create a new JavaScript Date object based on the timestamp
+  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+  const date = new Date(timestamp * 1000);
+  // Hours part from the timestamp
+  const hours = date.getHours();
+  // Minutes part from the timestamp
+  const minutes = `0${date.getMinutes()}`;
+  // Seconds part from the timestamp
+  const formattedTime = `${hours}:${minutes}`;
+  return formattedTime;
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
