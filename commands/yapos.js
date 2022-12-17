@@ -74,7 +74,8 @@ async function setUp(interaction, confirmedPlayers) {
   if (confirmedPlayers.length < 5) {
     const filter = (i) =>
       i.channel.id === message.channel.id &&
-      ["in", "out", "condi", "modal"].includes(i.customId);
+      ["in", "out", "condi", "modal"].includes(i.customId) &&
+      i.message.id === message.id;
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: ONEHOUR * 1000,
