@@ -660,7 +660,7 @@ async function modalThing(interaction) {
     });
 
   if (submitted) {
-    const pruttis = submitted.getTextInputValue(key.customId);
+    const pruttis = submitted.getTextInputValue("reason");
     console.log("Här är pruttis");
     console.log(pruttis);
   }
