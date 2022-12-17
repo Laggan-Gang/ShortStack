@@ -414,9 +414,6 @@ async function stackIt(message, confirmedPlayers) {
       autoArchiveDuration: 60,
       reason: "Time for stack!",
     });
-
-    const buttons = linkButton(message, stackThread, "Stack Thread"); //this one's fucked
-    await message.edit({ components: [buttons] });
     await badaBing.badaBing(
       i,
       shuffledChoices,
@@ -428,6 +425,8 @@ async function stackIt(message, confirmedPlayers) {
 
   collector.on("end", async (collected) => {
     if (collected.last()) {
+      const buttons = linkButton(message, stackThread, "Stack Thread"); //this one's fucked
+      await message.edit({ components: [buttons] });
       await message.edit({ content: "Stack is running in the Stack Thread!" });
     } else {
       await message.edit({
