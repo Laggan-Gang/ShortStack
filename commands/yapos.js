@@ -660,9 +660,7 @@ async function modalThing(interaction) {
     });
 
   if (submitted) {
-    const pruttis = Object.keys(fields).map((key) =>
-      submitted.fields.getTextInputValue(key.customId)
-    );
+    const pruttis = submitted.getTextInputValue(key.customId);
     console.log("Här är pruttis");
     console.log(pruttis);
   }
