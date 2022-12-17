@@ -14,7 +14,7 @@ const TRASH_CHANNEL = "539847809004994560";
 const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
-const READYTIME = 120;
+const READYTIME = 2 * 60;
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -67,7 +67,7 @@ async function setUp(interaction, confirmedPlayers) {
   const inOutButtons = inOut();
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
-    content: `Yapos call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
     embeds: [embed],
     components: inOutButtons,
   });
@@ -397,7 +397,7 @@ async function stackIt(message, confirmedPlayers) {
     i.channel.id === message.channel.id && i.customId === "stack";
   const collector = message.channel.createMessageComponentCollector({
     filter,
-    time: 5 * 60 * 1000,
+    time: FIVEMINUTES * 1000,
     max: 1,
   });
   collector.on("collect", async (i) => {
