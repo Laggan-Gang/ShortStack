@@ -15,6 +15,7 @@ const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
+
 const debug = ["<@&412260353699872768>", "yapos"];
 const yapos = debug[0];
 
@@ -39,7 +40,7 @@ const readyColours = {
   2: 0xff9900,
   3: 0xffff00, //yellow
   4: 0xccff33,
-  5: 0x99ff33, //full green
+  5: 0x99ff33, //green
 };
 
 async function arrayMaker(interaction) {
