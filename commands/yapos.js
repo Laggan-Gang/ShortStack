@@ -16,29 +16,27 @@ const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 120;
 
-module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("yapos")
-    .setDescription("Time to gauge dota interest")
-    .addUserOption((option) =>
-      option.setName("p2").setDescription("Anyone else?").setRequired(false)
-    )
-    .addUserOption((option) =>
-      option.setName("p3").setDescription("Anyone else?").setRequired(false)
-    )
-    .addUserOption((option) =>
-      option.setName("p4").setDescription("Anyone else?").setRequired(false)
-    )
-    .addUserOption((option) =>
-      option.setName("p5").setDescription("Anyone else?").setRequired(false)
-    ),
+const REMINDERS = [
+  " TAKING OUR SWEET TIME, HUH?",
+  " **JALLA, BITCH!**",
+  " CHOP CHOP!",
+  " NU SKET DU ALLT I DET BLÅ SKÅPET",
+  " Hur lång tid kan det ta...",
+  " WHAT'S TAKING YOU???",
+  " THIS GAME AIN'T GONNA THROW ITSELF",
+  " A LITTLE LESS CONVERSATION, A LITTLE MORE ACTION PLEASE",
+  " LESS TALK, MORE COCK",
+  " LESS STALL, MORE /STACK",
+  " POOP FASTER!!!",
+  " ***TODAY MB???***",
+];
 
-  async execute(interaction) {
-    const confirmedPlayers = await arrayMaker(interaction);
-    interaction.deferReply();
-    interaction.deleteReply();
-    await setUp(interaction, confirmedPlayers);
-  },
+const readyColours = {
+  0: 0xff0000,
+  1: 0xffa700,
+  2: 0xfff400,
+  3: 0xa3ff00,
+  4: 0x2cba00,
 };
 
 async function arrayMaker(interaction) {
@@ -84,7 +82,7 @@ async function setUp(interaction, confirmedPlayers) {
       console.log(i.user.username + " clicked " + i.customId);
       switch (i.customId) {
         case "in":
-          if (!confirmedPlayers.includes(i.user)) {
+          if (!confirmedPlayers.find(playerIdentity(i))) {
             eRemover(condiPlayers, i); //remove player from Condi if they're in it
             confirmedPlayers.push(i.user);
             await message.edit({
@@ -100,15 +98,21 @@ async function setUp(interaction, confirmedPlayers) {
           break;
 
         case "condi":
-          eRemover(confirmedPlayers, i);
-          const condition = await modalThing(i);
-          console.log("Här kommer modal thing return");
-          console.log(condition);
-          condiPlayers.push({ player: i.user, condition: condition }); //remove player from IN if they're in it
-          await message.edit({
-            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          });
-          //await handleIt(i, "They're IN, but being annoying about it");
+          if (!condiPlayers.find(playerIdentity(i))) {
+            eRemover(confirmedPlayers, i); //remove player from IN if they're in it
+            const condition = await modalThing(i);
+            console.log("Här kommer modal thing return");
+            console.log(condition);
+            condiPlayers.push({ player: i.user, condition: condition });
+            await message.edit({
+              embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+            });
+          } else {
+            await handleIt(
+              i,
+              "You're already conditionally in, what the hell don't push it wtf"
+            );
+          }
           break;
 
         case "out":
@@ -151,11 +155,13 @@ async function setUp(interaction, confirmedPlayers) {
   }
 }
 
+function playerIdentity(interaction) {
+  return (e) => [e?.id, e.player?.id].includes(interaction.user.id);
+}
+
 function eRemover(array, interaction) {
   //const index2 = array.findIndex(interaction.user);
-  const index = array.findIndex((e) =>
-    [e?.id, e.player?.id].includes(interaction.user.id)
-  );
+  const index = array.findIndex(playerIdentity(interaction));
   if (index > -1) {
     array.splice(index, 1); //Return the array instead probably
     return true;
@@ -608,46 +614,17 @@ async function handleIt(i, flavourText) {
   }
 }
 
-const REMINDERS = [
-  " TAKING OUR SWEET TIME, HUH?",
-  " **JALLA, BITCH!**",
-  " CHOP CHOP!",
-  " NU SKET DU ALLT I DET BLÅ SKÅPET",
-  " Hur lång tid kan det ta...",
-  " WHAT'S TAKING YOU???",
-  " THIS GAME AIN'T GONNA THROW ITSELF",
-  " A LITTLE LESS CONVERSATION, A LITTLE MORE ACTION PLEASE",
-  " LESS TALK, MORE COCK",
-  " LESS STALL, MORE /STACK",
-  " POOP FASTER!!!",
-  " ***TODAY MB???***",
-];
-
-const readyColours = {
-  0: 0xff0000,
-  1: 0xffa700,
-  2: 0xfff400,
-  3: 0xa3ff00,
-  4: 0x2cba00,
-};
-
 async function modalThing(interaction) {
-  // Create the modal
   const modal = new ModalBuilder()
     .setCustomId("textCollector")
     .setTitle("Ok, buddy");
-
-  const favoriteColorInput = new TextInputBuilder()
+  const reasionInput = new TextInputBuilder()
     .setCustomId("reason")
     .setLabel("What's the holdup?")
     .setStyle(TextInputStyle.Short);
-
-  const textInput = new ActionRowBuilder().addComponents(favoriteColorInput);
-
+  const textInput = new ActionRowBuilder().addComponents(reasionInput);
   modal.addComponents(textInput);
-
   await interaction.showModal(modal);
-
   // Get the Modal Submit Interaction that is emitted once the User submits the Modal
   const submitted = await interaction
     .awaitModalSubmit({
@@ -665,6 +642,32 @@ async function modalThing(interaction) {
   if (submitted) {
     const reason = submitted.fields.getTextInputValue("reason");
     await submitted.reply(`Oh "${reason}" huh, I see`);
+    await submitted.deleteReply();
     return reason;
   }
 }
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName("yapos")
+    .setDescription("Time to gauge dota interest")
+    .addUserOption((option) =>
+      option.setName("p2").setDescription("Anyone else?").setRequired(false)
+    )
+    .addUserOption((option) =>
+      option.setName("p3").setDescription("Anyone else?").setRequired(false)
+    )
+    .addUserOption((option) =>
+      option.setName("p4").setDescription("Anyone else?").setRequired(false)
+    )
+    .addUserOption((option) =>
+      option.setName("p5").setDescription("Anyone else?").setRequired(false)
+    ),
+
+  async execute(interaction) {
+    const confirmedPlayers = await arrayMaker(interaction);
+    interaction.deferReply();
+    interaction.deleteReply();
+    await setUp(interaction, confirmedPlayers);
+  },
+};
