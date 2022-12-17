@@ -32,11 +32,12 @@ const REMINDERS = [
 ];
 
 const readyColours = {
-  0: 0xff0000,
-  1: 0xffa700,
-  2: 0xfff400,
-  3: 0xa3ff00,
+  0: 0xff0000, //red
+  1: 0xff5500,
+  2: 0xffaa00,
+  3: 0xffff00, //yellow
   4: 0x2cba00,
+  5: 0x00ff00, //full green
 };
 
 async function arrayMaker(interaction) {
@@ -621,7 +622,7 @@ async function modalThing(interaction) {
     .setTitle("Ok, buddy");
   const reasionInput = new TextInputBuilder()
     .setCustomId("reason")
-    .setLabel(`YOU GOT <t:${funkyTime}:R></t:$>`)
+    .setLabel("What's the holdup?")
     .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
     .setMaxLength(280)
     .setStyle(TextInputStyle.Short);
@@ -632,22 +633,22 @@ async function modalThing(interaction) {
   const submitted = await interaction
     .awaitModalSubmit({
       // Timeout after READYTIME of not receiving any valid Modals
-      time: READYTIME * 1000,
+      time: 15 * 1000,
       // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
       filter: (i) => i.user.id === interaction.user.id,
     })
     .catch((error) => {
-      // Catch any Errors that are thrown (e.g. if the awaitModalSubmit times out after 60000 ms)
       console.error(error);
       return null;
     });
-  console.log(submitted);
-
-  if (submitted) {
-    const reason = submitted.fields.getTextInputValue("reason");
+  const reason = submitted.fields.getTextInputValue("reason");
+  if (reason) {
     await submitted.reply(`Oh "${reason}" huh, I see`);
     await submitted.deleteReply();
     return reason;
+  } else {
+    await submitted.reply(`Type faster!`);
+    await submitted.deleteReply();
   }
 }
 
