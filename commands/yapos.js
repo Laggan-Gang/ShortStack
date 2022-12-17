@@ -406,9 +406,9 @@ async function stackIt(message, confirmedPlayers) {
   collector.on("collect", async (i) => {});
 
   collector.on("end", async (collected) => {
+    await message.edit({ components: [] });
     if (collected.last()) {
       const interaction = collected.last();
-      console.log(interaction);
       const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
       const shuffledChoices = shuffle(choices);
 
@@ -428,15 +428,14 @@ async function stackIt(message, confirmedPlayers) {
         threadName,
         stackThread
       );
-      const buttons = linkButton(message, stackThread, "Stack Thread"); //this one's fucked
+      const button = linkButton(message, stackThread, "Stack Thread");
       await message.edit({
         content: "Stack is running in the Stack Thread!",
-        components: [buttons],
+        components: [button],
       });
     } else {
       await message.edit({
         content: "You actually don't seem all that ready.",
-        components: [],
       });
     }
   });
