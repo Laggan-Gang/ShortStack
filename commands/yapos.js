@@ -36,7 +36,7 @@ const readyColours = {
   1: 0xff5500,
   2: 0xffaa00,
   3: 0xffff00, //yellow
-  4: 0x2cba00,
+  4: 0xaaff00,
   5: 0x00ff00, //full green
 };
 
@@ -80,6 +80,8 @@ async function setUp(interaction, confirmedPlayers) {
       time: ONEHOUR * 1000,
     });
     collector.on("collect", async (i) => {
+      console.log("Här är i: ");
+      console.log(i);
       console.log(i.user.username + " clicked " + i.customId);
       switch (i.customId) {
         case "in":
@@ -541,7 +543,7 @@ function inOut() {
   const row2 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId("condi")
-      .setLabel("I'm In, but...")
+      .setLabel("I'm In, but (...)")
       .setStyle(ButtonStyle.Secondary)
   );
   return [row1, row2];
