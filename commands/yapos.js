@@ -6,6 +6,7 @@ const {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
+  StringSelectMenuBuilder,
 } = require("discord.js");
 const ljudGöraren = require("../jukeBox.js");
 const badaBing = require("../badaBing.js");
