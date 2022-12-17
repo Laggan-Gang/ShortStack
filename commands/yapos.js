@@ -441,8 +441,10 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
-  const time = getTimestamp(1);
-  const reason = submitted.fields.getTextInputValue("reason") + hMTime(time);
+  const time = getTimestamp(1000);
+  const reason = `${submitted.fields.getTextInputValue(
+    "reason"
+  )} <t:${time}:R>`;
   if (reason) {
     await submitted.reply(`Oh "${reason}" huh, I see`);
     await submitted.deleteReply();
