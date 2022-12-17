@@ -17,7 +17,7 @@ const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[1];
+const yapos = debug[0];
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
