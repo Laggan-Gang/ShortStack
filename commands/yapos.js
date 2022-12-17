@@ -73,16 +73,14 @@ async function setUp(interaction, confirmedPlayers) {
     components: inOutButtons,
   });
   if (confirmedPlayers.length < 5) {
-    const filter = (i) => i.channel.id === message.channel.id;
-    //&&
-    //["in", "out", "condi", "modal"].includes(i.customId);
+    const filter = (i) =>
+      i.channel.id === message.channel.id &&
+      ["in", "out", "condi", "modal"].includes(i.customId);
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: ONEHOUR * 1000,
     });
     collector.on("collect", async (i) => {
-      console.log("Här är hela interaction: ");
-      console.log(i);
       console.log(i.user.username + " clicked " + i.customId);
       switch (i.customId) {
         case "in":
@@ -636,25 +634,30 @@ async function modalThing(interaction) {
     .setCustomId("textCollector")
     .setTitle("Ok, buddy");
 
-  // Add components to modal
-
-  // Create the text input components
   const favoriteColorInput = new TextInputBuilder()
     .setCustomId("reason")
-    // The label is the prompt the user sees for this input
     .setLabel("What's the holdup?")
-    // Short means only a single line of text
     .setStyle(TextInputStyle.Short);
 
-  // An action row only holds one text input,
-  // so you need one action row per text input.
   const textInput = new ActionRowBuilder().addComponents(favoriteColorInput);
 
-  // Add inputs to the modal
   modal.addComponents(textInput);
 
-  // Show the modal to the user
   await interaction.showModal(modal);
-  //det här är obvi inte samma interaction, den måste komma sen
+
+  // Get the Modal Submit Interaction that is emitted once the User submits the Modal
+  const submitted = await interaction
+    .awaitModalSubmit({
+      // Timeout after a minute of not receiving any valid Modals
+      time: 60000,
+      // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
+      filter: (i) => i.user.id === interaction.user.id,
+    })
+    .catch((error) => {
+      // Catch any Errors that are thrown (e.g. if the awaitModalSubmit times out after 60000 ms)
+      console.error(error);
+      return null;
+    });
+  console.log(submitted);
 }
 // const reason = interaction.fields.getTextInputValue("reason");
