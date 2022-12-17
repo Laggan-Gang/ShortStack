@@ -403,31 +403,32 @@ async function stackIt(message, confirmedPlayers) {
     time: FIVEMINUTES * 1000,
     max: 1,
   });
-  collector.on("collect", async (i) => {
-    const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
-    const shuffledChoices = shuffle(choices);
-
-    const threadName = i.user.username;
-    const channel = await i.member.guild.channels.cache.get(TRASH_CHANNEL);
-    const stackThread = await channel.threads.create({
-      name: threadName + "'s Dota Party",
-      autoArchiveDuration: 60,
-      reason: "Time for stack!",
-    });
-    await badaBing.badaBing(
-      i,
-      shuffledChoices,
-      standardTime,
-      i.user.username,
-      stackThread
-    );
-  });
+  collector.on("collect", async (i) => {});
 
   collector.on("end", async (collected) => {
     if (collected.last()) {
+      const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
+      const shuffledChoices = shuffle(choices);
+
+      const threadName = i.user.username;
+      const channel = await i.member.guild.channels.cache.get(TRASH_CHANNEL);
+      const stackThread = await channel.threads.create({
+        name: threadName + "'s Dota Party",
+        autoArchiveDuration: 60,
+        reason: "Time for stack!",
+      });
+      await badaBing.badaBing(
+        i,
+        shuffledChoices,
+        standardTime,
+        threadName,
+        stackThread
+      );
       const buttons = linkButton(message, stackThread, "Stack Thread"); //this one's fucked
-      await message.edit({ components: [buttons] });
-      await message.edit({ content: "Stack is running in the Stack Thread!" });
+      await message.edit({
+        content: "Stack is running in the Stack Thread!",
+        components: [buttons],
+      });
     } else {
       await message.edit({
         content: "You actually don't seem all that ready.",
