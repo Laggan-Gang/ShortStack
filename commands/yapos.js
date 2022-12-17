@@ -370,8 +370,7 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
 }
 
 async function stackIt(message, confirmedPlayers) {
-  const filter = (i) =>
-    i.channel.id === message.channel.id && i.customId === "stack";
+  const filter = (i) => i.message.id === message.id && i.customId === "stack";
   const collector = message.channel.createMessageComponentCollector({
     filter,
     time: FIVEMINUTES * 1000,
@@ -444,7 +443,7 @@ async function modalThing(interaction) {
   const time = getTimestamp(1000);
   const reason = `${submitted.fields.getTextInputValue(
     "reason"
-  )} <t:${time}:R>`;
+  )} *(written <t:${time}:R>)*`;
   if (reason) {
     await submitted.reply(`Oh "${reason}" huh, I see`);
     await submitted.deleteReply();
@@ -453,19 +452,6 @@ async function modalThing(interaction) {
     await submitted.reply(`Type faster!`);
     await submitted.deleteReply();
   }
-}
-
-function hMTime(timestamp) {
-  // Create a new JavaScript Date object based on the timestamp
-  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  const date = new Date(timestamp);
-  // Hours part from the timestamp
-  const hours = date.getHours();
-  // Minutes part from the timestamp
-  const minutes = `0${date.getMinutes()}`;
-  // Seconds part from the timestamp
-  const formattedTime = `${hours}:${minutes}`;
-  return formattedTime;
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
