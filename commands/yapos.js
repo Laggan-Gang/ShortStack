@@ -456,7 +456,7 @@ async function modalThing(interaction) {
 function hMTime(timestamp) {
   // Create a new JavaScript Date object based on the timestamp
   // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  const date = new Date(timestamp * 1000);
+  const date = new Date(timestamp);
   // Hours part from the timestamp
   const hours = date.getHours();
   // Minutes part from the timestamp
