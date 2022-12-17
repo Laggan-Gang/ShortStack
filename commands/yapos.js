@@ -17,7 +17,7 @@ const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -83,7 +83,7 @@ async function setUp(interaction, confirmedPlayers) {
       time: ONEHOUR * 1000,
     });
     collector.on("collect", async (i) => {
-      console.log(i.user.username + " clicked " + i.customId);
+      console.log(`${i.user.username} clicked ${i.customId}`);
       switch (i.customId) {
         case "in":
           if (!confirmedPlayers.find(playerIdentity(i))) {
@@ -155,21 +155,6 @@ async function setUp(interaction, confirmedPlayers) {
     //Time for a ready check
     const party = await pThreadCreator(interaction, message, confirmedPlayers);
     await readyChecker(confirmedPlayers, party.message, party.thread);
-  }
-}
-
-function playerIdentity(interaction) {
-  return (e) => [e?.id, e.player?.id].includes(interaction.user.id);
-}
-
-function eRemover(array, interaction) {
-  //const index2 = array.findIndex(interaction.user);
-  const index = array.findIndex(playerIdentity(interaction));
-  if (index > -1) {
-    array.splice(index, 1); //Return the array instead probably
-    return true;
-  } else {
-    return false;
   }
 }
 
@@ -384,17 +369,6 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   return { thread: partyThread, message: partyMessage };
 }
 
-function userToMember(array, interaction) {
-  const memberArray = [];
-  for (let user of array) {
-    const member = interaction.guild.members.cache.find(
-      (member) => member.id === user.id
-    );
-    memberArray.push(member);
-  }
-  return memberArray;
-}
-
 async function stackIt(message, confirmedPlayers) {
   const filter = (i) =>
     i.channel.id === message.channel.id && i.customId === "stack";
@@ -439,6 +413,61 @@ async function stackIt(message, confirmedPlayers) {
       });
     }
   });
+}
+
+async function modalThing(interaction) {
+  const modal = new ModalBuilder()
+    .setCustomId("textCollector")
+    .setTitle("Ok, buddy");
+  const reasionInput = new TextInputBuilder()
+    .setCustomId("reason")
+    .setLabel("What's the holdup? Include ETA")
+    .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
+    .setMaxLength(280)
+    .setStyle(TextInputStyle.Short);
+  const etaInput = new StringSelectMenuBuilder()
+    .setCustomId("select")
+    .setPlaceholder("Nothing selected")
+    .addOptions(
+      {
+        label: "Select me",
+        description: "This is a description",
+        value: "first_option",
+      },
+      {
+        label: "You can select me too",
+        description: "This is also a description",
+        value: "second_option",
+      }
+    );
+
+  const modalInput = new ActionRowBuilder().addComponents(
+    reasionInput,
+    etaInput
+  );
+  modal.addComponents(modalInput);
+  await interaction.showModal(modal);
+  // Get the Modal Submit Interaction that is emitted once the User submits the Modal
+  const submitted = await interaction
+    .awaitModalSubmit({
+      // Timeout after READYTIME of not receiving any valid Modals
+      time: READYTIME * 1000,
+      // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
+      filter: (i) => i.user.id === interaction.user.id,
+    })
+    .catch((error) => {
+      console.error(error);
+      return null;
+    });
+  const reason = submitted.fields.getTextInputValue("reason");
+  if (reason) {
+    await submitted.reply(`Oh "${reason}" huh, I see`);
+    await submitted.deleteReply();
+    return reason;
+  } else {
+    await submitted.reply(`Type faster!`);
+    await submitted.deleteReply();
+  }
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
@@ -588,6 +617,32 @@ function rdyButtons() {
   return [buttonRow, row2];
 }
 
+function playerIdentity(interaction) {
+  return (e) => [e?.id, e.player?.id].includes(interaction.user.id);
+}
+
+function eRemover(array, interaction) {
+  //const index2 = array.findIndex(interaction.user);
+  const index = array.findIndex(playerIdentity(interaction));
+  if (index > -1) {
+    array.splice(index, 1); //Return the array instead probably
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function userToMember(array, interaction) {
+  const memberArray = [];
+  for (let user of array) {
+    const member = interaction.guild.members.cache.find(
+      (member) => member.id === user.id
+    );
+    memberArray.push(member);
+  }
+  return memberArray;
+}
+
 function getTimestamp(mod) {
   return Math.floor(Date.now() / mod);
 }
@@ -619,42 +674,6 @@ async function handleIt(i, flavourText) {
     await i.deleteReply();
   } catch (error) {
     console.log(error);
-  }
-}
-
-async function modalThing(interaction) {
-  const modal = new ModalBuilder()
-    .setCustomId("textCollector")
-    .setTitle("Ok, buddy");
-  const reasionInput = new TextInputBuilder()
-    .setCustomId("reason")
-    .setLabel("What's the holdup? Include ETA")
-    .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
-    .setMaxLength(280)
-    .setStyle(TextInputStyle.Short);
-  const textInput = new ActionRowBuilder().addComponents(reasionInput);
-  modal.addComponents(textInput);
-  await interaction.showModal(modal);
-  // Get the Modal Submit Interaction that is emitted once the User submits the Modal
-  const submitted = await interaction
-    .awaitModalSubmit({
-      // Timeout after READYTIME of not receiving any valid Modals
-      time: READYTIME * 1000,
-      // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
-      filter: (i) => i.user.id === interaction.user.id,
-    })
-    .catch((error) => {
-      console.error(error);
-      return null;
-    });
-  const reason = submitted.fields.getTextInputValue("reason");
-  if (reason) {
-    await submitted.reply(`Oh "${reason}" huh, I see`);
-    await submitted.deleteReply();
-    return reason;
-  } else {
-    await submitted.reply(`Type faster!`);
-    await submitted.deleteReply();
   }
 }
 
