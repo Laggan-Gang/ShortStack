@@ -154,7 +154,7 @@ async function setUp(interaction, confirmedPlayers) {
 function eRemover(array, interaction) {
   //const index2 = array.findIndex(interaction.user);
   const index = array.findIndex((e) =>
-    [e.id, e.player.id].includes(interaction.user.id)
+    [e?.id, e?.player.id].includes(interaction.user.id)
   );
   if (index > -1) {
     array.splice(index, 1); //Return the array instead probably
