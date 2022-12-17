@@ -32,12 +32,12 @@ const REMINDERS = [
 ];
 
 const readyColours = {
-  0: 0xff0000, //red
-  1: 0xff5500,
-  2: 0xffaa00,
+  0: 0x000000, //black
+  1: 0xcc3300, //red
+  2: 0xff9900,
   3: 0xffff00, //yellow
-  4: 0xaaff00,
-  5: 0x00ff00, //full green
+  4: 0xccff33,
+  5: 0x99ff33, //full green
 };
 
 async function arrayMaker(interaction) {
@@ -73,7 +73,6 @@ async function setUp(interaction, confirmedPlayers) {
   });
   if (confirmedPlayers.length < 5) {
     const filter = (i) =>
-      i.channel.id === message.channel.id &&
       ["in", "out", "condi", "modal"].includes(i.customId) &&
       i.message.id === message.id;
     const collector = message.channel.createMessageComponentCollector({
@@ -81,8 +80,6 @@ async function setUp(interaction, confirmedPlayers) {
       time: ONEHOUR * 1000,
     });
     collector.on("collect", async (i) => {
-      console.log("Här är i: ");
-      console.log(i);
       console.log(i.user.username + " clicked " + i.customId);
       switch (i.customId) {
         case "in":
@@ -618,8 +615,6 @@ async function handleIt(i, flavourText) {
 }
 
 async function modalThing(interaction) {
-  const funkyTime = getTimestamp(1) + READYTIME;
-  const dummyString = `<t:${funkyTime}:R></t:$>`;
   const modal = new ModalBuilder()
     .setCustomId("textCollector")
     .setTitle("Ok, buddy");
@@ -636,7 +631,7 @@ async function modalThing(interaction) {
   const submitted = await interaction
     .awaitModalSubmit({
       // Timeout after READYTIME of not receiving any valid Modals
-      time: 15 * 1000,
+      time: READYTIME * 1000,
       // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
       filter: (i) => i.user.id === interaction.user.id,
     })
