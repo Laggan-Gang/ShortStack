@@ -17,7 +17,7 @@ const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -407,18 +407,22 @@ async function stackIt(message, confirmedPlayers) {
 
   collector.on("end", async (collected) => {
     if (collected.last()) {
+      const interaction = collected.last();
+      console.log(interaction);
       const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
       const shuffledChoices = shuffle(choices);
 
-      const threadName = i.user.username;
-      const channel = await i.member.guild.channels.cache.get(TRASH_CHANNEL);
+      const threadName = interaction.user.username;
+      const channel = await interaction.member.guild.channels.cache.get(
+        TRASH_CHANNEL
+      );
       const stackThread = await channel.threads.create({
         name: threadName + "'s Dota Party",
         autoArchiveDuration: 60,
         reason: "Time for stack!",
       });
       await badaBing.badaBing(
-        i,
+        interaction,
         shuffledChoices,
         standardTime,
         threadName,
