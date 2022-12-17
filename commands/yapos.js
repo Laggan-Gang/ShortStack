@@ -474,8 +474,10 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
 
 function readyEmbed(readyArray) {
   const playerFields = [];
+  let rAmount = 0;
   for (let player of readyArray) {
     if (player.ready) {
+      rAmount++;
       playerFields.push(
         `${stringPrettifier(player.gamer.toString())} \`\`readied in ${
           player.pickTime / 1000
@@ -486,7 +488,7 @@ function readyEmbed(readyArray) {
     }
   }
   const embed = {
-    color: (Math.random() * 0xffffff) << 0,
+    color: readyColours[rAmount],
     fields: [
       { name: "**R E A D Y  C H E C K**", value: playerFields.join("\n") },
     ],
