@@ -662,7 +662,7 @@ async function modalThing(interaction) {
   if (submitted) {
     console.log("Här är submitted");
     console.log(submitted);
-    const pruttis = submitted.fields;
+    const pruttis = submitted.fields.getTextInputValue("reason");
     console.log("Här är pruttis");
     console.log(pruttis);
   }
