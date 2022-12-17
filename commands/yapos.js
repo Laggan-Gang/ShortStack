@@ -73,14 +73,16 @@ async function setUp(interaction, confirmedPlayers) {
     components: inOutButtons,
   });
   if (confirmedPlayers.length < 5) {
-    const filter = (i) =>
-      i.channel.id === message.channel.id &&
-      ["in", "out", "condi"].includes(i.customId);
+    const filter = (i) => i.channel.id === message.channel.id;
+    //&&
+    //["in", "out", "condi", "modal"].includes(i.customId);
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: ONEHOUR * 1000,
     });
     collector.on("collect", async (i) => {
+      console.log("Här är hela interaction: ");
+      console.log(i);
       console.log(i.user.username + " clicked " + i.customId);
       switch (i.customId) {
         case "in":
@@ -108,7 +110,7 @@ async function setUp(interaction, confirmedPlayers) {
           const prutt = await modalThing(i);
           console.log("Här kommer modal thing return");
           console.log(prutt);
-          await handleIt(i, "They're IN, but being annoying about it");
+          //await handleIt(i, "They're IN, but being annoying about it");
           break;
 
         case "out":
