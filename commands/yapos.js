@@ -101,13 +101,13 @@ async function setUp(interaction, confirmedPlayers) {
 
         case "condi":
           eRemover(confirmedPlayers, i);
-          condiPlayers.push(i.user); //remove player from IN if they're in it
+          const condition = await modalThing(i);
+          console.log("Här kommer modal thing return");
+          console.log(condition);
+          condiPlayers.push({ player: i.user, condition: condition }); //remove player from IN if they're in it
           await message.edit({
             embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
           });
-          const prutt = await modalThing(i);
-          console.log("Här kommer modal thing return");
-          console.log(prutt);
           //await handleIt(i, "They're IN, but being annoying about it");
           break;
 
@@ -152,7 +152,10 @@ async function setUp(interaction, confirmedPlayers) {
 }
 
 function eRemover(array, interaction) {
-  const index = array.indexOf(interaction.user);
+  const index2 = array.findIndex(interaction.user);
+  const index = array.findIndex((e) =>
+    [e.id, e.player.id].includes(interaction.user.id)
+  );
   if (index > -1) {
     array.splice(index, 1); //Return the array instead probably
     return true;
@@ -443,9 +446,9 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
     value: playerFields.join("\n"),
   });
 
-  if (condiPlayers[0]) {
+  if (condiPlayers.length > 0) {
     condiPlayers.map((e) => {
-      conditionalFields.push(e);
+      conditionalFields.push(`${e.player} ${e.condition}`);
     });
     embedFields.push({
       name: "*Conditionally In*",
@@ -648,8 +651,8 @@ async function modalThing(interaction) {
   // Get the Modal Submit Interaction that is emitted once the User submits the Modal
   const submitted = await interaction
     .awaitModalSubmit({
-      // Timeout after a minute of not receiving any valid Modals
-      time: 60000,
+      // Timeout after readytime of not receiving any valid Modals
+      time: READYTIME,
       // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
       filter: (i) => i.user.id === interaction.user.id,
     })
@@ -660,11 +663,8 @@ async function modalThing(interaction) {
     });
 
   if (submitted) {
-    console.log("Här är submitted");
-    console.log(submitted);
-    const pruttis = submitted.fields.getTextInputValue("reason");
-    console.log("Här är pruttis");
-    console.log(pruttis);
+    const reason = submitted.fields.getTextInputValue("reason");
+    await submitted.reply(`Oh "${reason}" huh, I see`);
+    return reason;
   }
 }
-// const reason = interaction.fields.getTextInputValue("reason");
