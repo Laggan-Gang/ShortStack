@@ -658,6 +658,13 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
-  console.log(submitted);
+
+  if (submitted) {
+    const pruttis = Object.keys(fields).map((key) =>
+      submitted.fields.getTextInputValue(key.customId)
+    );
+    console.log("Här är pruttis");
+    console.log(pruttis);
+  }
 }
 // const reason = interaction.fields.getTextInputValue("reason");
