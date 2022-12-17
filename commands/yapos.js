@@ -153,7 +153,6 @@ async function setUp(interaction, confirmedPlayers) {
 
 function eRemover(array, interaction) {
   //const index2 = array.findIndex(interaction.user);
-  console.log(array);
   const index = array.findIndex((e) =>
     [e?.id, e.player?.id].includes(interaction.user.id)
   );
@@ -653,7 +652,7 @@ async function modalThing(interaction) {
   const submitted = await interaction
     .awaitModalSubmit({
       // Timeout after readytime of not receiving any valid Modals
-      time: READYTIME,
+      time: READYTIME * 1000,
       // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
       filter: (i) => i.user.id === interaction.user.id,
     })
