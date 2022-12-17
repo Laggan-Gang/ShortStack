@@ -106,6 +106,7 @@ async function setUp(interaction, confirmedPlayers) {
             embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
           });
           const prutt = await modalThing(i);
+          console.log("Här kommer modal thing return");
           console.log(prutt);
           await handleIt(i, "They're IN, but being annoying about it");
           break;
