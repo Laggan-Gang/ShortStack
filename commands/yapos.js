@@ -15,6 +15,8 @@ const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
+const debug = ["<@&412260353699872768>", "yapos"];
+const yapos = debug[0];
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -67,7 +69,7 @@ async function setUp(interaction, confirmedPlayers) {
   const inOutButtons = inOut();
   const time = getTimestamp(1000);
   const message = await interaction.channel.send({
-    content: `<@&412260353699872768> call, closes <t:${time + ONEHOUR}:R>`, //<@&412260353699872768> yapos
+    content: `${yapos} call, closes <t:${time + ONEHOUR}:R>`,
     embeds: [embed],
     components: inOutButtons,
   });
@@ -622,7 +624,7 @@ async function modalThing(interaction) {
     .setTitle("Ok, buddy");
   const reasionInput = new TextInputBuilder()
     .setCustomId("reason")
-    .setLabel("What's the holdup?")
+    .setLabel("What's the holdup? Include ETA")
     .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
     .setMaxLength(280)
     .setStyle(TextInputStyle.Short);
