@@ -614,12 +614,16 @@ async function handleIt(i, flavourText) {
 }
 
 async function modalThing(interaction) {
+  const funkyTime = getTimestamp(1) + READYTIME;
+  const dummyString = `<t:${funkyTime}:R></t:$>`;
   const modal = new ModalBuilder()
     .setCustomId("textCollector")
     .setTitle("Ok, buddy");
   const reasionInput = new TextInputBuilder()
     .setCustomId("reason")
-    .setLabel("What's the holdup?")
+    .setLabel(`YOU GOT <t:${funkyTime}:R></t:$>`)
+    .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
+    .setMaxLength(280)
     .setStyle(TextInputStyle.Short);
   const textInput = new ActionRowBuilder().addComponents(reasionInput);
   modal.addComponents(textInput);
@@ -627,8 +631,8 @@ async function modalThing(interaction) {
   // Get the Modal Submit Interaction that is emitted once the User submits the Modal
   const submitted = await interaction
     .awaitModalSubmit({
-      // Timeout after readytime of not receiving any valid Modals
-      time: 15 * 1000,
+      // Timeout after READYTIME of not receiving any valid Modals
+      time: READYTIME * 1000,
       // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
       filter: (i) => i.user.id === interaction.user.id,
     })
@@ -637,6 +641,7 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
+  console.log(submitted);
 
   if (submitted) {
     const reason = submitted.fields.getTextInputValue("reason");
