@@ -152,7 +152,7 @@ async function setUp(interaction, confirmedPlayers) {
 }
 
 function eRemover(array, interaction) {
-  const index2 = array.findIndex(interaction.user);
+  //const index2 = array.findIndex(interaction.user);
   const index = array.findIndex((e) =>
     [e.id, e.player.id].includes(interaction.user.id)
   );
