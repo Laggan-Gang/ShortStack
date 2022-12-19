@@ -30,7 +30,7 @@ const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
-const buttonOptions = { in: "in", out: "out", conditional: "condi" };
+const buttonOptions = { in: "in", out: "out", condi: "condi" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
 const yapos = debug[1];
@@ -101,8 +101,7 @@ async function setUp(interaction, confirmedPlayers) {
   }
 
   const filter = (i) =>
-    //i.customId in buttonOptions &&
-    i.message.id === dotaMessage.id;
+    i.customId in buttonOptions && i.message.id === dotaMessage.id;
   const collector = dotaMessage.channel.createMessageComponentCollector({
     filter,
     time: ONEHOUR * 1000,
@@ -114,9 +113,6 @@ async function setUp(interaction, confirmedPlayers) {
         if (!confirmedPlayers.find(playerIdentity(i))) {
           eRemover(condiPlayers, i); //remove player from Condi if they're in it
           confirmedPlayers.push(i.user);
-          //await message.edit({
-          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          //});
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
@@ -132,9 +128,6 @@ async function setUp(interaction, confirmedPlayers) {
           const condition = await modalThing(i);
           console.log(condition);
           condiPlayers.push({ player: i.user, condition: condition });
-          //await message.edit({
-          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          //});
         } else {
           await handleIt(
             i,
@@ -147,9 +140,6 @@ async function setUp(interaction, confirmedPlayers) {
         const pConOut = eRemover(condiPlayers, i);
         const pInOut = eRemover(confirmedPlayers, i);
         if (pInOut || pConOut) {
-          //await message.edit({
-          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          //});
           await handleIt(i, "THEY'RE OUT");
         } else {
           await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
