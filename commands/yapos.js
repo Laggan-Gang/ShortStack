@@ -101,8 +101,7 @@ async function setUp(interaction, confirmedPlayers) {
   }
 
   const filter = (i) =>
-    //i.customId in buttonOptions &&
-    i.message.id === dotaMessage.id;
+    i.customId in buttonOptions && i.message.id === dotaMessage.id;
   const collector = dotaMessage.channel.createMessageComponentCollector({
     filter,
     time: ONEHOUR * 1000,
@@ -126,7 +125,7 @@ async function setUp(interaction, confirmedPlayers) {
         }
         break;
 
-      case buttonOptions.conditional:
+      case buttonOptions.condi:
         if (!condiPlayers.find(playerIdentity(i))) {
           eRemover(confirmedPlayers, i); //remove player from IN if they're in it
           const condition = await modalThing(i);
