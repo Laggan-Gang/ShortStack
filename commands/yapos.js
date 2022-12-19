@@ -31,9 +31,10 @@ const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
 const buttonOptions = { in: "in", out: "out", condi: "condi" };
+const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -207,9 +208,9 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   const filter = (i) =>
-    i.channel.id === partyMessage.channel.id &&
-    ["rdy", "stop", "sudo", "ping"].includes(i.customId); //I HOPE this logic works
-  //might add && confirmedPlayers.includes(i.member)
+    i.channel.id === partyMessage.channel.id && i.customId in readyOptions;
+
+  //["rdy", "stop", "sudo", "ping"].includes(i.customId);
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
     time: READYTIME * 1000,
@@ -219,7 +220,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     const pickTime = getTimestamp(1);
     console.log(i.user.username + " clicked " + i.customId);
     switch (i.customId) {
-      case "rdy":
+      case readyOptions.rdy:
         const player = readyArray.find((e) => {
           return e.gamer.id === i.member.user.id && e.ready === false;
         });
@@ -236,11 +237,11 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           collector.stop("That's enough");
         }
         break;
-      case "stop":
+      case readyOptions.stop:
         await handleIt(i, "ABORTING!!!");
         collector.stop("Someone wants out!");
         break;
-      case "sudo":
+      case readyOptions.sudo:
         await handleIt(i, "``sudo ready``");
         forceReady(readyArray, pickTime, miliTime);
         await partyMessage.edit({
@@ -248,7 +249,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         });
         collector.stop();
         break;
-      case "ping":
+      case readyOptions.ping:
         await handleIt(i, "Sending a gentle reminder...");
         await pingMessage(readyArray, partyThread);
         break;
@@ -266,7 +267,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     const time = getTimestamp(1000);
     if (!everyoneReady(readyArray)) {
       switch (collected.last()?.customId) {
-        case "stop":
+        case readyOptions.stop:
           await partyMessage.edit({
             content: `${collected
               .last()
@@ -291,7 +292,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     } else {
       const stackButton = rowBoat("Stack it!", "stack");
       switch (collected.last().customId) {
-        case "sudo":
+        case readyOptions.sudo:
           await partyMessage.edit({
             content: `${collected
               .last()
@@ -303,8 +304,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           await stackIt(partyMessage, confirmedPlayers, partyThread);
           return;
 
-        case "rdy":
-        case "ping": //in freak cases "ping" can be the last one
+        case readyOptions.rdy:
+        case readyOptions.ping: //in freak cases "ping" can be the last one
           await partyMessage.edit({
             content: "Everyopne's ready!",
             components: [stackButton],
@@ -479,9 +480,6 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
   const embed = {
     color: readyColours[confirmedPlayers.length],
     fields: embedFields,
-    //image: {
-    //  url: "attachment://dota-map.png",
-    //},
   };
   return embed;
 }
