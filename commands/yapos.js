@@ -1,6 +1,5 @@
 const {
   SlashCommandBuilder,
-  ActionRowBuilder,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
@@ -22,6 +21,7 @@ const {
   everyoneReady,
   pingMessage,
   playerIdentity,
+  modalComponent,
 } = require("../utils");
 const ljudGöraren = require("../jukeBox.js");
 
@@ -34,7 +34,7 @@ const READYTIME = 2 * 60;
 const buttonOptions = { in: "in", out: "out", condi: "condi" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -415,14 +415,13 @@ async function modalThing(interaction) {
   const modal = new ModalBuilder()
     .setCustomId("textCollector")
     .setTitle("Ok, buddy");
-  const reasionInput = new TextInputBuilder()
+  const reasonInput = new TextInputBuilder()
     .setCustomId("reason")
     .setLabel("What's the holdup? Include ETA")
     .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
     .setMaxLength(280)
     .setStyle(TextInputStyle.Short);
-
-  const modalInput = new ActionRowBuilder().addComponents(reasionInput);
+  const modalInput = modalComponent(reasonInput);
   modal.addComponents(modalInput);
   await interaction.showModal(modal);
   // Get the Modal Submit Interaction that is emitted once the User submits the Modal

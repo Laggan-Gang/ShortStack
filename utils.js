@@ -1,12 +1,4 @@
-const {
-  SlashCommandBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
-} = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 function playerIdentity(interaction) {
   return (e) => [e?.id, e.player?.id].includes(interaction.user.id);
@@ -137,6 +129,10 @@ module.exports = {
 
   getTimestamp(mod) {
     return Math.floor(Date.now() / mod);
+  },
+
+  modalComponent(reasonInput) {
+    return new ActionRowBuilder().addComponents(reasonInput);
   },
 
   async handleIt(i, flavourText) {
