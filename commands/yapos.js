@@ -101,7 +101,7 @@ async function setUp(interaction, confirmedPlayers) {
   }
 
   const filter = (i) =>
-    i.customId in buttonOptions && i.message.id === message.id;
+    i.customId in buttonOptions && i.message.id === dotaMessage.id;
   const collector = dotaMessage.channel.createMessageComponentCollector({
     filter,
     time: ONEHOUR * 1000,
