@@ -1,23 +1,39 @@
 const {
   SlashCommandBuilder,
   ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
 } = require("discord.js");
 const ljudGöraren = require("../jukeBox.js");
 const badaBing = require("../badaBing.js");
+const utils = require("../utils");
+const {
+  stringPrettifier,
+  rowBoat,
+  linkButton,
+  inOutBut,
+  rdyButtons,
+  eRemover,
+  userToMember,
+  getTimestamp,
+  shuffle,
+  handleIt,
+  forceReady,
+  everyoneReady,
+  pingMessage,
+  playerIdentity,
+} = require("../utils");
 const standardTime = 60;
 const TRASH_CHANNEL = "539847809004994560";
 const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
+const buttonOptions = { in: "in", out: "out", conditional: "condi" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -43,14 +59,14 @@ const readyColours = {
   5: 0x99ff33, //green
 };
 
-async function arrayMaker(interaction) {
+function arrayMaker(interaction) {
   const confirmedPlayers = [interaction.user];
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
-        await interaction.reply(
+        interaction.reply(
           "Please provide unique players!\nLove, **ShortStack!**"
         );
         return confirmedPlayers;
@@ -67,95 +83,110 @@ async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const condiPlayers = [];
   const embed = prettyEmbed(confirmedPlayers, condiPlayers);
-  const inOutButtons = inOut();
+  const inOutButtons = inOutBut();
   const time = getTimestamp(1000);
-  const message = await interaction.channel.send({
+  const dotaMessage = await interaction.channel.send({
     content: `${yapos} call, closes <t:${time + ONEHOUR}:R>`,
     embeds: [embed],
     components: inOutButtons,
   });
-  if (confirmedPlayers.length < 5) {
-    const filter = (i) =>
-      ["in", "out", "condi", "modal"].includes(i.customId) &&
-      i.message.id === message.id;
-    const collector = message.channel.createMessageComponentCollector({
-      filter,
-      time: ONEHOUR * 1000,
-    });
-    collector.on("collect", async (i) => {
-      console.log(`${i.user.username} clicked ${i.customId}`);
-      switch (i.customId) {
-        case "in":
-          if (!confirmedPlayers.find(playerIdentity(i))) {
-            eRemover(condiPlayers, i); //remove player from Condi if they're in it
-            confirmedPlayers.push(i.user);
-            await message.edit({
-              embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-            });
-            if (confirmedPlayers.length > 4) {
-              collector.stop("That's enough!");
-            }
-            await handleIt(i, "THEY'RE IN!");
-          } else {
-            await handleIt(i, "YOU'RE ALREADY IN!");
-          }
-          break;
-
-        case "condi":
-          if (!condiPlayers.find(playerIdentity(i))) {
-            eRemover(confirmedPlayers, i); //remove player from IN if they're in it
-            const condition = await modalThing(i);
-            console.log(condition);
-            condiPlayers.push({ player: i.user, condition: condition });
-            await message.edit({
-              embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-            });
-          } else {
-            await handleIt(
-              i,
-              "You're already conditionally in, what the hell don't push it wtf"
-            );
-          }
-          break;
-
-        case "out":
-          const pConOut = eRemover(condiPlayers, i);
-          const pInOut = eRemover(confirmedPlayers, i);
-          if (pInOut || pConOut) {
-            await message.edit({
-              embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-            });
-            await handleIt(i, "THEY'RE OUT");
-          } else {
-            await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
-          }
-          break;
-      }
-    });
-
-    collector.on("end", async (collected) => {
-      if (confirmedPlayers.length < 5) {
-        await message.edit({
-          content: "Looks like you ran out of time, darlings!",
-          components: [],
-        });
-
-        //do thing with collected info
-      } else {
-        //Time for a ready check
-        const party = await pThreadCreator(
-          interaction,
-          message,
-          confirmedPlayers
-        );
-        await readyChecker(confirmedPlayers, party.message, party.thread);
-      }
-    });
-  } else {
-    //Time for a ready check
-    const party = await pThreadCreator(interaction, message, confirmedPlayers);
+  if (confirmedPlayers.length > 5) {
+    const party = await pThreadCreator(
+      interaction,
+      dotaMessage,
+      confirmedPlayers
+    );
     await readyChecker(confirmedPlayers, party.message, party.thread);
+    return;
   }
+
+  const filter = (i) =>
+    i.customId in buttonOptions && i.message.id === message.id;
+  const collector = dotaMessage.channel.createMessageComponentCollector({
+    filter,
+    time: ONEHOUR * 1000,
+  });
+  collector.on("collect", async (i) => {
+    console.log(`${i.user.username} clicked ${i.customId}`);
+    switch (i.customId) {
+      case buttonOptions.in:
+        if (!confirmedPlayers.find(playerIdentity(i))) {
+          eRemover(condiPlayers, i); //remove player from Condi if they're in it
+          confirmedPlayers.push(i.user);
+          //await message.edit({
+          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          //});
+          if (confirmedPlayers.length > 4) {
+            collector.stop("That's enough!");
+          }
+          await handleIt(i, "THEY'RE IN!");
+        } else {
+          await handleIt(i, "YOU'RE ALREADY IN!");
+        }
+        break;
+
+      case buttonOptions.conditional:
+        if (!condiPlayers.find(playerIdentity(i))) {
+          eRemover(confirmedPlayers, i); //remove player from IN if they're in it
+          const condition = await modalThing(i);
+          console.log(condition);
+          condiPlayers.push({ player: i.user, condition: condition });
+          //await message.edit({
+          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          //});
+        } else {
+          await handleIt(
+            i,
+            "You're already conditionally in, what the hell don't push it wtf"
+          );
+        }
+        break;
+
+      case buttonOptions.out:
+        const pConOut = eRemover(condiPlayers, i);
+        const pInOut = eRemover(confirmedPlayers, i);
+        if (pInOut || pConOut) {
+          //await message.edit({
+          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          //});
+          await handleIt(i, "THEY'RE OUT");
+        } else {
+          await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
+        }
+        break;
+    }
+    await dotaMessage.edit({
+      embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+    });
+  });
+
+  collector.on("end", async (collected) => {
+    if (confirmedPlayers.length < 5) {
+      await dotaMessage.edit({
+        content: "Looks like you ran out of time, darlings!",
+        components: [],
+      });
+
+      //do thing with collected info
+    } else {
+      //Time for a ready check
+      const party = await pThreadCreator(
+        interaction,
+        dotaMessage,
+        confirmedPlayers
+      );
+      await readyChecker(confirmedPlayers, party.message, party.thread);
+    }
+  });
+  //else {
+  // //Time for a ready check
+  // const party = await pThreadCreator(
+  //   interaction,
+  //   dotaMessage,
+  //   confirmedPlayers
+  // );
+  // await readyChecker(confirmedPlayers, party.message, party.thread);
+  //}
 }
 
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
@@ -226,12 +257,11 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 
   collector.on("end", async (collected) => {
-    console.log("Now stopping, the final interaction was: ");
-    if (collected.last()) {
-      console.log(collected.last().customId);
-    } else {
-      console.log("Nothing!");
-    }
+    console.log(
+      `Now stopping, the final interaction was: ${
+        collected.last() ? collected.last().customId : `Nothing!`
+      }`
+    );
     const redoButton = rowBoat("Re-Check", "redo");
     const time = getTimestamp(1000);
     if (!everyoneReady(readyArray)) {
@@ -286,40 +316,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   });
 }
 
-function forceReady(readyArray, pickTime, miliTime) {
-  for (player of readyArray) {
-    if (!player.ready) {
-      player.ready = true;
-      player.pickTime = pickTime - miliTime;
-    }
-  }
-}
-
-function everyoneReady(readyArray) {
-  var rCount = 0;
-  for (let player of readyArray) {
-    if (player.ready) {
-      rCount++;
-    }
-  }
-  return rCount > 4;
-}
-
-async function pingMessage(readyArray, partyThread) {
-  const shitList = [];
-  for (let player of readyArray) {
-    if (!player.ready) {
-      const gentleReminder = await partyThread.send(
-        `${player.gamer.toString()}${shuffle(REMINDERS)[0]}`
-      );
-      shitList.push(gentleReminder);
-    }
-  }
-  for (let message of shitList) {
-    await message.delete();
-  }
-}
-
 async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
   const filter = (i) =>
     i.channel.id === partyMessage.channel.id && i.customId === "redo";
@@ -365,7 +361,7 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
     content: confirmedPlayers.join(),
   });
   const memberArray = userToMember(confirmedPlayers, interaction);
-  ljudGöraren.ljudGöraren(memberArray);
+  ljudGöraren(memberArray);
   return { thread: partyThread, message: partyMessage };
 }
 
@@ -518,149 +514,6 @@ function readyEmbed(readyArray) {
   return embed;
 }
 
-function stringPrettifier(string) {
-  const optimalStringLength = 39;
-  const neededFilling = optimalStringLength - string.length;
-  const stringFilling = "\u200b".repeat(neededFilling + 1);
-  return `${string}${stringFilling}`;
-}
-
-function rowBoat(btnText, btnId) {
-  const buttonRow = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setCustomId(btnId)
-      .setLabel(btnText)
-      .setStyle(ButtonStyle.Secondary)
-  );
-  return buttonRow;
-}
-
-function linkButton(message, thread, label) {
-  const buttonRow = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setURL(`https://discord.com/channels/${message.guildId}/${thread.id}`)
-      .setLabel(label)
-      .setStyle(ButtonStyle.Link)
-  );
-  return buttonRow;
-}
-
-function inOut() {
-  const row1 = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("in")
-        .setLabel("I'M IN")
-        .setStyle(ButtonStyle.Success)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("out")
-        .setLabel("I'M OUT")
-        .setStyle(ButtonStyle.Danger)
-    );
-  const row2 = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setCustomId("condi")
-      .setLabel("I'm In, but (...)")
-      .setStyle(ButtonStyle.Secondary)
-  );
-  return [row1, row2];
-}
-
-function rdyButtons() {
-  const buttonRow = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("rdy")
-        .setLabel("✅")
-        .setStyle(ButtonStyle.Success)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("stop")
-        .setLabel("Cancel")
-        .setStyle(ButtonStyle.Danger)
-        .setDisabled(false)
-    );
-  const row2 = new ActionRowBuilder()
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("sudo")
-        .setLabel("FORCE READY")
-        .setStyle(ButtonStyle.Primary)
-        .setDisabled(false)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("ping")
-        .setLabel("Ping")
-        .setStyle(ButtonStyle.Secondary)
-        .setDisabled(false)
-    );
-  return [buttonRow, row2];
-}
-
-function playerIdentity(interaction) {
-  return (e) => [e?.id, e.player?.id].includes(interaction.user.id);
-}
-
-function eRemover(array, interaction) {
-  //const index2 = array.findIndex(interaction.user);
-  const index = array.findIndex(playerIdentity(interaction));
-  if (index > -1) {
-    array.splice(index, 1); //Return the array instead probably
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function userToMember(array, interaction) {
-  const memberArray = [];
-  for (let user of array) {
-    const member = interaction.guild.members.cache.find(
-      (member) => member.id === user.id
-    );
-    memberArray.push(member);
-  }
-  return memberArray;
-}
-
-function getTimestamp(mod) {
-  return Math.floor(Date.now() / mod);
-}
-
-function shuffle([...array]) {
-  let currentIndex = array.length,
-    randomIndex;
-
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
-  }
-
-  return array;
-}
-
-async function handleIt(i, flavourText) {
-  try {
-    console.log("Handling it!");
-    await i.reply(flavourText);
-    await i.deleteReply();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("yapos")
@@ -679,7 +532,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const confirmedPlayers = await arrayMaker(interaction);
+    const confirmedPlayers = arrayMaker(interaction);
     interaction.deferReply();
     interaction.deleteReply();
     await setUp(interaction, confirmedPlayers);
