@@ -113,6 +113,9 @@ async function setUp(interaction, confirmedPlayers) {
         if (!confirmedPlayers.find(playerIdentity(i))) {
           eRemover(condiPlayers, i); //remove player from Condi if they're in it
           confirmedPlayers.push(i.user);
+          //await message.edit({
+          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          //});
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
@@ -128,6 +131,9 @@ async function setUp(interaction, confirmedPlayers) {
           const condition = await modalThing(i);
           console.log(condition);
           condiPlayers.push({ player: i.user, condition: condition });
+          //await message.edit({
+          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          //});
         } else {
           await handleIt(
             i,
@@ -140,6 +146,9 @@ async function setUp(interaction, confirmedPlayers) {
         const pConOut = eRemover(condiPlayers, i);
         const pInOut = eRemover(confirmedPlayers, i);
         if (pInOut || pConOut) {
+          //await message.edit({
+          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          //});
           await handleIt(i, "THEY'RE OUT");
         } else {
           await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
