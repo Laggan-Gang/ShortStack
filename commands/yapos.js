@@ -5,7 +5,6 @@ const {
   TextInputStyle,
 } = require("discord.js");
 const badaBing = require("../badaBing.js");
-const utils = require("../utils");
 const {
   stringPrettifier,
   rowBoat,
