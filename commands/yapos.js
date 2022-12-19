@@ -5,7 +5,6 @@ const {
   TextInputBuilder,
   TextInputStyle,
 } = require("discord.js");
-const ljudGöraren = require("../jukeBox.js");
 const badaBing = require("../badaBing.js");
 const utils = require("../utils");
 const {
@@ -24,6 +23,8 @@ const {
   pingMessage,
   playerIdentity,
 } = require("../utils");
+const ljudGöraren = require("../jukeBox.js");
+
 const standardTime = 60;
 const TRASH_CHANNEL = "539847809004994560";
 const TRASH_GUILD = "209707792314007552";
@@ -361,7 +362,7 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
     content: confirmedPlayers.join(),
   });
   const memberArray = userToMember(confirmedPlayers, interaction);
-  ljudGöraren(memberArray);
+  ljudGöraren.ljudGöraren(memberArray);
   return { thread: partyThread, message: partyMessage };
 }
 
