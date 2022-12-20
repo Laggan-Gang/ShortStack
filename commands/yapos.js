@@ -36,21 +36,6 @@ const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 const debug = ["<@&412260353699872768>", "yapos"];
 const yapos = debug[1];
 
-const REMINDERS = [
-  " TAKING OUR SWEET TIME, HUH?",
-  " **JALLA, BITCH!**",
-  " CHOP CHOP!",
-  " NU SKET DU ALLT I DET BLÅ SKÅPET",
-  " Hur lång tid kan det ta...",
-  " WHAT'S TAKING YOU???",
-  " THIS GAME AIN'T GONNA THROW ITSELF",
-  " A LITTLE LESS CONVERSATION, A LITTLE MORE ACTION PLEASE",
-  " LESS TALK, MORE COCK",
-  " LESS STALL, MORE /STACK",
-  " POOP FASTER!!!",
-  " ***TODAY MB???***",
-];
-
 const readyColours = {
   0: 0x000000, //black
   1: 0xcc3300, //red
@@ -91,7 +76,7 @@ async function setUp(interaction, confirmedPlayers) {
     embeds: [embed],
     components: inOutButtons,
   });
-  if (confirmedPlayers.length > 5) {
+  if (confirmedPlayers.length > 4) {
     const party = await pThreadCreator(
       interaction,
       dotaMessage,

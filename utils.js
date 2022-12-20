@@ -1,5 +1,20 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
+const REMINDERS = [
+  " TAKING OUR SWEET TIME, HUH?",
+  " **JALLA, BITCH!**",
+  " CHOP CHOP!",
+  " NU SKET DU ALLT I DET BLÅ SKÅPET",
+  " Hur lång tid kan det ta...",
+  " WHAT'S TAKING YOU???",
+  " THIS GAME AIN'T GONNA THROW ITSELF",
+  " A LITTLE LESS CONVERSATION, A LITTLE MORE ACTION PLEASE",
+  " LESS TALK, MORE COCK",
+  " LESS STALL, MORE /STACK",
+  " POOP FASTER!!!",
+  " ***TODAY MB???***",
+];
+
 function playerIdentity(interaction) {
   return (e) => [e?.id, e.player?.id].includes(interaction.user.id);
 }
