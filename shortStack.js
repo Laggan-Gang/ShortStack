@@ -29,7 +29,7 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   if (!command) return;
   console.log(command.data.name);
-  if (!command.data.name === "yapos") {
+  if (command.data.name !== "yapos") {
     console.log(
       "eftersom command.data.name inte === yapos så körs den här koden"
     );
