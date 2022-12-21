@@ -228,7 +228,8 @@ function whosNext(objectArray) {
 }
 
 function arrayPrettifier(playerArray) {
-  const optimalStringLength = 49;
+  //49 is the max character count to include a max level length + all the pos stuff
+  const optimalStringLength = 39;
   const prettyArray = [];
   for (let player of playerArray) {
     if (player.player.nickname) {
@@ -263,7 +264,10 @@ function arrayPrettifier(playerArray) {
 function stringPrettifier(player, fillingNeeded, position, randomed) {
   const stringFilling = " ".repeat(fillingNeeded + 1 - randomed);
   const interrobangs = "⁉️".repeat(randomed);
-  return `\`\`${player}${stringFilling} ${position}${interrobangs}\`\``;
+  return `\`\`${player.slice(
+    0,
+    20
+  )}${stringFilling} ${position}${interrobangs}\`\``;
 }
 
 //shuffle(array)
