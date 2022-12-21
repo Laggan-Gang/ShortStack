@@ -228,46 +228,27 @@ function whosNext(objectArray) {
 }
 
 function arrayPrettifier(playerArray) {
-  //49 is the max character count to include a max level length + all the pos stuff
-  const optimalStringLength = 39;
   const prettyArray = [];
   for (let player of playerArray) {
-    if (player.player.nickname) {
-      const neededFilling =
-        optimalStringLength -
-        (player.player.nickname.length + player.position.length);
-      prettyArray.push(
-        stringPrettifier(
-          player.player.nickname,
-          neededFilling,
-          player.position,
-          player.randomed
-        )
-      );
-    } else {
-      const neededFilling =
-        optimalStringLength -
-        (player.player.user.username.length + player.position.length);
-      prettyArray.push(
-        stringPrettifier(
-          player.player.user.username,
-          neededFilling,
-          player.position,
-          player.randomed
-        )
-      );
-    }
+    prettyArray.push(stringPrettifier(player));
   }
   return prettyArray;
 }
 
-function stringPrettifier(player, fillingNeeded, position, randomed) {
-  const stringFilling = " ".repeat(fillingNeeded + 1 - randomed);
-  const interrobangs = "⁉️".repeat(randomed);
-  return `\`\`${player.slice(
-    0,
-    20
-  )}${stringFilling} ${position}${interrobangs}\`\``;
+function stringPrettifier(player) {
+  //49 is the max character count to include a max level length + all the pos stuff
+  const optimalStringLength = 39;
+  let playerName = String;
+  if (player.player.nickname) {
+    playerName = player.player.user.nickname.slice(0, 20);
+  } else {
+    playerName = player.player.user.username.slice(0, 20);
+  }
+  const neededFilling =
+    optimalStringLength - (playerName.length + player.position.length);
+  const stringFilling = " ".repeat(neededFilling + 1 - player.randomed);
+  const interrobangs = "⁉️".repeat(player.randomed);
+  return `\`\`${playerName}${stringFilling} ${player.position}${interrobangs}\`\``;
 }
 
 //shuffle(array)
