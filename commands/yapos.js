@@ -99,9 +99,6 @@ async function setUp(interaction, confirmedPlayers) {
         if (!confirmedPlayers.find(playerIdentity(i))) {
           eRemover(condiPlayers, i); //remove player from Condi if they're in it
           confirmedPlayers.push(i.user);
-          //await message.edit({
-          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          //});
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
@@ -132,9 +129,6 @@ async function setUp(interaction, confirmedPlayers) {
         const pConOut = eRemover(condiPlayers, i);
         const pInOut = eRemover(confirmedPlayers, i);
         if (pInOut || pConOut) {
-          //await message.edit({
-          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          //});
           await handleIt(i, "THEY'RE OUT");
         } else {
           await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
@@ -164,15 +158,6 @@ async function setUp(interaction, confirmedPlayers) {
       await readyChecker(confirmedPlayers, party.message, party.thread);
     }
   });
-  //else {
-  // //Time for a ready check
-  // const party = await pThreadCreator(
-  //   interaction,
-  //   dotaMessage,
-  //   confirmedPlayers
-  // );
-  // await readyChecker(confirmedPlayers, party.message, party.thread);
-  //}
 }
 
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
@@ -183,8 +168,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     readyArray.push({ gamer: player, ready: false });
   }
 
-  //const readyArray = confirmedPlayers.map((cP) => ({ ...cP, ready: false }));
-  //const arrayCopy = [...readyArray];
   const embed = readyEmbed(readyArray);
   await partyMessage.edit({
     content: `Ready check closes <t:${time + READYTIME}:R>`,
@@ -195,7 +178,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const filter = (i) =>
     i.channel.id === partyMessage.channel.id && i.customId in readyOptions;
 
-  //["rdy", "stop", "sudo", "ping"].includes(i.customId);
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
     time: READYTIME * 1000,
@@ -239,7 +221,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         await pingMessage(readyArray, partyThread);
         break;
     }
-    //The interaction will be "failed" unless we do something with it
   });
 
   collector.on("end", async (collected) => {

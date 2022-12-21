@@ -33,7 +33,7 @@ client.on("interactionCreate", async (interaction) => {
     console.log(
       "eftersom command.data.name inte === yapos så körs den här koden"
     );
-    if (!(await rightPlaceChecker(interaction))) return;
+    if (!rightPlaceChecker(interaction)) return;
   }
 
   try {
@@ -51,7 +51,7 @@ client.on("interactionCreate", async (interaction) => {
 client.login(token);
 
 //For whenever I manage to make a config file and stuff
-async function rightPlaceChecker(interaction) {
+function rightPlaceChecker(interaction) {
   if (interaction.channelId != "539847809004994560") {
     interaction.reply(
       `Please handle these kinds of things in ${interaction.guild.channels.cache
