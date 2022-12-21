@@ -240,9 +240,9 @@ function stringPrettifier(player) {
   const optimalStringLength = 39;
   let playerName = String;
   if (player.player.nickname) {
-    playerName = player.player.nickname.slice(20);
+    playerName = player.player.nickname.slice(0, 20);
   } else {
-    playerName = player.player.user.username.slice(20);
+    playerName = player.player.user.username.slice(0, 20);
   }
   const neededFilling =
     optimalStringLength - (playerName.length + player.position.length);
