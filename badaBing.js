@@ -237,13 +237,15 @@ function arrayPrettifier(playerArray) {
 
 function stringPrettifier(player) {
   //49 is the max character count to include a max level length + all the pos stuff
+  console.log(player);
   const optimalStringLength = 39;
   let playerName = String;
   if (player.player.nickname) {
-    playerName = player.player.user.nickname.slice(0, 20);
+    playerName = player.player.user.nickname.slice();
   } else {
-    playerName = player.player.user.username.slice(0, 20);
+    playerName = player.player.user.username.slice();
   }
+  playerName.slice(20); //make sure things don't get too long
   const neededFilling =
     optimalStringLength - (playerName.length + player.position.length);
   const stringFilling = " ".repeat(neededFilling + 1 - player.randomed);
