@@ -241,7 +241,7 @@ function stringPrettifier(player) {
   const optimalStringLength = 39;
   let playerName = String;
   if (player.player.nickname) {
-    playerName = player.player.user.nickname.slice();
+    playerName = player.player.nickname.slice();
   } else {
     playerName = player.player.user.username.slice();
   }
