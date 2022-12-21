@@ -228,7 +228,7 @@ function whosNext(objectArray) {
 }
 
 function arrayPrettifier(playerArray) {
-  const optimalStringLength = 48;
+  const optimalStringLength = 49;
   const prettyArray = [];
   for (let player of playerArray) {
     if (player.player.nickname) {
