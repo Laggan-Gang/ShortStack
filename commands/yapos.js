@@ -404,6 +404,9 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
+  if (!submitted) {
+    return;
+  }
   console.log(submitted);
   submitted.deferReply();
   submitted.deleteReply();
@@ -411,7 +414,6 @@ async function modalThing(interaction) {
   const reason = `${submitted.fields.getTextInputValue(
     "reason"
   )} *(written <t:${time}:R>)*`;
-  console.log("Senaste reason är " + reason);
   return reason;
 }
 
