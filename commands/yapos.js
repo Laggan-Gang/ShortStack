@@ -111,15 +111,13 @@ async function setUp(interaction, confirmedPlayers) {
           eRemover(confirmedPlayers, i); //remove player from IN if they're in it
           const condition = await modalThing(i);
           console.log(condition);
-          if (condition) {
-            condiPlayers.push({ player: i.user, condition: condition });
-          }
+          condiPlayers.push({ player: i.user, condition: condition });
         }
         break;
 
       case buttonOptions.out:
-        eRemover(condiPlayers, i);
-        eRemover(confirmedPlayers, i);
+        const pConOut = eRemover(condiPlayers, i);
+        const pInOut = eRemover(confirmedPlayers, i);
         break;
     }
     await i.update({
@@ -388,10 +386,17 @@ async function modalThing(interaction) {
       return null;
     });
   const time = getTimestamp(1000);
-  const reason = `${await submitted.fields.getTextInputValue(
+  const reason = `${submitted.fields.getTextInputValue(
     "reason"
   )} *(written <t:${time}:R>)*`;
-  return reason;
+  if (reason) {
+    await submitted.reply(`Oh "${reason}" huh, I see`);
+    await submitted.deleteReply();
+    return reason;
+  } else {
+    await submitted.reply(`Type faster!`);
+    await submitted.deleteReply();
+  }
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
