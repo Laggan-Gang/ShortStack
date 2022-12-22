@@ -120,11 +120,13 @@ async function setUp(interaction, confirmedPlayers) {
         eRemover(confirmedPlayers, i);
         break;
     }
-    console.log("Här är interaction");
-    console.log(i);
+    console.log("Här är interaction innan");
+    console.log(i.replied);
     await i.update({
       embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
     });
+    console.log("Här är efter ");
+    console.log(i.replied);
   });
 
   collector.on("end", async (collected) => {
