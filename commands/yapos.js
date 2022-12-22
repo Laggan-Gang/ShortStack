@@ -385,20 +385,14 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
+  if (!submitted) {
+    return;
+  }
   const time = getTimestamp(1000);
   const reason = `${submitted.fields.getTextInputValue(
     "reason"
   )} *(written <t:${time}:R>)*`;
-  if (reason) {
-    await submitted.reply({
-      content: `Oh "${reason}" huh, I see`,
-      ephemeral: true,
-    });
-    return reason;
-  } else {
-    await submitted.reply(`Type faster!`);
-    await submitted.deleteReply();
-  }
+  return reason;
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
