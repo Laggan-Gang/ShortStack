@@ -192,10 +192,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           return e.gamer.id === i.member.user.id && e.ready === false;
         });
         if (player) {
-          await handleIt(i, "READY");
+          //await handleIt(i, "READY");
           player.ready = true;
           player.pickTime = pickTime - miliTime;
-          await partyMessage.edit({
+          await i.Update({
             embeds: [readyEmbed(readyArray)],
           });
         }
