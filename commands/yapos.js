@@ -404,7 +404,7 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
-  submitted.deferReply;
+  submitted.deferReply();
   const time = getTimestamp(1000);
   const reason = `${submitted.fields.getTextInputValue(
     "reason"
