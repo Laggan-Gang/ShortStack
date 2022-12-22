@@ -34,7 +34,7 @@ const buttonOptions = { in: "in", out: "out", condi: "condi" };
 const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const readyColours = {
   0: 0x000000, //black
@@ -102,9 +102,9 @@ async function setUp(interaction, confirmedPlayers) {
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
-          await handleIt(i, "THEY'RE IN!");
+          //await handleIt(i, "THEY'RE IN!");
         } else {
-          await handleIt(i, "YOU'RE ALREADY IN!");
+          //await handleIt(i, "YOU'RE ALREADY IN!");
         }
         break;
 
@@ -118,10 +118,7 @@ async function setUp(interaction, confirmedPlayers) {
           //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
           //});
         } else {
-          await handleIt(
-            i,
-            "You're already conditionally in, what the hell don't push it wtf"
-          );
+          //await handleIt( i,"You're already conditionally in, what the hell don't push it wtf");
         }
         break;
 
@@ -129,13 +126,13 @@ async function setUp(interaction, confirmedPlayers) {
         const pConOut = eRemover(condiPlayers, i);
         const pInOut = eRemover(confirmedPlayers, i);
         if (pInOut || pConOut) {
-          await handleIt(i, "THEY'RE OUT");
+          //await handleIt(i, "THEY'RE OUT");
         } else {
-          await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
+          //await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
         }
         break;
     }
-    await dotaMessage.edit({
+    await i.update({
       embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
     });
   });
@@ -192,10 +189,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           return e.gamer.id === i.member.user.id && e.ready === false;
         });
         if (player) {
-          //await handleIt(i, "READY");
+          await handleIt(i, "READY");
           player.ready = true;
           player.pickTime = pickTime - miliTime;
-          await i.Update({
+          await partyMessage.edit({
             embeds: [readyEmbed(readyArray)],
           });
         }
