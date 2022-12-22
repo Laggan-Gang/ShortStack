@@ -390,8 +390,10 @@ async function modalThing(interaction) {
     "reason"
   )} *(written <t:${time}:R>)*`;
   if (reason) {
-    await submitted.reply(`Oh "${reason}" huh, I see`);
-    await submitted.deleteReply();
+    await submitted.reply({
+      content: `Oh "${reason}" huh, I see`,
+      ephemeral: true,
+    });
     return reason;
   } else {
     await submitted.reply(`Type faster!`);
