@@ -118,8 +118,8 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.out:
-        const pConOut = eRemover(condiPlayers, i);
-        const pInOut = eRemover(confirmedPlayers, i);
+        eRemover(condiPlayers, i);
+        eRemover(confirmedPlayers, i);
         break;
     }
     await i.update({
@@ -388,7 +388,7 @@ async function modalThing(interaction) {
       return null;
     });
   const time = getTimestamp(1000);
-  const reason = `${submitted.fields.getTextInputValue(
+  const reason = `${await submitted.fields.getTextInputValue(
     "reason"
   )} *(written <t:${time}:R>)*`;
   return reason;
