@@ -102,7 +102,9 @@ async function setUp(interaction, confirmedPlayers) {
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
-        } else {
+          await i.update({
+            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          });
         }
         break;
 
@@ -112,23 +114,29 @@ async function setUp(interaction, confirmedPlayers) {
           const condition = await modalThing(i);
           console.log(condition);
           condiPlayers.push({ player: i.user, condition: condition });
+          await dotaMessage.edit({
+            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          });
         }
         break;
 
       case buttonOptions.out:
         eRemover(condiPlayers, i);
         eRemover(confirmedPlayers, i);
+        await i.update({
+          embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+        });
         break;
     }
-    if (!i.replied) {
-      await i.update({
-        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-      });
-    } else {
-      await dotaMessage.edit({
-        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-      });
-    }
+    //if (!i.replied) {
+    //  await i.update({
+    //    embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+    //  });
+    //} else {
+    //  await dotaMessage.edit({
+    //    embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+    //  });
+    //}
   });
 
   collector.on("end", async (collected) => {
