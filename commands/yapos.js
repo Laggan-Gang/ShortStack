@@ -34,7 +34,7 @@ const buttonOptions = { in: "in", out: "out", condi: "condi" };
 const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const readyColours = {
   0: 0x000000, //black
@@ -116,10 +116,12 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.out:
-        const pConOut = eRemover(condiPlayers, i);
-        const pInOut = eRemover(confirmedPlayers, i);
+        eRemover(condiPlayers, i);
+        eRemover(confirmedPlayers, i);
         break;
     }
+    console.log("Här är interaction");
+    console.log(i);
     await i.update({
       embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
     });
