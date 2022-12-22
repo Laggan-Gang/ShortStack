@@ -34,7 +34,7 @@ const buttonOptions = { in: "in", out: "out", condi: "condi" };
 const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[1];
+const yapos = debug[0];
 
 const readyColours = {
   0: 0x000000, //black
