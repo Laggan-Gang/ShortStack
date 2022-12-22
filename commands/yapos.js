@@ -122,9 +122,16 @@ async function setUp(interaction, confirmedPlayers) {
     }
     console.log("Här är interaction innan");
     console.log(i.replied);
-    await i.update({
-      embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-    });
+    if (!i.replied) {
+      await i.update({
+        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+      });
+    } else {
+      dotaMessage.edit({
+        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+      });
+    }
+
     console.log("Här är efter ");
     console.log(i.replied);
   });
