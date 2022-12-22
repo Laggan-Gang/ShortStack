@@ -102,9 +102,6 @@ async function setUp(interaction, confirmedPlayers) {
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
-          await i.update({
-            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          });
         }
         break;
 
@@ -114,34 +111,24 @@ async function setUp(interaction, confirmedPlayers) {
           const condition = await modalThing(i);
           console.log(condition);
           condiPlayers.push({ player: i.user, condition: condition });
-          await dotaMessage.edit({
-            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          });
-        } else {
-          await i.update({
-            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          });
         }
-
         break;
 
       case buttonOptions.out:
+        //snygga till det här vid tillfälle :)
         eRemover(condiPlayers, i);
         eRemover(confirmedPlayers, i);
-        await i.update({
-          embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-        });
         break;
     }
-    //if (!i.replied) {
-    //  await i.update({
-    //    embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-    //  });
-    //} else {
-    //  await dotaMessage.edit({
-    //    embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-    //  });
-    //}
+    if (!i.replied) {
+      await i.update({
+        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+      });
+    } else {
+      await dotaMessage.edit({
+        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+      });
+    }
   });
 
   collector.on("end", async (collected) => {
@@ -392,12 +379,9 @@ async function modalThing(interaction) {
   const modalInput = modalComponent(reasonInput);
   modal.addComponents(modalInput);
   await interaction.showModal(modal);
-  // Get the Modal Submit Interaction that is emitted once the User submits the Modal
   const submitted = await interaction
     .awaitModalSubmit({
-      // Timeout after READYTIME of not receiving any valid Modals
       time: READYTIME * 1000,
-      // Make sure we only accept Modals from the User who sent the original Interaction we're responding to
       filter: (i) => i.user.id === interaction.user.id,
     })
     .catch((error) => {
@@ -405,17 +389,15 @@ async function modalThing(interaction) {
       return null;
     });
   if (!submitted) {
-    return;
+    return "took to long to write";
   }
-  console.log(submitted);
-  submitted.update("Testing what the hell will happen here");
-  //submitted.deferReply();
-  //submitted.deleteReply();
+  submitted.update(
+    "LET ME KNOW IF YOU FIND THIS STRING BECAUSE I HAVE NO IDEA WHERE IT GOES"
+  );
   const time = getTimestamp(1000);
-  const reason = `${submitted.fields.getTextInputValue(
+  return `${submitted.fields.getTextInputValue(
     "reason"
   )} *(written <t:${time}:R>)*`;
-  return reason;
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
