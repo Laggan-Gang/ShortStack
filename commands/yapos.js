@@ -108,9 +108,7 @@ async function setUp(interaction, confirmedPlayers) {
       case buttonOptions.condi:
         if (!condiPlayers.find(playerIdentity(i))) {
           eRemover(confirmedPlayers, i); //remove player from IN if they're in it
-          const condition = await modalThing(i);
-          console.log(condition);
-          condiPlayers.push({ player: i.user, condition: condition });
+          await modalThing(i);
         }
         break;
 
@@ -119,15 +117,10 @@ async function setUp(interaction, confirmedPlayers) {
         eRemover(confirmedPlayers, i);
         break;
     }
-    if (!i.replied) {
-      await i.update({
-        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-      });
-    } else {
-      await dotaMessage.edit({
-        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-      });
-    }
+
+    await i.update({
+      embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+    });
   });
 
   collector.on("end", async (collected) => {
@@ -136,7 +129,6 @@ async function setUp(interaction, confirmedPlayers) {
         content: "Looks like you ran out of time, darlings!",
         components: [],
       });
-      //do thing with collected info
     } else {
       //Time for a ready check
       const party = await pThreadCreator(
@@ -183,9 +175,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         if (player) {
           player.ready = true;
           player.pickTime = pickTime - miliTime;
-          //await i.update({
-          //  embeds: [readyEmbed(readyArray)],
-          //});
         }
         if (everyoneReady(readyArray)) {
           console.log("Now stopping");
@@ -194,20 +183,15 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
 
       case readyOptions.stop:
-        //await handleIt(i, "ABORTING!!!");
         collector.stop("Someone wants out!");
         break;
 
       case readyOptions.sudo:
         forceReady(readyArray, pickTime, miliTime);
-        //await i.update({
-        //  embeds: [readyEmbed(readyArray)],
-        //});
         collector.stop();
         break;
 
       case readyOptions.ping:
-        //await handleIt(i, "Sending a gentle reminder...");
         await pingMessage(readyArray, partyThread);
         break;
     }
@@ -372,7 +356,7 @@ async function stackIt(message, confirmedPlayers) {
   });
 }
 
-async function modalThing(interaction) {
+async function modalThing(interaction, condiPlayers, confirmedPlayers) {
   const modal = new ModalBuilder()
     .setCustomId("textCollector")
     .setTitle("Ok, buddy");
@@ -395,15 +379,18 @@ async function modalThing(interaction) {
       return null;
     });
   if (!submitted) {
-    return "took to long to write";
+    interaction.update({
+      embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+    });
+    return;
   }
-  submitted.update(
-    "LET ME KNOW IF YOU FIND THIS STRING BECAUSE I HAVE NO IDEA WHERE IT GOES"
-  );
   const time = getTimestamp(1000);
-  return `${submitted.fields.getTextInputValue(
+  const condition = `${submitted.fields.getTextInputValue(
     "reason"
   )} *(written <t:${time}:R>)*`;
+  condiPlayers.push({ player: i.user, condition: condition });
+
+  submitted.update({ embeds: [prettyEmbed(confirmedPlayers, condiPlayers)] });
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
