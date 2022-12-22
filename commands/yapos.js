@@ -396,9 +396,6 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
-  if (!submitted) {
-    return;
-  }
   const time = getTimestamp(1000);
   const reason = `${submitted.fields.getTextInputValue(
     "reason"
@@ -461,9 +458,6 @@ function readyEmbed(readyArray) {
     fields: [
       { name: "**R E A D Y  C H E C K**", value: playerFields.join("\n") },
     ],
-    //image: {
-    //  url: "attachment://dota-map.png",
-    //},
   };
   return embed;
 }
