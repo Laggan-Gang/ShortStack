@@ -115,7 +115,6 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.out:
-        //snygga till det här vid tillfälle :)
         eRemover(condiPlayers, i);
         eRemover(confirmedPlayers, i);
         break;
@@ -137,7 +136,6 @@ async function setUp(interaction, confirmedPlayers) {
         content: "Looks like you ran out of time, darlings!",
         components: [],
       });
-
       //do thing with collected info
     } else {
       //Time for a ready check
@@ -185,31 +183,37 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         if (player) {
           player.ready = true;
           player.pickTime = pickTime - miliTime;
-          await i.update({
-            embeds: [readyEmbed(readyArray)],
-          });
+          //await i.update({
+          //  embeds: [readyEmbed(readyArray)],
+          //});
         }
         if (everyoneReady(readyArray)) {
           console.log("Now stopping");
           collector.stop("That's enough");
         }
         break;
+
       case readyOptions.stop:
-        await handleIt(i, "ABORTING!!!");
+        //await handleIt(i, "ABORTING!!!");
         collector.stop("Someone wants out!");
         break;
+
       case readyOptions.sudo:
         forceReady(readyArray, pickTime, miliTime);
-        await i.update({
-          embeds: [readyEmbed(readyArray)],
-        });
+        //await i.update({
+        //  embeds: [readyEmbed(readyArray)],
+        //});
         collector.stop();
         break;
+
       case readyOptions.ping:
-        await handleIt(i, "Sending a gentle reminder...");
+        //await handleIt(i, "Sending a gentle reminder...");
         await pingMessage(readyArray, partyThread);
         break;
     }
+    await i.update({
+      embeds: [readyEmbed(readyArray)],
+    });
   });
 
   collector.on("end", async (collected) => {
