@@ -170,13 +170,7 @@ module.exports = {
   },
 
   everyoneReady(readyArray) {
-    var rCount = 0;
-    for (let player of readyArray) {
-      if (player.ready) {
-        rCount++;
-      }
-    }
-    return rCount > 4;
+    return readyArray.filter((p) => p.ready).length > 4;
   },
 
   async pingMessage(readyArray, partyThread) {
