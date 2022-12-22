@@ -117,7 +117,12 @@ async function setUp(interaction, confirmedPlayers) {
           await dotaMessage.edit({
             embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
           });
+        } else {
+          await i.update({
+            embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+          });
         }
+
         break;
 
       case buttonOptions.out:
@@ -399,6 +404,7 @@ async function modalThing(interaction) {
       console.error(error);
       return null;
     });
+  submitted.deferReply;
   const time = getTimestamp(1000);
   const reason = `${submitted.fields.getTextInputValue(
     "reason"
