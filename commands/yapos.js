@@ -117,10 +117,11 @@ async function setUp(interaction, confirmedPlayers) {
         eRemover(confirmedPlayers, i);
         break;
     }
-
-    await i.update({
-      embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-    });
+    if (!i.replied) {
+      await i.update({
+        embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+      });
+    }
   });
 
   collector.on("end", async (collected) => {
