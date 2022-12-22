@@ -224,6 +224,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     );
     const redoButton = rowBoat("Re-Check", "redo");
     const time = getTimestamp(1000);
+    console.log("Everyone ready ser ut såhär: ");
+    console.log(everyoneReady(readyArray));
     if (!everyoneReady(readyArray)) {
       switch (collected.last()?.customId) {
         case readyOptions.stop:
