@@ -102,9 +102,7 @@ async function setUp(interaction, confirmedPlayers) {
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
-          //await handleIt(i, "THEY'RE IN!");
         } else {
-          //await handleIt(i, "YOU'RE ALREADY IN!");
         }
         break;
 
@@ -114,22 +112,12 @@ async function setUp(interaction, confirmedPlayers) {
           const condition = await modalThing(i);
           console.log(condition);
           condiPlayers.push({ player: i.user, condition: condition });
-          //await message.edit({
-          //  embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
-          //});
-        } else {
-          //await handleIt( i,"You're already conditionally in, what the hell don't push it wtf");
         }
         break;
 
       case buttonOptions.out:
         const pConOut = eRemover(condiPlayers, i);
         const pInOut = eRemover(confirmedPlayers, i);
-        if (pInOut || pConOut) {
-          //await handleIt(i, "THEY'RE OUT");
-        } else {
-          //await handleIt(i, "THEY WERE NEVER IN IN THE FIRST PLACE!!?");
-        }
         break;
     }
     await i.update({
@@ -189,10 +177,9 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           return e.gamer.id === i.member.user.id && e.ready === false;
         });
         if (player) {
-          await handleIt(i, "READY");
           player.ready = true;
           player.pickTime = pickTime - miliTime;
-          await partyMessage.edit({
+          await i.update({
             embeds: [readyEmbed(readyArray)],
           });
         }
@@ -206,9 +193,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         collector.stop("Someone wants out!");
         break;
       case readyOptions.sudo:
-        await handleIt(i, "``sudo ready``");
         forceReady(readyArray, pickTime, miliTime);
-        await partyMessage.edit({
+        await i.update({
           embeds: [readyEmbed(readyArray)],
         });
         collector.stop();
