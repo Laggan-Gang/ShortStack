@@ -388,7 +388,7 @@ async function modalThing(interaction, condiPlayers, confirmedPlayers) {
   const condition = `${submitted.fields.getTextInputValue(
     "reason"
   )} *(written <t:${time}:R>)*`;
-  condiPlayers.push({ player: i.user, condition: condition });
+  condiPlayers.push({ player: interaction.user, condition: condition });
 
   submitted.update({ embeds: [prettyEmbed(confirmedPlayers, condiPlayers)] });
 }
