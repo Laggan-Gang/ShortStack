@@ -108,7 +108,7 @@ async function setUp(interaction, confirmedPlayers) {
       case buttonOptions.condi:
         if (!condiPlayers.find(playerIdentity(i))) {
           eRemover(confirmedPlayers, i); //remove player from IN if they're in it
-          await modalThing(i);
+          await modalThing(i, condiPlayers, confirmedPlayers);
         }
         break;
 
