@@ -34,7 +34,7 @@ const buttonOptions = { in: "in", out: "out", condi: "condi" };
 const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[0];
+const yapos = debug[1];
 
 const readyColours = {
   0: 0x000000, //black
@@ -203,15 +203,16 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
   collector.on("end", async (collected) => {
     console.log(
-      `Now stopping, the final interaction was: ${
+      `Now stopping and removing components, the final interaction was: ${
         collected.last() ? collected.last().customId : `Nothing!`
       }`
     );
-    const redoButton = rowBoat("Re-Check", "redo");
-    const time = getTimestamp(1000);
+    await partyMessage.edit({ comopnents: [] });
     console.log("Everyone ready ser ut såhär: ");
     console.log(everyoneReady(readyArray));
     if (!everyoneReady(readyArray)) {
+      const time = getTimestamp(1000);
+      const redoButton = rowBoat("Re-Check", "redo");
       switch (collected.last()?.customId) {
         case readyOptions.stop:
           await partyMessage.edit({
@@ -237,28 +238,38 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       }
     } else {
       const stackButton = rowBoat("Stack it!", "stack");
+      console.log("Det här är efter stackButton");
+      let finalMessage = "";
       switch (collected.last().customId) {
         case readyOptions.sudo:
-          await partyMessage.edit({
-            content: `${collected
-              .last()
-              .member.toString()} Used FORCED READY! You should be safe to stack, if not blame ${collected
-              .last()
-              .member.toString()}`,
-            components: [stackButton],
-          });
-          await stackIt(partyMessage, confirmedPlayers, partyThread);
-          return;
+          const readyLast = collected.last().member.toString();
+          finalMessage = `${readyLast} used FORCED READY! You should be safe to stack, if not blame ${readyLast}`;
+          //await partyMessage.edit({
+          //  content: `${collected
+          //    .last()
+          //    .member.toString()} Used FORCED READY! You should be safe to stack, if not blame ${collected
+          //    .last()
+          //    .member.toString()}`,
+          //  components: [stackButton],
+          //});
+          //await stackIt(partyMessage, confirmedPlayers, partyThread);
+          break;
 
         case readyOptions.rdy:
         case readyOptions.ping: //in freak cases "ping" can be the last one
-          await partyMessage.edit({
-            content: "Everyopne's ready!",
-            components: [stackButton],
-          });
-          await stackIt(partyMessage, confirmedPlayers, partyThread);
-          return;
+          finalMessage = "Everyone's ready!";
+          //await partyMessage.edit({
+          //  content: "Everyopne's ready!",
+          //  components: [stackButton],
+          //});
+          //await stackIt(partyMessage, confirmedPlayers, partyThread);
+          break;
       }
+      await partyMessage.edit({
+        content: finalMessage,
+        components: [stackButton],
+      });
+      await stackIt(partyMessage, confirmedPlayers, partyThread);
     }
   });
 }
@@ -358,6 +369,7 @@ async function stackIt(message, confirmedPlayers) {
 }
 
 async function modalThing(interaction, condiPlayers, confirmedPlayers) {
+  //this is  a little busy
   const modal = new ModalBuilder()
     .setCustomId("textCollector")
     .setTitle("Ok, buddy");
@@ -365,7 +377,7 @@ async function modalThing(interaction, condiPlayers, confirmedPlayers) {
     .setCustomId("reason")
     .setLabel("What's the holdup? Include ETA")
     .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
-    .setMaxLength(280)
+    .setMaxLength(140)
     .setStyle(TextInputStyle.Short);
   const modalInput = modalComponent(reasonInput);
   modal.addComponents(modalInput);
@@ -380,7 +392,7 @@ async function modalThing(interaction, condiPlayers, confirmedPlayers) {
       return null;
     });
   if (!submitted) {
-    interaction.update({
+    await interaction.update({
       embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
     });
     return;
@@ -391,7 +403,9 @@ async function modalThing(interaction, condiPlayers, confirmedPlayers) {
   )} *(written <t:${time}:R>)*`;
   condiPlayers.push({ player: interaction.user, condition: condition });
 
-  submitted.update({ embeds: [prettyEmbed(confirmedPlayers, condiPlayers)] });
+  await submitted.update({
+    embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+  });
 }
 
 function prettyEmbed(confirmedPlayers, condiPlayers) {
