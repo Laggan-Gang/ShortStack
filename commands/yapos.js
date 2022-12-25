@@ -193,12 +193,15 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
 
       case readyOptions.ping:
+        console.log("I början av case blocket är i.replied " + i.replied);
         i.deferReply();
         await pingMessage(readyArray, partyThread);
         await i.deleteReply();
+        console.log("i.replied är i case blocket " + i.replied);
         break;
     }
     if (!i.replied) {
+      console.log("Eftersom den här koden körs är i.replied false");
       await i.update({
         embeds: [readyEmbed(readyArray)],
       });
