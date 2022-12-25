@@ -193,8 +193,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
 
       case readyOptions.ping:
-        i.deferUpdate();
-        //i.deferReply();
+        i.deferReply();
         await pingMessage(readyArray, partyThread);
         i.deleteReply();
         break;
