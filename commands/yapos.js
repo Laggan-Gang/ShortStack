@@ -195,11 +195,14 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       case readyOptions.ping:
         i.deferReply();
         await pingMessage(readyArray, partyThread);
+        i.deleteReply();
         break;
     }
-    await i.update({
-      embeds: [readyEmbed(readyArray)],
-    });
+    if (!i.replied) {
+      await i.update({
+        embeds: [readyEmbed(readyArray)],
+      });
+    }
   });
 
   collector.on("end", async (collected) => {
