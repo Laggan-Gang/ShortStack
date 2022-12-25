@@ -200,8 +200,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         console.log("i.replied är i case blocket " + i.replied);
         break;
     }
-    if (!i.replied) {
-      console.log("Eftersom den här koden körs är i.replied false");
+    if (!(i.replied || i.deferred)) {
+      console.log(
+        "Eftersom den här koden körs är i.replied eller i.deferred false"
+      );
       await i.update({
         embeds: [readyEmbed(readyArray)],
       });
