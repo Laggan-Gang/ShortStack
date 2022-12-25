@@ -193,17 +193,13 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
 
       case readyOptions.ping:
-        console.log("I början av case blocket är i.replied " + i.replied);
-        i.deferReply();
+        i.deferUpdate();
+        //i.deferReply();
         await pingMessage(readyArray, partyThread);
-        await i.deleteReply();
-        console.log("i.replied är i case blocket " + i.replied);
+        i.deleteReply();
         break;
     }
     if (!(i.replied || i.deferred)) {
-      console.log(
-        "Eftersom den här koden körs är i.replied eller i.deferred false"
-      );
       await i.update({
         embeds: [readyEmbed(readyArray)],
       });
@@ -217,8 +213,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       }`
     );
     await partyMessage.edit({ comopnents: [] });
-    console.log("Everyone ready ser ut såhär: ");
-    console.log(everyoneReady(readyArray));
+    console.log(`Everyone ready ser ut såhär: ${everyoneReady(readyArray)}`);
     if (!everyoneReady(readyArray)) {
       const time = getTimestamp(1000);
       const redoButton = rowBoat("Re-Check", "redo");
