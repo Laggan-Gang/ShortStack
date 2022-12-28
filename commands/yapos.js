@@ -25,8 +25,8 @@ const {
 const ljudGöraren = require("../jukeBox.js");
 
 const standardTime = 60;
-//const TRASH_CHANNEL = "539847809004994560";
-const TRASH_CHANNEL = "1057444797301923860";
+const TRASH_CHANNEL = "539847809004994560"; //shit thread
+//const TRASH_CHANNEL = "1057444797301923860"; yapos thread
 const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
