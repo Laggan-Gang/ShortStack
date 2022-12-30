@@ -118,7 +118,9 @@ async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
   collector.on("collect", async (i) => {
     console.log(i.user.username);
     //The interaction will be "failed" unless we do something with it
-    i.update("Pick received...");
+    await i.deferReply();
+    await i.deleteReply();
+    //await i.update("Pick received...");
     //try {
     //  await i.reply("Roger, babe!");
     //  await i.deleteReply();
