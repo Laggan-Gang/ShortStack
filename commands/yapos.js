@@ -301,7 +301,7 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   message.edit({
     content:
       "Looks like we got a stack! Ready check is running in the Party Thread!",
-    components: [linkButton(message, partyThread, "Party Thread")],
+    components: [linkButton(partyThread, "Party Thread")],
   });
   const partyMessage = await partyThread.send({
     content: confirmedPlayers.join(),
@@ -341,7 +341,7 @@ async function stackIt(message, confirmedPlayers) {
         standardTime,
         stackThread
       );
-      const button = linkButton(message, stackThread, "Stack Thread");
+      const button = linkButton(stackThread, "Stack Thread");
       await message.edit({
         content: "Stack is running in the Stack Thread!",
         components: [button],

@@ -52,11 +52,7 @@ module.exports = {
       content: `${playerArray.map((b) => b.player).join("", " ")}`,
     });
     if (!existingThread) {
-      const button = linkButton(
-        interaction.member.guildId,
-        stackThread,
-        "Stack Thread"
-      );
+      const button = linkButton(stackThread, "Stack Thread");
       interaction.channel.send({ components: button });
     }
     badaBoom(playerArray, message, pickTime);
