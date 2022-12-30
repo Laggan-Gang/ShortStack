@@ -58,7 +58,6 @@ module.exports = {
   },
 
   linkButton(thread, label) {
-    console.log(thread.guild.id);
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setURL(`https://discord.com/channels/${thread.guild.id}/${thread.id}`)
