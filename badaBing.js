@@ -56,23 +56,6 @@ module.exports = {
       interaction.channel.send({ components: [button] });
     }
     badaBoom(playerArray, message, pickTime);
-
-    //if (!threadPar) {
-    //  const thread = await channel.threads.create({
-    //    name: threadName + "'s Dota Party",
-    //    autoArchiveDuration: 60,
-    //    reason: "Time to set up your dota party!",
-    //  });
-    //  const message = await thread.send({
-    //    content: `${playerArray.map((b) => b.player).join("", " ")}`,
-    //  });
-    //  badaBoom(playerArray, message, pickTime);
-    //} else {
-    //  const message = await threadPar.send({
-    //    content: `${playerArray.map((b) => b.player).join("", " ")}`,
-    //  });
-    //  badaBoom(playerArray, message, pickTime);
-    //}
   },
 };
 
@@ -135,12 +118,13 @@ async function badaBoom(playerArray, message, pickTime, recentlyPicked) {
   collector.on("collect", async (i) => {
     console.log(i.user.username);
     //The interaction will be "failed" unless we do something with it
-    try {
-      await i.reply("Roger, babe!");
-      await i.deleteReply();
-    } catch (error) {
-      console.log(error);
-    }
+    i.update("Pick received...");
+    //try {
+    //  await i.reply("Roger, babe!");
+    //  await i.deleteReply();
+    //} catch (error) {
+    //  console.log(error);
+    //}
   });
 
   collector.on("end", async (collected) => {
