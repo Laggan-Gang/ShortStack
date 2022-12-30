@@ -30,13 +30,13 @@ client.on("interactionCreate", async (interaction) => {
   const command = client.commands.get(interaction.commandName);
   if (!interaction.isChatInputCommand()) return;
   if (!command) return;
-  console.log(command.data.name);
-  if (command.data.name !== "yapos") {
-    console.log(
-      "eftersom command.data.name inte === yapos så körs den här koden"
-    );
-    if (!rightPlaceChecker(interaction)) return;
-  }
+  //console.log(command.data.name);
+  //if (command.data.name !== "yapos") {
+  //  console.log(
+  //    "eftersom command.data.name inte === yapos så körs den här koden"
+  //  );
+  //  if (!rightPlaceChecker(interaction)) return;
+  //}
 
   try {
     command.execute(interaction);
