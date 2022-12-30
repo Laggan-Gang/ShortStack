@@ -341,7 +341,6 @@ async function stackIt(message, confirmedPlayers) {
       const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
       const shuffledChoices = shuffle(choices);
 
-      const threadName = interaction.user.username;
       const channel = await interaction.member.guild.channels.cache.get(
         TRASH_CHANNEL
       );

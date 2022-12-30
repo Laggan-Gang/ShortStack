@@ -31,7 +31,6 @@ module.exports = {
     const choices = [];
     const numPlayers = 5;
     const pickTime = interaction.options.getInteger("time") || standardTime;
-    const threadName = interaction.user.username;
 
     for (let i = 1; i < numPlayers + 1; i++) {
       const { id } = interaction.options.getUser("p" + i);
@@ -44,6 +43,6 @@ module.exports = {
       choices.push(id);
     }
     const shuffledChoices = shuffle(choices);
-    badaBing.badaBing(interaction, shuffledChoices, pickTime, threadName);
+    badaBing.badaBing(interaction, shuffledChoices, pickTime);
   },
 };

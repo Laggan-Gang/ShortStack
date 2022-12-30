@@ -11,7 +11,7 @@ const Canvas = require("@napi-rs/canvas");
 const { request } = require("undici");
 const axios = require("axios");
 const { laggStatsBaseUrl } = require("./config.json");
-
+const TRASH_CHANNEL = "539847809004994560";
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
 const basePlayer = { position: "Has not picked yet", randomed: 0 };
 const standardTime = 60;
@@ -21,11 +21,9 @@ module.exports = {
     interaction,
     choices,
     pickTime,
-    threadName,
-    threadPar
+    existingThread
   ) {
     interaction.deferReply();
-    const channel = await interaction.channel;
     const playerArray = await Promise.all(
       choices.map(async (choice) => {
         const [player, preferred] = await Promise.all([
@@ -40,22 +38,38 @@ module.exports = {
       })
     );
     await interaction.deleteReply();
-    if (!threadPar) {
-      const thread = await channel.threads.create({
-        name: threadName + "'s Dota Party",
-        autoArchiveDuration: 60,
-        reason: "Time to set up your dota party!",
-      });
-      const message = await thread.send({
-        content: `${playerArray.map((b) => b.player).join("", " ")}`,
-      });
-      badaBoom(playerArray, message, pickTime);
-    } else {
-      const message = await threadPar.send({
-        content: `${playerArray.map((b) => b.player).join("", " ")}`,
-      });
-      badaBoom(playerArray, message, pickTime);
-    }
+
+    const stackThread =
+      existingThread ||
+      (await interaction.member.guild.channels.cache
+        .get(TRASH_CHANNEL)
+        .threads.create({
+          name: interaction.user.username + "'s Dota Party",
+          autoArchiveDuration: 60,
+          reason: "Time to set up your dota party!",
+        }));
+
+    const message = await stackThread.send({
+      content: `${playerArray.map((b) => b.player).join("", " ")}`,
+    });
+
+    badaBoom(playerArray, message, pickTime);
+    //if (!threadPar) {
+    //  const thread = await channel.threads.create({
+    //    name: threadName + "'s Dota Party",
+    //    autoArchiveDuration: 60,
+    //    reason: "Time to set up your dota party!",
+    //  });
+    //  const message = await thread.send({
+    //    content: `${playerArray.map((b) => b.player).join("", " ")}`,
+    //  });
+    //  badaBoom(playerArray, message, pickTime);
+    //} else {
+    //  const message = await threadPar.send({
+    //    content: `${playerArray.map((b) => b.player).join("", " ")}`,
+    //  });
+    //  badaBoom(playerArray, message, pickTime);
+    //}
   },
 };
 
