@@ -53,7 +53,7 @@ module.exports = {
     });
     if (!existingThread) {
       const button = linkButton(stackThread, "Stack Thread");
-      interaction.channel.send({ components: button });
+      interaction.channel.send({ components: [button] });
     }
     badaBoom(playerArray, message, pickTime);
 
