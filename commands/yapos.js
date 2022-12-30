@@ -337,20 +337,20 @@ async function stackIt(message, confirmedPlayers) {
   collector.on("end", async (collected) => {
     await message.edit({ components: [] });
     if (collected.last()) {
-      const interaction = collected.last();
+      const lastInteraction = collected.last();
       const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
       const shuffledChoices = shuffle(choices);
 
-      const channel = await interaction.member.guild.channels.cache.get(
+      const channel = await lastInteraction.member.guild.channels.cache.get(
         TRASH_CHANNEL
       );
       const stackThread = await channel.threads.create({
-        name: threadName + "'s Dota Party",
+        name: interaction.user.username + "'s Dota Party",
         autoArchiveDuration: 60,
         reason: "Time for stack!",
       });
       await badaBing.badaBing(
-        interaction,
+        lastInteraction,
         shuffledChoices,
         standardTime,
         threadName,
