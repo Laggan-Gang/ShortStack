@@ -246,25 +246,11 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         case readyOptions.sudo:
           const readyLast = collected.last().member.toString();
           finalMessage = `${readyLast} used FORCED READY! You should be safe to stack, if not blame ${readyLast}`;
-          //await partyMessage.edit({
-          //  content: `${collected
-          //    .last()
-          //    .member.toString()} Used FORCED READY! You should be safe to stack, if not blame ${collected
-          //    .last()
-          //    .member.toString()}`,
-          //  components: [stackButton],
-          //});
-          //await stackIt(partyMessage, confirmedPlayers, partyThread);
           break;
 
         case readyOptions.rdy:
         case readyOptions.ping: //in freak cases "ping" can be the last one
           finalMessage = "Everyone's ready!";
-          //await partyMessage.edit({
-          //  content: "Everyopne's ready!",
-          //  components: [stackButton],
-          //});
-          //await stackIt(partyMessage, confirmedPlayers, partyThread);
           break;
       }
       await partyMessage.edit({
@@ -337,11 +323,11 @@ async function stackIt(message, confirmedPlayers) {
   collector.on("end", async (collected) => {
     await message.edit({ components: [] });
     if (collected.last()) {
-      const lastInteraction = collected.last();
+      const interaction = collected.last();
       const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
       const shuffledChoices = shuffle(choices);
 
-      const channel = await lastInteraction.member.guild.channels.cache.get(
+      const channel = await interaction.member.guild.channels.cache.get(
         TRASH_CHANNEL
       );
       const stackThread = await channel.threads.create({
@@ -350,7 +336,7 @@ async function stackIt(message, confirmedPlayers) {
         reason: "Time for stack!",
       });
       await badaBing.badaBing(
-        lastInteraction,
+        interaction,
         shuffledChoices,
         standardTime,
         threadName,
