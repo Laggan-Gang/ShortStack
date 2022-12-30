@@ -11,6 +11,7 @@ const Canvas = require("@napi-rs/canvas");
 const { request } = require("undici");
 const axios = require("axios");
 const { laggStatsBaseUrl } = require("./config.json");
+const { linkButton, shuffle } = require("./utils");
 const TRASH_CHANNEL = "539847809004994560";
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
 const basePlayer = { position: "Has not picked yet", randomed: 0 };
@@ -38,7 +39,6 @@ module.exports = {
       })
     );
     await interaction.deleteReply();
-
     const stackThread =
       existingThread ||
       (await interaction.member.guild.channels.cache
@@ -48,12 +48,19 @@ module.exports = {
           autoArchiveDuration: 60,
           reason: "Time to set up your dota party!",
         }));
-
     const message = await stackThread.send({
       content: `${playerArray.map((b) => b.player).join("", " ")}`,
     });
 
     badaBoom(playerArray, message, pickTime);
+    if (!stackThread) {
+      const button = linkButton(
+        interaction.member.guildId,
+        stackThread,
+        "Stack Thread"
+      );
+      interaction.channel.send({ components: button });
+    }
     //if (!threadPar) {
     //  const thread = await channel.threads.create({
     //    name: threadName + "'s Dota Party",
@@ -263,28 +270,6 @@ function stringPrettifier(player) {
   const stringFilling = " ".repeat(neededFilling + 1 - player.randomed);
   const interrobangs = "⁉️".repeat(player.randomed);
   return `\`\`${playerName}${stringFilling} ${player.position}${interrobangs}\`\``;
-}
-
-//shuffle(array)
-//NOTE: This is NOT the Maakep Engine, I forgot where it is and couldn't be bothered to find it.
-function shuffle([...array]) {
-  let currentIndex = array.length,
-    randomIndex;
-
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
-  }
-
-  return array;
 }
 
 async function artTime(updatedArray) {
