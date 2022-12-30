@@ -339,7 +339,6 @@ async function stackIt(message, confirmedPlayers) {
         interaction,
         shuffledChoices,
         standardTime,
-        threadName,
         stackThread
       );
       const button = linkButton(message, stackThread, "Stack Thread");
