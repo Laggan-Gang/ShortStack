@@ -51,9 +51,7 @@ module.exports = {
     const message = await stackThread.send({
       content: `${playerArray.map((b) => b.player).join("", " ")}`,
     });
-
-    badaBoom(playerArray, message, pickTime);
-    if (!stackThread) {
+    if (!existingThread) {
       const button = linkButton(
         interaction.member.guildId,
         stackThread,
@@ -61,6 +59,8 @@ module.exports = {
       );
       interaction.channel.send({ components: button });
     }
+    badaBoom(playerArray, message, pickTime);
+
     //if (!threadPar) {
     //  const thread = await channel.threads.create({
     //    name: threadName + "'s Dota Party",
