@@ -4,6 +4,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const { token } = require("./config.json");
+const YAPOSCHANNEL = "1057444797301923860";
+const TRASHCHANNEL = "539847809004994560";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
@@ -49,19 +51,19 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 client.login(token);
-
 //For whenever I manage to make a config file and stuff
 function rightPlaceChecker(interaction) {
-  if (interaction.channelId != "539847809004994560") {
-    interaction.reply(
-      `Please handle these kinds of things in ${interaction.guild.channels.cache
-        .get("539847809004994560")
-        .toString()}!\nLove, ShortStack!`
-    );
-    return false;
-  } else {
+  if ([YAPOSCHANNEL, TRASHCHANNEL].includes(interaction.channelId)) {
     return true;
   }
+  interaction.reply(
+    `Please handle these kinds of things in ${interaction.guild.channels.cache.get(
+      YAPOSCHANNEL
+    )} or ${interaction.guild.channels.cache.get(
+      TRASHCHANNEL
+    )}!\nLove, ShortStack!`
+  );
+  return false;
 }
 
 function interactionSiphon(interaction) {

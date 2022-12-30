@@ -27,7 +27,6 @@ const ljudGöraren = require("../jukeBox.js");
 const standardTime = 60;
 const TRASH_CHANNEL = "539847809004994560"; //shit thread
 //const TRASH_CHANNEL = "1057444797301923860"; yapos thread
-const TRASH_GUILD = "209707792314007552";
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
@@ -49,7 +48,7 @@ const readyColours = {
 function arrayMaker(interaction) {
   const confirmedPlayers = [interaction.user];
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
-  for (let i = 2; i < 7; i++) {
+  for (let i = 2; i < 6; i++) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
@@ -58,7 +57,6 @@ function arrayMaker(interaction) {
         );
         return confirmedPlayers;
       }
-      //THIS IS NOT WHERE THINGS GO WRONG
       confirmedPlayers.push(player);
     } else {
       return confirmedPlayers;
