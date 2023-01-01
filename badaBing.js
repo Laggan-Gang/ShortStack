@@ -25,19 +25,36 @@ module.exports = {
     existingThread
   ) {
     interaction.deferReply();
-    const playerArray = await Promise.all(
-      choices.map(async (choice) => {
-        const [player, preferred] = await Promise.all([
-          interaction.guild.members.fetch(choice),
-          getMyPreferences(choice),
-        ]);
+    let playerArray = [];
+    try {
+      playerArray = await Promise.all(
+        choices.map(async (choice) => {
+          const [player, preferred] = await Promise.all([
+            interaction.guild.members.fetch(choice),
+            getMyPreferences(choice),
+          ]);
+          return {
+            ...basePlayer,
+            player,
+            preferred,
+          };
+        })
+      );
+    } catch {
+      console.log("Nu funkar inte getMyPreferences men vi kör backup strats");
+      playerArray = choices.map((choice) => {
+        const player = interaction.guild.members.fetch(choice);
+        const preferred = "fill";
         return {
           ...basePlayer,
           player,
           preferred,
         };
-      })
-    );
+      });
+
+      //(choice.preferred = "fill"));
+    }
+
     await interaction.deleteReply();
     const stackThread =
       existingThread ||
