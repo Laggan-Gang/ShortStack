@@ -44,6 +44,7 @@ module.exports = {
       console.log("Nu funkar inte getMyPreferences men vi kör backup strats");
       playerArray = choices.map(async (choice) => {
         const player = await interaction.guild.members.fetch(choice);
+        console.log(player);
         const preferred = "fill";
         return {
           ...basePlayer,
