@@ -51,7 +51,7 @@ module.exports = {
           preferred,
         };
       });
-
+      console.log(playerArray);
       //(choice.preferred = "fill"));
     }
 
