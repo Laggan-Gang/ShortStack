@@ -210,7 +210,10 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         collected.last() ? collected.last().customId : `Nothing!`
       }`
     );
-    await partyMessage.edit({ comopnents: [] });
+    await partyMessage.edit({
+      comopnents: [],
+      embeds: [readyEmbed(readyArray)],
+    });
     console.log(`Everyone ready ser ut såhär: ${everyoneReady(readyArray)}`);
     if (!everyoneReady(readyArray)) {
       const time = getTimestamp(1000);

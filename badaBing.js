@@ -26,6 +26,7 @@ module.exports = {
   ) {
     interaction.deferReply();
     let playerArray = [];
+
     try {
       playerArray = await Promise.all(
         choices.map(async (choice) => {
@@ -42,18 +43,19 @@ module.exports = {
       );
     } catch {
       console.log("Nu funkar inte getMyPreferences men vi kör backup strats");
-      playerArray = choices.map(async (choice) => {
-        const player = await interaction.guild.members.fetch(choice);
-        console.log(player);
-        const preferred = "fill";
-        return {
-          ...basePlayer,
-          player,
-          preferred,
-        };
-      });
-      console.log(playerArray);
-      //(choice.preferred = "fill"));
+      playerArray = await Promise.all(
+        choices.map(async (choice) => {
+          const player = await Promise.all(
+            interaction.guild.members.fetch(choice)
+          );
+          const preferred = "fill";
+          return {
+            ...basePlayer,
+            player,
+            preferred,
+          };
+        })
+      );
     }
 
     await interaction.deleteReply();
