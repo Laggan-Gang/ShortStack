@@ -58,8 +58,6 @@ function arrayMaker(interaction) {
         return confirmedPlayers;
       }
       confirmedPlayers.push(player);
-    } else {
-      return confirmedPlayers;
     }
   }
 }
