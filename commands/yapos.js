@@ -64,6 +64,7 @@ function arrayMaker(interaction) {
       console.log(confirmedPlayers);
     }
   }
+  return confirmedPlayers;
 }
 
 async function setUp(interaction, confirmedPlayers) {
