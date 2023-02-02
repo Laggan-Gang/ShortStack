@@ -109,13 +109,16 @@ async function setUp(interaction, confirmedPlayers) {
 
       case buttonOptions.dummy:
         const dummy = interaction.guild.members.cache.find(
-          (dummy) => dummy.user.bot === false
+          (dummy) => dummy.user.bot === true && !dummy in confirmedPlayers
         );
         console.log("Här är confirmed players");
         console.log(confirmedPlayers);
         console.log("Här är vår dummy");
         console.log(dummy);
         confirmedPlayers.push(dummy);
+        if (confirmedPlayers.length > 4) {
+          collector.stop("That's enough!");
+        }
         break;
 
       case buttonOptions.out:
