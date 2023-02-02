@@ -60,7 +60,7 @@ async function arrayMaker(interaction) {
       confirmedPlayers.push(player);
     }
   }
-  return confirmedPlayers;
+  return [confirmedPlayers];
 }
 
 async function setUp(interaction, confirmedPlayers) {
