@@ -108,8 +108,8 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.dummy:
-        const dummy = interaction.guild.user.cache.find(
-          (dummy) => dummy.bot === false
+        const dummy = interaction.guild.member.cache.find(
+          (dummy) => dummy.user.bot === false
         );
         console.log("Här är confirmed players");
         console.log(confirmedPlayers);
