@@ -116,6 +116,8 @@ async function setUp(interaction, confirmedPlayers) {
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
+        } else {
+          console.log("No more dummies!");
         }
         break;
 
