@@ -108,16 +108,14 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.dummy:
-        const dummy = interaction.guild.members.cache.filter(
-          (dummy) => dummy.user.bot
+        const dummy = interaction.guild.members.cache.find(
+          (dummy) => dummy.user.bot && !confirmedPlayers.includes(dummy)
         );
-        console.log("Här är confirmed players");
-        console.log(confirmedPlayers);
-        console.log("Här är vår dummy");
-        console.log(dummy);
-        confirmedPlayers.push(dummy);
-        if (confirmedPlayers.length > 4) {
-          collector.stop("That's enough!");
+        if (dummy) {
+          confirmedPlayers.push(dummy);
+          if (confirmedPlayers.length > 4) {
+            collector.stop("That's enough!");
+          }
         }
         break;
 
