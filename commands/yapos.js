@@ -34,7 +34,7 @@ const buttonOptions = { in: "in", out: "out", condi: "condi" };
 const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
-const yapos = debug[1];
+const yapos = debug[0];
 
 const readyColours = {
   0: 0x000000, //black
@@ -47,8 +47,6 @@ const readyColours = {
 
 function arrayMaker(interaction) {
   const confirmedPlayers = [interaction.user];
-  console.log("Här är första confirmed players");
-  console.log(confirmedPlayers);
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
@@ -60,8 +58,6 @@ function arrayMaker(interaction) {
         return confirmedPlayers;
       }
       confirmedPlayers.push(player);
-      console.log("Här är confirmed players i loopen");
-      console.log(confirmedPlayers);
     }
   }
   return confirmedPlayers;
@@ -405,8 +401,6 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
   const playerFields = [];
   const conditionalFields = [];
   const embedFields = [];
-  console.log("Här är confirmed players i prettyEmbed");
-  console.log(confirmedPlayers);
   for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
       playerFields.push(confirmedPlayers[i]);
