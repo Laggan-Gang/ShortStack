@@ -45,14 +45,14 @@ const readyColours = {
   5: 0x99ff33, //green
 };
 
-function arrayMaker(interaction) {
+async function arrayMaker(interaction) {
   const confirmedPlayers = [interaction.user];
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
-        interaction.message.send(
+        await interaction.reply(
           "Please provide unique players!\nLove, **ShortStack!**"
         );
         return;
@@ -472,7 +472,8 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const confirmedPlayers = arrayMaker(interaction);
+    const confirmedPlayers = await arrayMaker(interaction);
+    if (!confirmedPlayers) return;
     interaction.deferReply();
     interaction.deleteReply();
     await setUp(interaction, confirmedPlayers);
