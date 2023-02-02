@@ -85,7 +85,7 @@ module.exports = {
       .addComponents(
         new ButtonBuilder()
           .setCustomId("dummy")
-          .setLabel("Add Dummy")
+          .setLabel("Dummy")
           .setStyle(ButtonStyle.Primary)
       )
       .addComponents(

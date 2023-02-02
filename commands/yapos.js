@@ -110,6 +110,13 @@ async function setUp(interaction, confirmedPlayers) {
         }
         break;
 
+      case buttonOptions.dummy:
+        const member = interaction.guild.members.cache.find(
+          (member) => member.bot === true
+        );
+        confirmedPlayers.push(member);
+        break;
+
       case buttonOptions.out:
         eRemover(condiPlayers, i);
         eRemover(confirmedPlayers, i);
@@ -472,7 +479,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const confirmedPlayers = await arrayMaker(interaction);
+    const confirmedPlayers = arrayMaker(interaction);
     if (!confirmedPlayers) return;
     interaction.deferReply();
     interaction.deleteReply();
