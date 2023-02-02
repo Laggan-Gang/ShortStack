@@ -108,7 +108,7 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.dummy:
-        const dummy = interaction.guild.members.cache.find(
+        const dummy = interaction.guild.members.cache.filter(
           (dummy) =>
             dummy.user.bot === true && !confirmedPlayers.includes(dummy)
         );
