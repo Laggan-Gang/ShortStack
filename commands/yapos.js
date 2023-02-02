@@ -30,7 +30,7 @@ const TRASH_CHANNEL = "539847809004994560"; //shit thread
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
-const buttonOptions = { in: "in", out: "out", condi: "condi" };
+const buttonOptions = { in: "in", out: "out", dummy: "dummy", condi: "condi" };
 const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
 const debug = ["<@&412260353699872768>", "yapos"];
@@ -52,10 +52,10 @@ function arrayMaker(interaction) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
-        interaction.reply(
+        interaction.send(
           "Please provide unique players!\nLove, **ShortStack!**"
         );
-        return confirmedPlayers;
+        return;
       }
       confirmedPlayers.push(player);
     }

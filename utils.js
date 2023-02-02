@@ -81,12 +81,19 @@ module.exports = {
           .setLabel("I'M OUT")
           .setStyle(ButtonStyle.Danger)
       );
-    const row2 = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId("condi")
-        .setLabel("I'm In, but (...)")
-        .setStyle(ButtonStyle.Secondary)
-    );
+    const row2 = new ActionRowBuilder()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId("dummy")
+          .setLabel("Add Dummy")
+          .setStyle(ButtonStyle.Primary)
+      )
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId("condi")
+          .setLabel("I'm In, but (...)")
+          .setStyle(ButtonStyle.Secondary)
+      );
     return [row1, row2];
   },
 
