@@ -52,7 +52,7 @@ function arrayMaker(interaction) {
     if (interaction.options.getUser("p" + i)) {
       const player = interaction.options.getUser("p" + i);
       if (confirmedPlayers.includes(player)) {
-        interaction.send(
+        interaction.message.send(
           "Please provide unique players!\nLove, **ShortStack!**"
         );
         return;
