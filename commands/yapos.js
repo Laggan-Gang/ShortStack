@@ -459,18 +459,14 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
   const embedFields = [];
   for (let i = 0; i < maxLength; i++) {
     let field = "";
-    switch (true) {
-      case "representing" in (confirmedPlayers[i] || {}):
-        field += confirmedPlayers[i].representing;
-      case "player" in confirmedPlayers[i]:
-        field += confirmedPlayers[i].player;
-        break;
 
-      default:
-        field += `\`\`Open slot\`\``;
+    if (confirmedPlayers[i]) {
+      playerFields.push(
+        confirmedPlayers[i].player + (confirmedPlayers[i].representing || "")
+      );
+    } else {
+      playerFields.push(`${`\`\`Open slot\`\``}`);
     }
-
-    playerFields.push(field);
   }
   embedFields.push({
     name: "*Who's up for Dota?*",
