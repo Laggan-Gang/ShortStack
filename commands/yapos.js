@@ -113,7 +113,7 @@ async function setUp(interaction, confirmedPlayers) {
           (dummy) =>
             dummy.user.bot && !confirmedPlayers.find((d) => d.player == dummy)
         );
-        const dummy = shuffle(dummyArray)[0].toString();
+        const dummy = shuffle(dummyArray)[0];
 
         if (dummy) {
           //  confirmedPlayers.push(dummy);
@@ -404,7 +404,6 @@ async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
     });
     return;
   }
-  const time = getTimestamp(1000);
   const representing = ` *avatar of **${submitted.fields.getTextInputValue(
     "avatar"
   )}***`;
