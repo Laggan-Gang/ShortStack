@@ -109,7 +109,7 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.dummy:
-        await dummySystem(interaction, condiPlayers, confirmedPlayers);
+        await dummySystem(i, condiPlayers, confirmedPlayers);
         //const dummy = interaction.guild.members.cache.find(
         //  (dummy) => dummy.user.bot && !confirmedPlayers.includes(dummy)
         //);
