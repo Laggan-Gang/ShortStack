@@ -109,10 +109,11 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.dummy:
-        const dummy = interaction.guild.members.cache.find(
+        const dummyArray = interaction.guild.members.cache.filter(
           (dummy) =>
             dummy.user.bot && !confirmedPlayers.find((d) => d.player == dummy)
         );
+        const dummy = shuffle(dummyArray);
         if (dummy) {
           //  confirmedPlayers.push(dummy);
           //  if (confirmedPlayers.length > 4) {
@@ -121,6 +122,9 @@ async function setUp(interaction, confirmedPlayers) {
           //} else {
           //  console.log("No more dummies!");
           await dummySystem(i, condiPlayers, confirmedPlayers, dummy);
+          if (confirmedPlayers.length > 4) {
+            collector.stop("That's enough!");
+          }
         }
         break;
 
