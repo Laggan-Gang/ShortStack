@@ -8,7 +8,12 @@ const YAPOSCHANNEL = "1057444797301923860";
 const TRASHCHANNEL = "539847809004994560";
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildVoiceStates,
+  ],
 });
 client.commands = new Collection();
 
