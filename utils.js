@@ -142,7 +142,7 @@ module.exports = {
     const memberArray = [];
     for (let user of array) {
       const member = interaction.guild.members.cache.find(
-        (member) => member.id === user.id
+        (member) => member.id === user.player.id
       );
       memberArray.push(member);
     }
