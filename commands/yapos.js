@@ -159,7 +159,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const time = getTimestamp(1000);
   const miliTime = getTimestamp(1);
   for (let player of confirmedPlayers) {
-    readyArray.push({ gamer: player, ready: false });
+    readyArray.push({ gamer: player.player, ready: false });
   }
 
   const embed = readyEmbed(readyArray);
@@ -340,7 +340,7 @@ async function stackIt(message, confirmedPlayers) {
     await message.edit({ components: [] });
     if (collected.last()) {
       const interaction = collected.last();
-      const choices = confirmedPlayers.map((cP) => cP.id); //badaBing takes an array of player IDs, not player objects
+      const choices = confirmedPlayers.map((cP) => cP.player.id); //badaBing takes an array of player IDs, not player objects
       const shuffledChoices = shuffle(choices);
 
       const channel = await interaction.member.guild.channels.cache.get(
