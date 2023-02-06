@@ -33,7 +33,7 @@ const READYTIME = 2 * 60;
 const buttonOptions = { in: "in", out: "out", dummy: "dummy", condi: "condi" };
 const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
 
-const debug = ["<@&412260353699872768>", "yapos"];
+const debug = ["<@&412260353699872768>", "test yapos"];
 const yapos = debug[1];
 
 const readyColours = {
@@ -113,12 +113,13 @@ async function setUp(interaction, confirmedPlayers) {
           (dummy) => dummy.user.bot && !confirmedPlayers.includes(dummy)
         );
         if (dummy) {
-          confirmedPlayers.push(dummy);
-          if (confirmedPlayers.length > 4) {
-            collector.stop("That's enough!");
-          }
-        } else {
-          console.log("No more dummies!");
+          //  confirmedPlayers.push(dummy);
+          //  if (confirmedPlayers.length > 4) {
+          //    collector.stop("That's enough!");
+          //  }
+          //} else {
+          //  console.log("No more dummies!");
+          await dummySystem(interaction, condiPlayers, confirmedPlayers);
         }
         break;
 
