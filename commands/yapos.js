@@ -109,18 +109,18 @@ async function setUp(interaction, confirmedPlayers) {
         break;
 
       case buttonOptions.dummy:
-        await dummySystem(i, condiPlayers, confirmedPlayers);
-        //const dummy = interaction.guild.members.cache.find(
-        //  (dummy) => dummy.user.bot && !confirmedPlayers.includes(dummy)
-        //);
-        //if (dummy) {
-        //  //  confirmedPlayers.push(dummy);
-        //  //  if (confirmedPlayers.length > 4) {
-        //  //    collector.stop("That's enough!");
-        //  //  }
-        //  //} else {
-        //  //  console.log("No more dummies!");
-        //}
+        const dummy = interaction.guild.members.cache.find(
+          (dummy) => dummy.user.bot && !confirmedPlayers.includes(dummy)
+        );
+        if (dummy) {
+          //  confirmedPlayers.push(dummy);
+          //  if (confirmedPlayers.length > 4) {
+          //    collector.stop("That's enough!");
+          //  }
+          //} else {
+          //  console.log("No more dummies!");
+          await dummySystem(i, condiPlayers, confirmedPlayers, dummy);
+        }
         break;
 
       case buttonOptions.out:
@@ -369,7 +369,7 @@ async function stackIt(message, confirmedPlayers) {
   });
 }
 
-async function dummySystem(interaction, condiPlayers, confirmedPlayers) {
+async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
   //this is  a little busy
   const modal = new ModalBuilder()
     .setCustomId("textCollector")
@@ -399,11 +399,11 @@ async function dummySystem(interaction, condiPlayers, confirmedPlayers) {
     return;
   }
   const time = getTimestamp(1000);
-  const representing = `${submitted.fields.getTextInputValue(
+  const representing = `*representing ${submitted.fields.getTextInputValue(
     "avatar"
-  )} *(written <t:${time}:R>)*`;
+  )}*`;
   confirmedPlayers.push({
-    player: interaction.user,
+    player: dummy,
     representing: representing,
   });
 
@@ -458,11 +458,19 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
   const conditionalFields = [];
   const embedFields = [];
   for (let i = 0; i < maxLength; i++) {
-    if (confirmedPlayers[i]) {
-      playerFields.push(confirmedPlayers[i].player);
-    } else {
-      playerFields.push(`${`\`\`Open slot\`\``}`);
+    let field = "";
+    switch (true) {
+      case "representing" in confirmedPlayers[i]:
+        field += confirmedPlayers[i].representing;
+      case "player" in confirmedPlayers[i]:
+        field += confirmedPlayers[i].player;
+        break;
+
+      default:
+        field += `\`\`Open slot\`\``;
     }
+
+    playerFields.push(field);
   }
   embedFields.push({
     name: "*Who's up for Dota?*",
