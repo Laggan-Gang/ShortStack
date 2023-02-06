@@ -113,7 +113,7 @@ async function setUp(interaction, confirmedPlayers) {
           (dummy) =>
             dummy.user.bot && !confirmedPlayers.find((d) => d.player == dummy)
         );
-        const dummy = shuffle(dummyArray);
+        const dummy = shuffle(dummyArray)[0];
         if (dummy) {
           //  confirmedPlayers.push(dummy);
           //  if (confirmedPlayers.length > 4) {
