@@ -399,7 +399,7 @@ async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
     return;
   }
   const time = getTimestamp(1000);
-  const representing = `*representing ${submitted.fields.getTextInputValue(
+  const representing = ` *representing ${submitted.fields.getTextInputValue(
     "avatar"
   )}*`;
   confirmedPlayers.push({
@@ -462,7 +462,8 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
 
     if (confirmedPlayers[i]) {
       playerFields.push(
-        confirmedPlayers[i].player + (confirmedPlayers[i].representing || "")
+        confirmedPlayers[i].player.toString() +
+          (confirmedPlayers[i].representing || "")
       );
     } else {
       playerFields.push(`${`\`\`Open slot\`\``}`);
