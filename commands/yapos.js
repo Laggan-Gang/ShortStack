@@ -46,7 +46,8 @@ const readyColours = {
 };
 
 function arrayMaker(interaction) {
-  const confirmedPlayers = [interaction.user];
+  const confirmedPlayers = [];
+  confirmedPlayers.push({ player: interaction.user });
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
     if (interaction.options.getUser("p" + i)) {
@@ -54,7 +55,7 @@ function arrayMaker(interaction) {
       if (confirmedPlayers.includes(player)) {
         return;
       }
-      confirmedPlayers.push(player);
+      confirmedPlayers.push({ player: player });
     }
   }
   return confirmedPlayers;
@@ -93,7 +94,7 @@ async function setUp(interaction, confirmedPlayers) {
       case buttonOptions.in:
         if (!confirmedPlayers.find(playerIdentity(i))) {
           eRemover(condiPlayers, i); //remove player from Condi if they're in it
-          confirmedPlayers.push(i.user);
+          confirmedPlayers.push({ player: i.user });
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
@@ -367,6 +368,49 @@ async function stackIt(message, confirmedPlayers) {
   });
 }
 
+async function dummySystem(interaction, condiPlayers, confirmedPlayers) {
+  //this is  a little busy
+  const modal = new ModalBuilder()
+    .setCustomId("textCollector")
+    .setTitle("Ok, buddy");
+  const avatarInput = new TextInputBuilder()
+    .setCustomId("avatar")
+    .setLabel("Which Dummy is the Dummy representing?")
+    .setPlaceholder("The Dummy this Dummy is representing is...")
+    .setMaxLength(140)
+    .setStyle(TextInputStyle.Short);
+  const modalInput = modalComponent(avatarInput);
+  modal.addComponents(modalInput);
+  await interaction.showModal(modal);
+  const submitted = await interaction
+    .awaitModalSubmit({
+      time: READYTIME * 1000,
+      filter: (i) => i.user.id === interaction.user.id,
+    })
+    .catch((error) => {
+      console.error(error);
+      return null;
+    });
+  if (!submitted) {
+    await interaction.update({
+      embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+    });
+    return;
+  }
+  const time = getTimestamp(1000);
+  const representing = `${submitted.fields.getTextInputValue(
+    "avatar"
+  )} *(written <t:${time}:R>)*`;
+  confirmedPlayers.push({
+    player: interaction.user,
+    representing: representing,
+  });
+
+  await submitted.update({
+    embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+  });
+}
+
 async function modalThing(interaction, condiPlayers, confirmedPlayers) {
   //this is  a little busy
   const modal = new ModalBuilder()
@@ -414,7 +458,7 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
   const embedFields = [];
   for (let i = 0; i < maxLength; i++) {
     if (confirmedPlayers[i]) {
-      playerFields.push(confirmedPlayers[i]);
+      playerFields.push(confirmedPlayers[i].player);
     } else {
       playerFields.push(`${`\`\`Open slot\`\``}`);
     }
