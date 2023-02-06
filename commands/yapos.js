@@ -120,7 +120,6 @@ async function setUp(interaction, confirmedPlayers) {
           //  }
           //} else {
           //  console.log("No more dummies!");
-          await dummySystem(interaction, condiPlayers, confirmedPlayers);
         }
         break;
 
