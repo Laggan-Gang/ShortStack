@@ -91,7 +91,7 @@ function löftesKollaren(player) {
 
 function channelFinder(memberArray) {
   for (let member of memberArray) {
-    const channel = member.voice.channel;
+    const channel = member.player.voice.channel;
     if (channel) {
       return channel;
     }

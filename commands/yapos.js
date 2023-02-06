@@ -400,9 +400,9 @@ async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
     return;
   }
   const time = getTimestamp(1000);
-  const representing = ` *representing ${submitted.fields.getTextInputValue(
+  const representing = ` *avatar of **${submitted.fields.getTextInputValue(
     "avatar"
-  )}*`;
+  )}***`;
   confirmedPlayers.push({
     player: dummy,
     representing: representing,
