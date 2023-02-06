@@ -110,7 +110,7 @@ async function setUp(interaction, confirmedPlayers) {
 
       case buttonOptions.dummy:
         const dummy = interaction.guild.members.cache.find(
-          (dummy) => dummy.user.bot && !confirmedPlayers.includes(dummy)
+          (dummy) => dummy.user.bot && !dummy in confirmedPlayers
         );
         if (dummy) {
           //  confirmedPlayers.push(dummy);
