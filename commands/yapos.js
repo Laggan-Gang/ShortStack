@@ -113,15 +113,11 @@ async function setUp(interaction, confirmedPlayers) {
           (dummy) =>
             dummy.user.bot && !confirmedPlayers.find((d) => d.player == dummy)
         );
+        //each element in the array from .filter() is itself an array, wherein the first
+        //element is just the userID and the second is the member object
         const dummy = shuffle(dummyArray)[0][1];
         console.log(dummy);
         if (dummy) {
-          //  confirmedPlayers.push(dummy);
-          //  if (confirmedPlayers.length > 4) {
-          //    collector.stop("That's enough!");
-          //  }
-          //} else {
-          //  console.log("No more dummies!");
           await dummySystem(i, condiPlayers, confirmedPlayers, dummy);
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
