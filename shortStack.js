@@ -33,7 +33,7 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   const command = client.commands.get(interaction.commandName);
-  if (!interaction.isChatInputCommand()) return;
+  //if (!interaction.isChatInputCommand()) return; TESTING IF THIS IS THE ISSUE
   if (!command) return;
   //console.log(command.data.name);
   //if (command.data.name !== "yapos") {
