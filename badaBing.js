@@ -13,6 +13,7 @@ const axios = require("axios");
 const { laggStatsBaseUrl } = require("./config.json");
 const { linkButton, shuffle } = require("./utils");
 const TRASH_CHANNEL = "539847809004994560";
+const YAPOS_CHANNEL = "1057444797301923860";
 const PREF_URL = laggStatsBaseUrl + "/d2pos";
 const basePlayer = { position: "Has not picked yet", randomed: 0 };
 const standardTime = 60;
@@ -59,6 +60,9 @@ module.exports = {
     }
 
     await interaction.deleteReply();
+    const yaposThread = await interaction.member.guild.channels.cache.get(
+      YAPOS_CHANNEL
+    );
     const stackThread =
       existingThread ||
       (await interaction.member.guild.channels.cache
@@ -73,7 +77,7 @@ module.exports = {
     });
     if (!existingThread) {
       const button = linkButton(stackThread, "Stack Thread");
-      interaction.channel.send({ components: [button] });
+      yaposThread.send({ components: [button] });
     }
     badaBoom(playerArray, message, pickTime);
   },
