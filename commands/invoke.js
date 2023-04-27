@@ -10,8 +10,7 @@ module.exports = {
     const queue = await helpMeLittleHelper(queuer, "get");
     console.log(queue.data);
     await interaction.reply({
-      content: "The queue looks like this: \n" + queue.data.join("\n"),
-      ephemeral: true,
+      content: `${queue.data.join(", ")} you are being summoned.`,
     });
   },
 };

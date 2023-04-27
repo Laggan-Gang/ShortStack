@@ -1,7 +1,6 @@
 const express = require("express");
 
 const app = express();
-let queue = ["<@207840759087497217>"];
 
 app.use(express.json());
 
@@ -23,7 +22,7 @@ app.delete("/queue", (req, res) => {
 
 const port = 3000;
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+  console.log(`Little Helper is alive and well!`);
 });
 
 //curl -H "Content-Type: application/json" -d '{"id":"Beatrice dev"}' http://localhost:3000/queue
