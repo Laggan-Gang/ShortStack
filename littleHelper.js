@@ -6,7 +6,7 @@ const queue = ["<@207840759087497217>"];
 app.use(express.json());
 
 app.get("/queue", (req, res) => {
-  res.json(db);
+  res.json(queue);
 });
 
 app.post("/queue", (req, res) => {
@@ -22,4 +22,5 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
 
-//curl -H "Content-Type: application/json" -d '{"id":"my ID string"}' http://localhost:3000/queue
+//curl -H "Content-Type: application/json" -d '{"id":"Beatrice dev"}' http://localhost:3000/queue
+//curl http://localhost:3000/queue -1
