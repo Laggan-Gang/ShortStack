@@ -10,9 +10,7 @@ app.get("/queue", (req, res) => {
 });
 
 app.post("/queue", (req, res) => {
-  const queuer = {
-    id: req.body.id,
-  };
+  const queuer = req.body.id;
   queue.push(queuer);
   res.status(201).header("location", `queue`).json(queue).end();
 });
