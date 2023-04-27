@@ -18,7 +18,7 @@ app.post("/queue", (req, res) => {
 app.delete("/queue", (req, res) => {
   const queuer = req.body.id;
   queue = queue.filter((e) => {
-    e === queuer;
+    e !== queuer;
   });
   res.status(200).header("location", "queue").json(queue).end();
 });
