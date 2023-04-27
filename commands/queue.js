@@ -11,6 +11,26 @@ module.exports = {
       ephemeral: true,
     });
 
+    const queuer = interaction.user.toString();
+    console.log(queuer);
+    const request = {
+      baseURL: "http://localhost:3000/",
+      url: "queue",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: queuer,
+      responseType: "json",
+    };
+    try {
+      const res = await axios(request);
+      console.log(res);
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+
     console.log("Nu är vi i interaction grejen");
   },
 };
