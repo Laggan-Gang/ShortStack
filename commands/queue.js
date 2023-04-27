@@ -11,7 +11,8 @@ module.exports = {
       ephemeral: true,
     });
 
-    const queuer = interaction.user.toString();
+    const queuer = { id: interaction.user.toString() };
+    console.log("Här är queuer");
     console.log(queuer);
     const request = {
       baseURL: "http://localhost:3000/",
