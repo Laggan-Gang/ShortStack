@@ -11,7 +11,7 @@ module.exports = {
     console.log(queue.data);
     await interaction.reply({
       content: "The queue looks like this: \n" + queue.data.join("\n"),
-      ephemeral: true,
+      ephemeral: false,
     });
   },
 };

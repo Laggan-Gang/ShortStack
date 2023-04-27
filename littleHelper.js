@@ -6,7 +6,7 @@ let queue = [];
 app.use(express.json());
 
 app.get("/queue", (req, res) => {
-  res.json(queue);
+  res.status(200).header("location", "queue").json(queue).end();
 });
 
 app.post("/queue", (req, res) => {
