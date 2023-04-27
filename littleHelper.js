@@ -15,6 +15,12 @@ app.post("/queue", (req, res) => {
   res.status(201).header("location", `queue`).json(queue).end();
 });
 
+app.delete("/queue", (req, res) => {
+  const queuer = req.body.id;
+  queue.splice(queue.indexOf[queuer]);
+  res.status(200).header("location", "queue").json(queue).end();
+});
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);

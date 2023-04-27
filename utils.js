@@ -1,4 +1,5 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const axios = require("axios");
 
 const REMINDERS = [
   " TAKING OUR SWEET TIME, HUH?",
@@ -40,6 +41,25 @@ function shuffle([...array]) {
 }
 
 module.exports = {
+  async helpMeLittleHelper(queuer, method) {
+    const request = {
+      baseURL: "http://localhost:3000/",
+      url: "queue",
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: queuer,
+      responseType: "json",
+    };
+    try {
+      const res = await axios(request);
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
   stringPrettifier(string) {
     const optimalStringLength = 39;
     const neededFilling = optimalStringLength - string.length;
