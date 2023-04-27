@@ -1,7 +1,7 @@
 const express = require("express");
 
 const app = express();
-const queue = ["<@207840759087497217>"];
+let queue = ["<@207840759087497217>"];
 
 app.use(express.json());
 
@@ -17,7 +17,9 @@ app.post("/queue", (req, res) => {
 
 app.delete("/queue", (req, res) => {
   const queuer = req.body.id;
-  queue.splice(queue.indexOf[queuer]);
+  queue = queue.filter((e) => {
+    e === queuer;
+  });
   res.status(200).header("location", "queue").json(queue).end();
 });
 
