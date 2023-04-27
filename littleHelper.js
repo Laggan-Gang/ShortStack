@@ -22,4 +22,4 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
 
-//curl -H "Content-Type: application/json" -d '{"id":"my ID string",}' http://localhost:3000/queue
+//curl -H "Content-Type: application/json" -d '{"id":"my ID string"}' http://localhost:3000/queue
