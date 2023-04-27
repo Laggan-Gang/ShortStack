@@ -6,7 +6,7 @@ module.exports = {
     .setDescription("Time to queue"),
   async execute(interaction) {
     await interaction.reply({
-      content: "You're in Q position: ",
+      content: "This is super not ready yet ",
       ephemeral: true,
     });
 
