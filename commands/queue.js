@@ -8,6 +8,7 @@ module.exports = {
   async execute(interaction) {
     const queuer = { id: interaction.user.toString() };
     const queue = postQueue(queuer);
+    console.log(queue.data);
     await interaction.reply({
       content: "The queue looks like this: " + queue.data.join("\n"),
       ephemeral: true,
