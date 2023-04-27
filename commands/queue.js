@@ -6,11 +6,6 @@ module.exports = {
     .setName("queue")
     .setDescription("Time to queue"),
   async execute(interaction) {
-    await interaction.reply({
-      content: "This is super not ready yet ",
-      ephemeral: true,
-    });
-
     const queuer = { id: interaction.user.toString() };
     console.log("Här är queuer");
     console.log(queuer);
@@ -33,5 +28,10 @@ module.exports = {
     }
 
     console.log("Nu är vi i interaction grejen");
+
+    await interaction.reply({
+      content: "The queue looks like this: " + request.data.join("\n"),
+      ephemeral: true,
+    });
   },
 };
