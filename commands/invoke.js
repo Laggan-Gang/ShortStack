@@ -33,25 +33,27 @@ module.exports = {
 
     const filter = (i) =>
       i.customId === "rdyQueue" && unreadiedArr.includes(i.user.toString());
-    const collector = message.channel.createMessageComponentCollector({
+    const collector = await message.channel.createMessageComponentCollector({
       filter,
       time: 5 * 1000,
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
       console.log(i.user.username);
+      console.log(i);
       readiedArr.push(i.user.toString());
       const queuerIndex = unreadiedArr.indexOf(i.user.toString());
       if (queuerIndex > -1) {
         unreadiedArr.splice(queuerIndex, 1);
       }
-      message.edit(updateMessage(unreadiedArr, readiedArr));
+      await message.edit(updateMessage(unreadiedArr, readiedArr));
 
       await i.deferReply();
       await i.deleteReply();
     });
 
     collector.on("end", async (collected) => {
+      console.log(collected);
       try {
         message.edit({
           content: `For now the queue is pretty simple. ${unreadiedArr.join(
@@ -63,7 +65,6 @@ module.exports = {
         });
         for (let queuer of queue.data) {
           const test = await helpMeLittleHelper({ id: queuer }, "delete");
-          console.log(test);
         }
       } catch (error) {
         message.edit("There was an error baby  " + error);
