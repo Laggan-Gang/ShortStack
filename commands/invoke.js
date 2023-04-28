@@ -32,6 +32,7 @@ module.exports = {
       i.channel.id === message.channel.id &&
       i.customId === "rdyQueue" &&
       unreadiedArr.includes(i.user.id.toString());
+    console.log(message);
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: pickTime * 1000, //NEED NEW PICK TIME (fem minuter)
