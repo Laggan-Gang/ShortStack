@@ -25,7 +25,7 @@ module.exports = {
     );
     const message = await interaction.reply({
       content: `${queue.data.join(", ")} you are being summoned.`,
-      components: buttonRow,
+      components: [buttonRow],
     });
 
     const filter = (i) =>
