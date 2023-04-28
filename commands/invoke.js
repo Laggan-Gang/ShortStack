@@ -23,10 +23,11 @@ module.exports = {
         .setLabel("✅")
         .setStyle(ButtonStyle.Success)
     );
-    const message = await interaction.reply({
+    await interaction.reply({
       content: `${queue.data.join(", ")} you are being summoned.`,
       components: [buttonRow],
     });
+    const message = await interaction.fetchReply();
 
     const filter = (i) =>
       i.channel.id === message.channel.id &&
