@@ -1,4 +1,5 @@
 const {
+  ActionRowBuilder,
   SlashCommandBuilder,
   ButtonBuilder,
   ButtonStyle,
