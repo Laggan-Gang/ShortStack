@@ -35,7 +35,7 @@ module.exports = {
       i.customId === "rdyQueue" && unreadiedArr.includes(i.user.toString());
     const collector = await message.channel.createMessageComponentCollector({
       filter,
-      time: 5 * 1000,
+      time: 5 * 60 * 1000,
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
