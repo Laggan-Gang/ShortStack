@@ -29,10 +29,9 @@ module.exports = {
     });
     const message = await interaction.fetchReply();
 
-    //const filter = (i) =>
-    //  i.customId === "rdyQueue" &&
-    //  unreadiedArr.includes(i.user.id.toString());
-    const filter = (i) => true;
+    const filter = (i) =>
+      i.customId === "rdyQueue" && unreadiedArr.includes(i.user.toString());
+    //const filter = (i) => true;
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: 5 * 1000,
@@ -53,7 +52,7 @@ module.exports = {
 
     collector.on("end", async (collected) => {
       try {
-        message.edit({ content: "Very cool" });
+        message.edit({ content: "Very cool", components: [] });
       } catch (error) {
         message.edit("There was an error baby  " + error);
         console.log(error);
