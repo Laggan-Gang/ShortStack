@@ -30,7 +30,7 @@ module.exports = {
     const message = await interaction.fetchReply();
 
     const filter = (i) =>
-      i.channel.id === message.channel.id &&
+      i.channel.id === message.channelId &&
       i.customId === "rdyQueue" &&
       unreadiedArr.includes(i.user.id.toString());
     console.log(message);
@@ -43,7 +43,6 @@ module.exports = {
       console.log(i);
       console.log(i.user.username);
       //The interaction will be "failed" unless we do something with it
-
       await i.deferReply();
       await i.deleteReply();
     });
