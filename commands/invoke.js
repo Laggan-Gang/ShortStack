@@ -35,7 +35,7 @@ module.exports = {
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: 5 * 1000,
-      max: unreadiedArr.length,
+      max: queue.data.length,
     });
     collector.on("collect", async (i) => {
       readiedArr.push(i.user.toString());
@@ -53,7 +53,7 @@ module.exports = {
         message.edit({
           content: `For now the queue is pretty simple. ${unreadiedArr.join(
             ", "
-          )} you need to re-queue manually after this invocation. \n The original quque-order was ${queue.data.join(
+          )} you need to re-queue manually after this invocation. \n \n The original quque-order was ${queue.data.join(
             " > "
           )}`,
           components: [],
