@@ -15,7 +15,6 @@ module.exports = {
     const queue = await helpMeLittleHelper(queuer, "get");
     const unreadiedArr = [...queue.data];
     const readiedArr = [];
-    console.log(unreadiedArr);
 
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -31,7 +30,6 @@ module.exports = {
 
     const filter = (i) =>
       i.customId === "rdyQueue" && unreadiedArr.includes(i.user.toString());
-    //const filter = (i) => true;
     const collector = message.channel.createMessageComponentCollector({
       filter,
       time: 5 * 1000,
@@ -58,6 +56,10 @@ module.exports = {
           )}`,
           components: [],
         });
+        for (let queuer of queue.data) {
+          const test = await helpMeLittleHelper(queuer, "delete");
+          console.log(test);
+        }
       } catch (error) {
         message.edit("There was an error baby  " + error);
         console.log(error);
