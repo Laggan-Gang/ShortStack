@@ -53,7 +53,7 @@ module.exports = {
         message.edit({
           content: `For now the queue is pretty simple. ${unreadiedArr.join(
             ", "
-          )} you need to re-queue manually after this invocation. \n The original quque-order was ${data.body.join(
+          )} you need to re-queue manually after this invocation. \n The original quque-order was ${queue.data.join(
             " > "
           )}`,
           components: [],
