@@ -39,6 +39,7 @@ module.exports = {
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
+      console.log(i.user.username);
       readiedArr.push(i.user.toString());
       const queuerIndex = unreadiedArr.indexOf(i.user.toString());
       if (queuerIndex > -1) {
