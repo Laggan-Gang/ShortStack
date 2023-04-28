@@ -37,11 +37,12 @@ module.exports = {
     });
     collector.on("collect", async (i) => {
       readiedArr.push(i.user.toString());
-      message.edit(updateMessage(unreadiedArr, readiedArr));
       const queuerIndex = unreadiedArr.indexOf(i.user.toString());
       if (queuerIndex > -1) {
         unreadiedArr.splice(queuerIndex, 1);
       }
+      message.edit(updateMessage(unreadiedArr, readiedArr));
+
       await i.deferReply();
       await i.deleteReply();
     });
