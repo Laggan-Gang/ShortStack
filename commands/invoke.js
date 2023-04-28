@@ -57,7 +57,7 @@ module.exports = {
           components: [],
         });
         for (let queuer of queue.data) {
-          const test = await helpMeLittleHelper(queuer, "delete");
+          const test = await helpMeLittleHelper({ id: queuer }, "delete");
           console.log(test);
         }
       } catch (error) {
