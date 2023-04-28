@@ -4,7 +4,9 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-const { helpMeLittleHelper } = require("../utils");
+const { helpMeLittleHelper, getTimestamp } = require("../utils");
+
+const READYTIME = 5 * 60 * 1000;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,8 +27,13 @@ module.exports = {
         .setLabel("✅")
         .setStyle(ButtonStyle.Success)
     );
+    const time = getTimestamp(1000);
     await interaction.reply({
-      content: `${queue.data.join(", ")} you are being summoned.`,
+      content: `${queue.data.join(
+        ", "
+      )} you are being summoned. Your time to show ends <t:${
+        time + READYTIME
+      }:R>`,
       components: [buttonRow],
     });
     const message = await interaction.fetchReply();
@@ -35,7 +42,7 @@ module.exports = {
       i.customId === "rdyQueue" && unreadiedArr.includes(i.user.toString());
     const collector = await message.channel.createMessageComponentCollector({
       filter,
-      time: 5 * 60 * 1000,
+      time: READYTIME,
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
