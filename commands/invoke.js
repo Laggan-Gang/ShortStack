@@ -36,8 +36,8 @@ module.exports = {
     console.log(message);
     const collector = message.channel.createMessageComponentCollector({
       filter,
-      time: pickTime * 1000, //NEED NEW PICK TIME (fem minuter)
-      max: 1,
+      time: 5 * 1000, //NEED NEW PICK TIME (fem minuter)
+      max: unreadiedArr.length,
     });
     collector.on("collect", async (i) => {
       console.log(i);
