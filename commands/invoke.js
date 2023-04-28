@@ -13,7 +13,7 @@ module.exports = {
   async execute(interaction) {
     const queuer = { id: interaction.user.toString() };
     const queue = await helpMeLittleHelper(queuer, "get");
-    const unreadiedArr = queue.data;
+    const unreadiedArr = [...queue.data];
     const readiedArr = [];
     console.log(unreadiedArr);
 
@@ -38,25 +38,38 @@ module.exports = {
       max: unreadiedArr.length,
     });
     collector.on("collect", async (i) => {
-      console.log("Hela i");
-      console.log(i);
-      console.log("i.user.toString() här");
-      console.log(i.user.toString());
-      console.log("Unreadied arr");
-      console.log(unreadiedArr);
-      console.log("message.channelId här");
-      console.log(message.channelId);
+      readiedArr.push(i.user.toString());
+      message.edit(updateMessage(unreadiedArr, readiedArr));
+      const queuerIndex = unreadiedArr.indexOf(i.user.toString());
+      if (queuerIndex > -1) {
+        unreadiedArr.splice(queuerIndex, 1);
+      }
       await i.deferReply();
       await i.deleteReply();
     });
 
     collector.on("end", async (collected) => {
       try {
-        message.edit({ content: "Very cool", components: [] });
+        message.edit({
+          content: `For now the queue is pretty simple. ${unreadiedArr.join(
+            ", "
+          )} you need to re-queue manually after this invocation. \n The original quque-order was ${data.body.join(
+            " > "
+          )}`,
+          components: [],
+        });
       } catch (error) {
         message.edit("There was an error baby  " + error);
         console.log(error);
       }
     });
   },
+};
+
+updateMessage = (unreadiedArr, readiedArr) => {
+  return `${unreadiedArr.join(
+    ", "
+  )} you are being summoned. \n ${readiedArr.join(
+    ", "
+  )} you have been confirmed ready.`;
 };
