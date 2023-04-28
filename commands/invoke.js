@@ -41,6 +41,8 @@ module.exports = {
     collector.on("collect", async (i) => {
       console.log(i.user.username);
       console.log(i);
+      console.log(queue.data);
+      console.log(queue.data.length);
       readiedArr.push(i.user.toString());
       const queuerIndex = unreadiedArr.indexOf(i.user.toString());
       if (queuerIndex > -1) {
