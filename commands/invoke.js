@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 const { helpMeLittleHelper, getTimestamp } = require("../utils");
 
-const READYTIME = 5 * 60 * 1000;
+const READYTIME = 5 * 60;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -42,7 +42,7 @@ module.exports = {
       i.customId === "rdyQueue" && unreadiedArr.includes(i.user.toString());
     const collector = await message.channel.createMessageComponentCollector({
       filter,
-      time: READYTIME,
+      time: READYTIME * 1000,
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
