@@ -13,6 +13,9 @@ module.exports = {
   async execute(interaction) {
     const queuer = { id: interaction.user.toString() };
     const queue = await helpMeLittleHelper(queuer, "get");
+    if (queue.data.length < 1) {
+      interaction.reply(`There's no one in the queue, bozo`);
+    }
     const unreadiedArr = [...queue.data];
     const readiedArr = [];
 
