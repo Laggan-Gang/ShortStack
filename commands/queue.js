@@ -12,7 +12,7 @@ module.exports = {
         .setRequired(false)
     ),
   async execute(interaction) {
-    let queuer = { id: interaction.options.getUser("target").toString() };
+    let queuer = { id: interaction.options.getUser("target")?.toString() };
     if (!queuer) {
       queuer = { id: interaction.user.toString() };
     }
