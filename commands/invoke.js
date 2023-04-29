@@ -6,7 +6,8 @@ const {
 } = require("discord.js");
 const { helpMeLittleHelper, getTimestamp } = require("../utils");
 
-const READYTIME = 5 * 60;
+const READYTIME = 10;
+//const READYTIME = 5 * 60;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -41,7 +42,7 @@ module.exports = {
         .setLabel("✅")
         .setStyle(ButtonStyle.Success)
     );
-    const time = getTimestamp(1000); //+ READYTIME;
+    const time = getTimestamp(1000) + READYTIME;
     await interaction.reply({
       content: `${queue.data.join(
         ", "
@@ -60,10 +61,6 @@ module.exports = {
     collector.on("collect", async (i) => {
       readiedArr.push(i.user.toString());
       removeFromArray(unreadiedArr, i.user.toString());
-      //const queuerIndex = unreadiedArr.indexOf(i.user.toString());
-      //if (queuerIndex > -1) {
-      //  unreadiedArr.splice(queuerIndex, 1);
-      //}
       await message.edit(updateMessage(unreadiedArr, readiedArr, time));
       await i.deferReply();
       await i.deleteReply();
@@ -78,7 +75,6 @@ module.exports = {
         );
 
         const messageArray = [];
-
         if (!acceptedApplicants.length) {
           messageArray.push("But no one came....");
         } else {
@@ -86,7 +82,6 @@ module.exports = {
             `${acceptedApplicants.join(" & ")} you're ***CONFIRMED IN***.`
           );
         }
-
         if (readiedArr.length) {
           messageArray.push(
             `${readiedArr.join(
