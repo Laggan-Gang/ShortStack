@@ -90,7 +90,7 @@ module.exports = {
           );
         }
         if (unreadiedArr.length) {
-          message.push(
+          messageArray.push(
             `${unreadiedArr.join(
               ", "
             )} you failed to ready up and have been removed from the queue.`
