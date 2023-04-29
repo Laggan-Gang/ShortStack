@@ -93,14 +93,14 @@ module.exports = {
             `${acceptedApplicants.join(" & ")} you're **CONFIRMED IN**.`
           );
         }
-        if (readies.length) {
+        if (readies[0]) {
           messageArray.push(
             `${readies.join(
               " & "
             )} you readied up on time and will remain in the queue. Better luck next time :)`
           );
         }
-        if (unreadies.length) {
+        if (unreadies[0]) {
           messageArray.push(
             `${unreadies.join(
               " & "
@@ -163,11 +163,6 @@ const claimToTheThrone = (newArray, vacancies) => {
 const readySort = (array, boolean) => {
   return array.map((e) => {
     if (e.ready === boolean) {
-      if (!boolean) {
-        console.log("Här är e i readySort när boolean är " + boolean);
-        console.log(e);
-      }
-
       return e.id;
     }
   });
