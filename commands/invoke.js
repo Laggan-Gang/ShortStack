@@ -76,18 +76,43 @@ module.exports = {
           readiedArr,
           vacancies
         );
+
+        const messageArray = [];
+
+        if (!acceptedApplicants.length) {
+          messageArray.push("But no one came....");
+        } else {
+          messageArray.push(
+            `${acceptedApplicants.join(" & ")} you're ***CONFIRMED IN***.`
+          );
+        }
+
+        if (readiedArr.length) {
+          messageArray.push(
+            `${readiedArr.join(
+              " & "
+            )} you readied up on time and will remain in the queue. Better luck next time :)`
+          );
+        }
+        if (unreadiedArr.length) {
+          message.push(
+            `${unreadiedArr.join(
+              ", "
+            )} you failed to ready up and have been removed from the queue.`
+          );
+        }
+
         message.edit({
-          content: `${acceptedApplicants.join(
-            " & "
-          )} you're ***CONFIRMED IN***. \n${unreadiedArr.join(
-            ", "
-          )} you failed to ready up and have been removed from the queue. \n ${readiedArr.join(
-            " & "
-          )} you readied up on time and will remain in the queue. Better luck next time :)`,
+          content: `${acceptedApplicants.join("\n")}`,
           components: [],
         });
+
+        for (picked of acceptedApplicants) {
+          await helpMeLittleHelper({ id: picked }, "delete");
+        }
+
         for (let noShow of unreadiedArr) {
-          const test = await helpMeLittleHelper({ id: noShow }, "delete");
+          await helpMeLittleHelper({ id: noShow }, "delete");
         }
       } catch (error) {
         message.edit("There was an error baby  " + error);
