@@ -133,14 +133,6 @@ module.exports = {
 
 const updateMessage = (newArray, time, premature) => {
   const message = [];
-  const readies = `${readySort(newArray, true).join(
-    " & "
-  )} you have been confirmed ready.`;
-  const unreadies = `${
-    readySort(newArray, false).join
-  } you are being summoned. Heed the call <t:${time}:R>, or lose your spot.`;
-  message.push(readies);
-  message.push(unreadies);
   if (premature.length) {
     message.push(
       `${premature.join(
@@ -148,6 +140,17 @@ const updateMessage = (newArray, time, premature) => {
       )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`
     );
   }
+  const readies = readySort(newArray, true).filter(
+    (e) => !acceptedApplicants.includes(e)
+  );
+  const unreadies = readySort(newArray, false);
+
+  const readiesStr = `${readies.join(" & ")} you have been confirmed ready.`;
+  const unreadiesStr = `${unreadies.join(
+    " & "
+  )} you are being summoned. Heed the call <t:${time}:R>, or lose your spot.`;
+  message.push(readiesStr);
+  message.push(unreadiesStr);
   return message.join("\n \n");
 };
 
