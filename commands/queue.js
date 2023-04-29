@@ -4,9 +4,18 @@ const { helpMeLittleHelper } = require("../utils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("queue")
-    .setDescription("Time to queue"),
+    .setDescription("Time to queue")
+    .addUserOption((option) =>
+      option
+        .setName("target")
+        .setDescription("Add someone else to queue?")
+        .setRequired(false)
+    ),
   async execute(interaction) {
-    const queuer = { id: interaction.user.toString() };
+    let queuer = { id: interaction.options.getUser("target") };
+    if (!queuer) {
+      queuer = { id: interaction.user.toString() };
+    }
     const queue = await helpMeLittleHelper(queuer, "post");
     console.log(queue.data);
     await interaction.reply({
