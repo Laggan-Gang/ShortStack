@@ -12,8 +12,11 @@ module.exports = {
         .setRequired(false)
     ),
   async execute(interaction) {
-    let queuer = { id: interaction.options.getUser("target")?.toString() };
-    if (!queuer) {
+    let target = interaction.options.getUser("target");
+    let queuer = "";
+    if (target) {
+      queuer = { id: target.toString() };
+    } else {
       queuer = { id: interaction.user.toString() };
     }
     const queue = await helpMeLittleHelper(queuer, "post");
