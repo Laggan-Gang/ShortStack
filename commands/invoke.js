@@ -163,8 +163,11 @@ const claimToTheThrone = (newArray, vacancies) => {
 const readySort = (array, boolean) => {
   return array.map((e) => {
     if (e.ready === boolean) {
-      console.log("Här är e i readySort");
-      console.log(e);
+      if (!boolean) {
+        console.log("Här är e i readySort när boolean är " + boolean);
+        console.log(e);
+      }
+
       return e.id;
     }
   });
