@@ -6,8 +6,9 @@ const {
 } = require("discord.js");
 const { helpMeLittleHelper, getTimestamp } = require("../utils");
 
-const READYTIME = 5 * 60;
+//const READYTIME = 5 * 60;
 
+const READYTIME = 5;
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("invoke")
@@ -36,9 +37,6 @@ module.exports = {
     for (let id of queue.data) {
       newArray.push({ id: id, ready: false });
     }
-    //const unreadiedArr = [...queue.data];
-    //const readiedArr = [];
-
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("rdyQueue")
@@ -84,9 +82,8 @@ module.exports = {
           (e) => !acceptedApplicants.includes(e)
         );
         const unreadies = readySort(newArray, false);
-        console.log(unreadies);
         const messageArray = [];
-        if (!acceptedApplicants.length) {
+        if (!acceptedApplicants[0]) {
           messageArray.push("But no one came....");
         } else {
           messageArray.push(
@@ -114,11 +111,11 @@ module.exports = {
         });
 
         for (picked of acceptedApplicants) {
-          await helpMeLittleHelper({ id: picked }, "delete");
+          await helpMeLittleHelper({ id: picked.id }, "delete");
         }
 
         for (let noShow of unreadies) {
-          await helpMeLittleHelper({ id: noShow }, "delete");
+          await helpMeLittleHelper({ id: noShow.id }, "delete");
         }
       } catch (error) {
         message.edit("There was an error baby  " + error);
