@@ -164,7 +164,7 @@ const claimToTheThrone = (newArray, vacancies) => {
 };
 
 const readySort = (array, boolean) => {
-  return array.map((e) => {
+  array.map((e) => {
     if (e.ready === boolean) {
       return e.id;
     }
