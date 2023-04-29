@@ -67,9 +67,9 @@ module.exports = {
         }
       });
 
-      //readiedArr.push(i.user.toString());
-      //removeFromArray(unreadiedArr, i.user.toString());
-      //checkEarlyComplete(queue.data, readiedArr, vacancies);
+      const premature = prematureFinish(newArray, vacancies);
+      console.log(premature);
+
       await message.edit(updateMessage(newArray, time));
       await i.deferReply();
       await i.deleteReply();
@@ -89,21 +89,21 @@ module.exports = {
         console.log("Unreadies");
         console.log(unreadies);
         const messageArray = [];
-        if (!acceptedApplicants[0]) {
+        if (!acceptedApplicants.length) {
           messageArray.push("But no one came....");
         } else {
           messageArray.push(
             `${acceptedApplicants.join(" & ")} you're **CONFIRMED IN**.`
           );
         }
-        if (readies[0]) {
+        if (readies.length) {
           messageArray.push(
             `${readies.join(
               " & "
             )} you readied up on time and will remain in the queue. Better luck next time :)`
           );
         }
-        if (unreadies[0]) {
+        if (unreadies.length) {
           messageArray.push(
             `${unreadies.join(
               " & "
@@ -152,43 +152,21 @@ const removeFromArray = (array, elementToRemove) => {
 
 const claimToTheThrone = (newArray, vacancies) => {
   const readies = readySort(newArray, true);
-
-  //const readies = newArray.map((e) => {
-  //  if (e.ready === true) {
-  //    return e.id;
-  //  }
-  //});
   readies.length = vacancies;
-  console.log(readies);
   return readies;
-};
-
-const readySort2 = (array, boolean) => {
-  return array.map((e) => {
-    if (e.ready === boolean) {
-      return e.id;
-    }
-  });
 };
 
 const readySort = (array, boolean) => {
   return array.filter((e) => e.ready === boolean).map((e) => e.id);
 };
-const checkEarlyComplete = (originalArray, readiedArr, vacancies) => {
-  const originalCopy = [...originalArray];
-  const readiedCopy = [...readiedArr];
-  const earlyCompleteArr = [];
+const checkEarlyComplete = (newArray, vacancies) => {
+  const prematureFinish = [];
   for (let i = 0; i < vacancies; i++) {
-    if (originalCopy[i] === readiedCopy[i]) {
-      earlyCompleteArr.push(originalCopy[i]);
-      console.log(
-        `${originalCopy[i]} är en match med ${readiedArr[i]} och index är ${i} och vacancies är ${vacancies}`
-      );
+    if (newArray[i].ready) {
+      prematureFinish.push(newArray[i].id);
+    } else {
+      return [];
     }
   }
-  if (earlyCompleteArr.length == vacancies) {
-    return earlyCompleteArr;
-  }
-
-  //code to check if early complete here
+  return prematureFinish;
 };
