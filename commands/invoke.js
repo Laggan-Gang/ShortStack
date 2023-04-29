@@ -60,6 +60,7 @@ module.exports = {
     collector.on("collect", async (i) => {
       readiedArr.push(i.user.toString());
       removeFromArray(unreadiedArr, i.user.toString());
+      checkEarlyComplete(queue.data, readiedArr, vacancies);
       await message.edit(updateMessage(unreadiedArr, readiedArr, time));
       await i.deferReply();
       await i.deleteReply();
@@ -119,7 +120,7 @@ module.exports = {
 const updateMessage = (unreadiedArr, readiedArr, time) => {
   return `${unreadiedArr.join(
     ", "
-  )} you are being summoned. Your time to show ends <t:${time}:R> \n ${readiedArr.join(
+  )} you are being summoned. Your time to show ends <t:${time}:R> \n \n ${readiedArr.join(
     ", "
   )} you have been confirmed ready.`;
 };
@@ -135,7 +136,7 @@ const removeFromArray = (array, elementToRemove) => {
 const claimToTheThrone = (originalArray, readiedArr, vacancies) => {
   const heritage = [];
   for (let lineager of originalArray) {
-    if (heritage.length <= vacancies && readiedArr.includes(lineager)) {
+    if (heritage.length < vacancies && readiedArr.includes(lineager)) {
       heritage.push(lineager);
       removeFromArray(readiedArr, lineager);
       console.log(
@@ -144,4 +145,20 @@ const claimToTheThrone = (originalArray, readiedArr, vacancies) => {
     }
   }
   return heritage;
+};
+
+const checkEarlyComplete = (originalArray, readiedArr, vacancies) => {
+  const originalCopy = [...originalArray];
+  const readiedCopy = [...readiedArr];
+  const earlyCompleteArr = [];
+  for (let i = 0; i < vacancies; i++) {
+    if (originalCopy[i] === readiedCopy[i]) {
+      earlyCompleteArr.push(originalCopy[i]);
+      console.log(
+        `${originalCopy[i]} är en match med ${readiedArr[i]} och index är ${i} och vacancies är ${vacancies}`
+      );
+    }
+  }
+
+  //code to check if early complete here
 };

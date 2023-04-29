@@ -28,5 +28,8 @@ module.exports = {
     await message.edit({
       content: `The queue looks like this: \n${queue.data.join("\n")}`,
     });
+    if (queue.data.length >= 5) {
+      //code to make new stack goes here
+    }
   },
 };
