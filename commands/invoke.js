@@ -41,13 +41,11 @@ module.exports = {
         .setLabel("✅")
         .setStyle(ButtonStyle.Success)
     );
-    const time = getTimestamp(1000);
+    const time = getTimestamp(1000) + READYTIME;
     await interaction.reply({
       content: `${queue.data.join(
         ", "
-      )} you are being summoned. Your time to show ends <t:${
-        time + READYTIME
-      }:R>`,
+      )} you are being summoned. Your time to show ends <t:${time}:R>`,
       components: [buttonRow],
     });
     const message = await interaction.fetchReply();
@@ -79,11 +77,13 @@ module.exports = {
           vacancies
         );
         message.edit({
-          content: `For now the queue is pretty simple. ${unreadiedArr.join(
+          content: `${acceptedApplicants.join(
+            " & "
+          )} you're ***CONFIRMED IN***. \n${unreadiedArr.join(
             ", "
-          )} you need to re-queue manually after this invocation. \n \n The original quque-order was ${queue.data.join(
-            " > "
-          )}`,
+          )} you failed to ready up and have been removed from the queue. \n ${readiedArr.join(
+            " & "
+          )} you readied up on time and will remain in the queue. Better luck next time :)`,
           components: [],
         });
         for (let noShow of unreadiedArr) {
@@ -100,7 +100,7 @@ module.exports = {
 const updateMessage = (unreadiedArr, readiedArr) => {
   return `${unreadiedArr.join(
     ", "
-  )} you are being summoned. \n ${readiedArr.join(
+  )} you are being summoned. Your time to show ends <t:${time}:R> \n ${readiedArr.join(
     ", "
   )} you have been confirmed ready.`;
 };
@@ -118,6 +118,7 @@ const claimToTheThrone = (originalArray, readiedArr, vacancies) => {
   for (let lineager of originalArray) {
     if (heritage.length < vacancies && readiedArr.includes(lineager)) {
       heritage.push(lineager);
+      removeFromArray(readiedArr, lineager);
       console.log(
         `${lineager} was found in the ready array, adding them to heritage. Vacancies is ${vacancies} and heritage length is ${heritage.length}`
       );
