@@ -65,27 +65,21 @@ module.exports = {
     collector.on("collect", async (i) => {
       newArray.map((e) => {
         if (e.id === i.user.toString()) {
-          console.log(e);
           e.ready = true;
         }
       });
-      console.log(newArray);
 
       //readiedArr.push(i.user.toString());
       //removeFromArray(unreadiedArr, i.user.toString());
       //checkEarlyComplete(queue.data, readiedArr, vacancies);
-      await message.edit(updateMessage(unreadiedArr, readiedArr, time));
+      await message.edit(updateMessage(newArray, time));
       await i.deferReply();
       await i.deleteReply();
     });
 
     collector.on("end", async (collected) => {
       try {
-        const acceptedApplicants = claimToTheThrone(
-          queue.data,
-          readiedArr,
-          vacancies
-        );
+        const acceptedApplicants = claimToTheThrone(newArray, vacancies);
 
         const messageArray = [];
         if (!acceptedApplicants.length) {
@@ -130,10 +124,13 @@ module.exports = {
   },
 };
 
-const updateMessage = (unreadiedArr, readiedArr, time) => {
-  return `${unreadiedArr.join(
+const updateMessage = (newArray, time) => {
+  const readies = newArray.filter((e) => e.ready);
+  const unreadies = newArray.filter((e) => !e.ready);
+
+  return `${unreadies.join(
     ", "
-  )} you are being summoned. Your time to show ends <t:${time}:R> \n \n ${readiedArr.join(
+  )} you are being summoned. Your time to show ends <t:${time}:R> \n \n ${readies.join(
     ", "
   )} you have been confirmed ready.`;
 };
@@ -146,18 +143,22 @@ const removeFromArray = (array, elementToRemove) => {
   return;
 };
 
-const claimToTheThrone = (originalArray, readiedArr, vacancies) => {
-  const heritage = [];
-  for (let lineager of originalArray) {
-    if (heritage.length < vacancies && readiedArr.includes(lineager)) {
-      heritage.push(lineager);
-      removeFromArray(readiedArr, lineager);
-      console.log(
-        `${lineager} was found in the ready array, adding them to heritage. Vacancies is ${vacancies} and heritage length is ${heritage.length}`
-      );
-    }
-  }
-  return heritage;
+const claimToTheThrone = (newArray, vacancies) => {
+  const readies = newArray.filter((e) => e.ready);
+  readies.length = vacancies;
+  console.log(readies);
+  return readies;
+
+  //for (let lineager of originalArray) {
+  //  if (heritage.length < vacancies && readiedArr.includes(lineager)) {
+  //    heritage.push(lineager);
+  //    removeFromArray(readiedArr, lineager);
+  //    console.log(
+  //      `${lineager} was found in the ready array, adding them to heritage. Vacancies is ${vacancies} and heritage length is ${heritage.length}`
+  //    );
+  //  }
+  //}
+  //return heritage;
 };
 
 const checkEarlyComplete = (originalArray, readiedArr, vacancies) => {
