@@ -71,7 +71,7 @@ module.exports = {
       console.log("Här är premature");
       console.log(premature);
 
-      await message.edit(updateMessage(newArray, time));
+      await message.edit(updateMessage(newArray, time, premature));
       await i.deferReply();
       await i.deleteReply();
     });
@@ -132,15 +132,24 @@ module.exports = {
   },
 };
 
-const updateMessage = (newArray, time) => {
-  const readies = readySort(newArray, true);
-  const unreadies = readySort(newArray, false);
-
-  return `${unreadies.join(
-    ", "
-  )} you are being summoned. Your time to show ends <t:${time}:R> \n \n ${readies.join(
-    ", "
+const updateMessage = (newArray, time, premature) => {
+  const message = "";
+  const readies = `${readySort(newArray, true).join(
+    " & "
   )} you have been confirmed ready.`;
+  const unreadies = `${
+    readySort(newArray, false).join
+  } you are being summoned. Heed the call <t:${time}:R>, or lose your spot.`;
+  message.push(readies);
+  message.push(unreadies);
+  if (premature.length) {
+    message.push(
+      `${premature.join(
+        " & "
+      )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`
+    );
+  }
+  return message;
 };
 
 const removeFromArray = (array, elementToRemove) => {
