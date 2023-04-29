@@ -82,6 +82,12 @@ module.exports = {
           (e) => !acceptedApplicants.includes(e)
         );
         const unreadies = readySort(newArray, false);
+        console.log("Accepted Applicants ");
+        console.log(acceptedApplicants);
+        console.log("Readies");
+        console.log(readies);
+        console.log("Unreadies");
+        console.log(unreadies);
         const messageArray = [];
         if (!acceptedApplicants[0]) {
           messageArray.push("But no one came....");
