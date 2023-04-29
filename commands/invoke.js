@@ -146,7 +146,11 @@ const removeFromArray = (array, elementToRemove) => {
 };
 
 const claimToTheThrone = (newArray, vacancies) => {
-  const readies = newArray.filter((e) => e.ready);
+  const readies = newArray.map((e) => {
+    if (e.ready) {
+      return e.id;
+    }
+  });
   readies.length = vacancies;
   console.log(readies);
   return readies;
