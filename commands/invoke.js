@@ -93,14 +93,14 @@ module.exports = {
             `${acceptedApplicants.join(" & ")} you're **CONFIRMED IN**.`
           );
         }
-        if (readies.length) {
+        if (readies) {
           messageArray.push(
             `${readies.join(
               " & "
             )} you readied up on time and will remain in the queue. Better luck next time :)`
           );
         }
-        if (unreadies.length) {
+        if (unreadies) {
           messageArray.push(
             `${unreadies.join(
               " & "
