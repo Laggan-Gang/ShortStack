@@ -18,10 +18,10 @@ module.exports = {
         .setDescription("How many slots are open?")
         .setRequired(true)
         .addChoices(
-          { name: "1 slot open", value: 1 },
-          { name: "2 slots open", value: 2 },
-          { name: "3 slots open", value: 3 },
-          { name: "4 slots open", value: 4 }
+          { name: "1 Slot open", value: 1 },
+          { name: "2 Slots open", value: 2 },
+          { name: "3 Slots open", value: 3 },
+          { name: "4 Slots open", value: 4 }
         )
     ),
   async execute(interaction) {
@@ -32,7 +32,6 @@ module.exports = {
       return;
     }
     const vacancies = interaction.options.getInteger("vacancies");
-    console.log(`Här är vacancies: ${vacancies}`);
     const unreadiedArr = [...queue.data];
     const readiedArr = [];
 
@@ -62,19 +61,23 @@ module.exports = {
     });
     collector.on("collect", async (i) => {
       readiedArr.push(i.user.toString());
-      const queuerIndex = unreadiedArr.indexOf(i.user.toString());
-      if (queuerIndex > -1) {
-        unreadiedArr.splice(queuerIndex, 1);
-      }
+      removeFromArray(unreadiedArr, i.user.toString());
+      //const queuerIndex = unreadiedArr.indexOf(i.user.toString());
+      //if (queuerIndex > -1) {
+      //  unreadiedArr.splice(queuerIndex, 1);
+      //}
       await message.edit(updateMessage(unreadiedArr, readiedArr));
-
       await i.deferReply();
       await i.deleteReply();
     });
 
     collector.on("end", async (collected) => {
-      console.log(collected);
       try {
+        const acceptedApplicants = claimToTheThrone(
+          queue.data,
+          readiedArr,
+          vacancies
+        );
         message.edit({
           content: `For now the queue is pretty simple. ${unreadiedArr.join(
             ", "
@@ -83,8 +86,8 @@ module.exports = {
           )}`,
           components: [],
         });
-        for (let queuer of queue.data) {
-          const test = await helpMeLittleHelper({ id: queuer }, "delete");
+        for (let noShow of unreadiedArr) {
+          const test = await helpMeLittleHelper({ id: noShow }, "delete");
         }
       } catch (error) {
         message.edit("There was an error baby  " + error);
@@ -94,10 +97,31 @@ module.exports = {
   },
 };
 
-updateMessage = (unreadiedArr, readiedArr) => {
+const updateMessage = (unreadiedArr, readiedArr) => {
   return `${unreadiedArr.join(
     ", "
   )} you are being summoned. \n ${readiedArr.join(
     ", "
   )} you have been confirmed ready.`;
+};
+
+const removeFromArray = (array, elementToRemove) => {
+  const index = array.indexOf(elementToRemove);
+  if (index > -1) {
+    array.splice(index, 1);
+  }
+  return;
+};
+
+const claimToTheThrone = (originalArray, readiedArr, vacancies) => {
+  const heritage = [];
+  for (let lineager of originalArray) {
+    if (heritage.length < vacancies && readiedArr.includes(lineager)) {
+      heritage.push(lineager);
+      console.log(
+        `${lineager} was found in the ready array, adding them to heritage. Vacancies is ${vacancies} and heritage length is ${heritage.length}`
+      );
+    }
+  }
+  return heritage;
 };
