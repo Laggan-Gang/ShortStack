@@ -127,8 +127,8 @@ module.exports = {
 };
 
 const updateMessage = (newArray, time) => {
-  const readies = newArray.map(idGrabber(e, true));
-  const unreadies = newArray.map(idGrabber(e, false));
+  const readies = readySort(newArray, true);
+  const unreadies = readySort(newArray, false);
 
   return `${unreadies.join(
     ", "
@@ -170,7 +170,7 @@ const claimToTheThrone = (newArray, vacancies) => {
 };
 
 const readySort = (array, boolean) => {
-  return array.mapmap((e) => {
+  return array.map((e) => {
     if (e.ready === boolean) {
       return e.id;
     }
