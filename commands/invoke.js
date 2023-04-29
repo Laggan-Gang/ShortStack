@@ -80,7 +80,9 @@ module.exports = {
     collector.on("end", async (collected) => {
       try {
         const acceptedApplicants = claimToTheThrone(newArray, vacancies);
-        const readies = readySort(newArray, true);
+        const readies = readySort(newArray, true).filter(
+          (e) => !acceptedApplicants.includes(e)
+        );
         const unreadies = readySort(newArray, false);
 
         const messageArray = [];
@@ -156,17 +158,6 @@ const claimToTheThrone = (newArray, vacancies) => {
   readies.length = vacancies;
   console.log(readies);
   return readies;
-
-  //for (let lineager of originalArray) {
-  //  if (heritage.length < vacancies && readiedArr.includes(lineager)) {
-  //    heritage.push(lineager);
-  //    removeFromArray(readiedArr, lineager);
-  //    console.log(
-  //      `${lineager} was found in the ready array, adding them to heritage. Vacancies is ${vacancies} and heritage length is ${heritage.length}`
-  //    );
-  //  }
-  //}
-  //return heritage;
 };
 
 const readySort = (array, boolean) => {
