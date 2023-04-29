@@ -80,6 +80,8 @@ module.exports = {
     collector.on("end", async (collected) => {
       try {
         const acceptedApplicants = claimToTheThrone(newArray, vacancies);
+        const readies = newArray.filter((e) => e.ready);
+        const unreadies = newArray.filter((e) => !e.ready);
 
         const messageArray = [];
         if (!acceptedApplicants.length) {
@@ -89,14 +91,14 @@ module.exports = {
             `${acceptedApplicants.join(" & ")} you're **CONFIRMED IN**.`
           );
         }
-        if (readiedArr.length) {
+        if (readies.length) {
           messageArray.push(
             `${readiedArr.join(
               " & "
             )} you readied up on time and will remain in the queue. Better luck next time :)`
           );
         }
-        if (unreadiedArr.length) {
+        if (unreadies.length) {
           messageArray.push(
             `${unreadiedArr.join(
               " & "
@@ -113,7 +115,7 @@ module.exports = {
           await helpMeLittleHelper({ id: picked }, "delete");
         }
 
-        for (let noShow of unreadiedArr) {
+        for (let noShow of unreadies) {
           await helpMeLittleHelper({ id: noShow }, "delete");
         }
       } catch (error) {
