@@ -32,8 +32,15 @@ module.exports = {
       return;
     }
     const vacancies = interaction.options.getInteger("vacancies");
+    const readyArray = queue.data.map((e) => (e.ready = false));
+    console.log(`Här är ready array`);
+    console.log(readyArray);
     const unreadiedArr = [...queue.data];
     const readiedArr = [];
+
+    const arrayConverter = (array) => {
+      return array.map((e) => (e.ready = false));
+    };
 
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -79,7 +86,7 @@ module.exports = {
           messageArray.push("But no one came....");
         } else {
           messageArray.push(
-            `${acceptedApplicants.join(" & ")} you're ***CONFIRMED IN***.`
+            `${acceptedApplicants.join(" & ")} you're **CONFIRMED IN**.`
           );
         }
         if (readiedArr.length) {
@@ -92,7 +99,7 @@ module.exports = {
         if (unreadiedArr.length) {
           messageArray.push(
             `${unreadiedArr.join(
-              ", "
+              " & "
             )} you failed to ready up and have been removed from the queue.`
           );
         }
@@ -158,6 +165,9 @@ const checkEarlyComplete = (originalArray, readiedArr, vacancies) => {
         `${originalCopy[i]} är en match med ${readiedArr[i]} och index är ${i} och vacancies är ${vacancies}`
       );
     }
+  }
+  if (earlyCompleteArr.length == vacancies) {
+    return earlyCompleteArr;
   }
 
   //code to check if early complete here
