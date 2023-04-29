@@ -11,13 +11,29 @@ const READYTIME = 5 * 60;
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("invoke")
-    .setDescription("Time to invoke the queue"),
+    .setDescription("Time to invoke the queue")
+    .addIntegerOption((option) =>
+      option.setName(
+        "vacancies"
+          .setDescription("How many slots are open?")
+          .setRequired(true)
+          .addChoices(
+            { name: "1 slot open", value: 1 },
+            { name: "2 slots open", value: 2 },
+            { name: "3 slots open", value: 3 },
+            { name: "4 slots open", value: 4 }
+          )
+      )
+    ),
   async execute(interaction) {
     const queuer = { id: interaction.user.toString() };
     const queue = await helpMeLittleHelper(queuer, "get");
     if (queue.data.length < 1) {
       interaction.reply(`There's no one in the queue, bozo`);
+      return;
     }
+    const vacancies = interaction.options.getInteger("vacancies");
+    console.log(`Här är vacancies: ${vacancies}`);
     const unreadiedArr = [...queue.data];
     const readiedArr = [];
 
@@ -46,10 +62,6 @@ module.exports = {
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
-      console.log(i.user.username);
-      console.log(i);
-      console.log(queue.data);
-      console.log(queue.data.length);
       readiedArr.push(i.user.toString());
       const queuerIndex = unreadiedArr.indexOf(i.user.toString());
       if (queuerIndex > -1) {
