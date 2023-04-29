@@ -163,12 +163,16 @@ const claimToTheThrone = (newArray, vacancies) => {
   return readies;
 };
 
-const readySort = (array, boolean) => {
-  array.map((e) => {
+const readySort2 = (array, boolean) => {
+  return array.map((e) => {
     if (e.ready === boolean) {
       return e.id;
     }
   });
+};
+
+const readySort = (array, boolean) => {
+  return array.filter((e) => e.ready === boolean).map((e) => e.id);
 };
 const checkEarlyComplete = (originalArray, readiedArr, vacancies) => {
   const originalCopy = [...originalArray];
