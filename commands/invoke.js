@@ -111,11 +111,11 @@ module.exports = {
         });
 
         for (picked of acceptedApplicants) {
-          await helpMeLittleHelper({ id: picked.id }, "delete");
+          await helpMeLittleHelper({ id: picked }, "delete");
         }
 
         for (let noShow of unreadies) {
-          await helpMeLittleHelper({ id: noShow.id }, "delete");
+          await helpMeLittleHelper({ id: noShow }, "delete");
         }
       } catch (error) {
         message.edit("There was an error baby  " + error);
