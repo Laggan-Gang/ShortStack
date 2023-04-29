@@ -67,10 +67,13 @@ module.exports = {
       });
 
       const premature = checkEarlyComplete(newArray, vacancies);
+      const acceptedApplicants = claimToTheThrone(newArray, vacancies);
       console.log("Här är premature");
       console.log(premature);
 
-      await message.edit(updateMessage(newArray, time, premature));
+      await message.edit(
+        updateMessage(newArray, time, premature, acceptedApplicants)
+      );
       await i.deferReply();
       await i.deleteReply();
     });
@@ -131,7 +134,7 @@ module.exports = {
   },
 };
 
-const updateMessage = (newArray, time, premature) => {
+const updateMessage = (newArray, time, premature, acceptedApplicants) => {
   const message = [];
   if (premature.length) {
     message.push(
