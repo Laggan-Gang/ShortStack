@@ -32,12 +32,11 @@ module.exports = {
       return;
     }
     const vacancies = interaction.options.getInteger("vacancies");
-    const readyArray = queue.data.map((e) => {
-      e.queuer = e;
-      e.ready = false;
-    });
-    console.log(`Här är ready array`);
-    console.log(readyArray);
+    const newArray = [];
+    for (let queuer of queue.data) {
+      newArray.push({ id: queuer, ready: false });
+    }
+    console.log(newArray);
     const unreadiedArr = [...queue.data];
     const readiedArr = [];
 
