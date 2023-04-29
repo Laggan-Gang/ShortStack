@@ -6,9 +6,8 @@ const {
 } = require("discord.js");
 const { helpMeLittleHelper, getTimestamp } = require("../utils");
 
-//const READYTIME = 5 * 60;
+const READYTIME = 5 * 60;
 
-const READYTIME = 5;
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("invoke")
