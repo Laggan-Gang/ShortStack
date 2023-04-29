@@ -33,12 +33,11 @@ module.exports = {
     }
     const vacancies = interaction.options.getInteger("vacancies");
     const newArray = [];
-    for (let queuer of queue.data) {
-      newArray.push({ id: queuer, ready: false });
+    for (let id of queue.data) {
+      newArray.push({ id: id, ready: false });
     }
-    console.log(newArray);
-    const unreadiedArr = [...queue.data];
-    const readiedArr = [];
+    //const unreadiedArr = [...queue.data];
+    //const readiedArr = [];
 
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -56,16 +55,25 @@ module.exports = {
     const message = await interaction.fetchReply();
 
     const filter = (i) =>
-      i.customId === "rdyQueue" && unreadiedArr.includes(i.user.toString());
+      i.customId === "rdyQueue" &&
+      newArray.filter((e) => e.id === i.user.toString());
     const collector = await message.channel.createMessageComponentCollector({
       filter,
       time: READYTIME * 1000,
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
-      readiedArr.push(i.user.toString());
-      removeFromArray(unreadiedArr, i.user.toString());
-      checkEarlyComplete(queue.data, readiedArr, vacancies);
+      newArray.map((e) => {
+        if (e.id === i.user.toString()) {
+          console.log(e);
+          e.ready = true;
+        }
+      });
+      console.log(newArray);
+
+      //readiedArr.push(i.user.toString());
+      //removeFromArray(unreadiedArr, i.user.toString());
+      //checkEarlyComplete(queue.data, readiedArr, vacancies);
       await message.edit(updateMessage(unreadiedArr, readiedArr, time));
       await i.deferReply();
       await i.deleteReply();
