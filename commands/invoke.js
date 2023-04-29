@@ -133,7 +133,7 @@ module.exports = {
 };
 
 const updateMessage = (newArray, time, premature) => {
-  const message = "";
+  const message = [];
   const readies = `${readySort(newArray, true).join(
     " & "
   )} you have been confirmed ready.`;
@@ -149,7 +149,7 @@ const updateMessage = (newArray, time, premature) => {
       )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`
     );
   }
-  return message;
+  return message.join("\n \n");
 };
 
 const removeFromArray = (array, elementToRemove) => {
