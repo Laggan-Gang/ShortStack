@@ -68,6 +68,7 @@ module.exports = {
       });
 
       const premature = checkEarlyComplete(newArray, vacancies);
+      console.log("Här är premature");
       console.log(premature);
 
       await message.edit(updateMessage(newArray, time));
