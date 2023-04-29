@@ -10,8 +10,12 @@ module.exports = {
     const queue = await helpMeLittleHelper(queuer, "delete");
     console.log(queue.data);
     await interaction.reply({
-      content: "The queue looks like this: \n" + queue.data.join("\n"),
+      content: `Roger...`,
       ephemeral: false,
+    });
+    const message = await interaction.fetchReply();
+    await message.edit({
+      content: `The queue looks like this: \n${queue.data.join("\n")}`,
     });
   },
 };

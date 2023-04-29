@@ -6,8 +6,7 @@ const {
 } = require("discord.js");
 const { helpMeLittleHelper, getTimestamp } = require("../utils");
 
-const READYTIME = 10;
-//const READYTIME = 5 * 60;
+const READYTIME = 5 * 60;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -136,7 +135,7 @@ const removeFromArray = (array, elementToRemove) => {
 const claimToTheThrone = (originalArray, readiedArr, vacancies) => {
   const heritage = [];
   for (let lineager of originalArray) {
-    if (heritage.length < vacancies && readiedArr.includes(lineager)) {
+    if (heritage.length <= vacancies && readiedArr.includes(lineager)) {
       heritage.push(lineager);
       removeFromArray(readiedArr, lineager);
       console.log(

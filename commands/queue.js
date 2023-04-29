@@ -20,7 +20,6 @@ module.exports = {
       queuer = { id: interaction.user.toString() };
     }
     const queue = await helpMeLittleHelper(queuer, "post");
-    console.log(queue.data);
     await interaction.reply({
       content: `Roger...`,
       ephemeral: false,
