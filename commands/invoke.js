@@ -64,7 +64,7 @@ module.exports = {
       //if (queuerIndex > -1) {
       //  unreadiedArr.splice(queuerIndex, 1);
       //}
-      await message.edit(updateMessage(unreadiedArr, readiedArr));
+      await message.edit(updateMessage(unreadiedArr, readiedArr, time));
       await i.deferReply();
       await i.deleteReply();
     });
@@ -97,7 +97,7 @@ module.exports = {
   },
 };
 
-const updateMessage = (unreadiedArr, readiedArr) => {
+const updateMessage = (unreadiedArr, readiedArr, time) => {
   return `${unreadiedArr.join(
     ", "
   )} you are being summoned. Your time to show ends <t:${time}:R> \n ${readiedArr.join(
