@@ -80,8 +80,8 @@ module.exports = {
     collector.on("end", async (collected) => {
       try {
         const acceptedApplicants = claimToTheThrone(newArray, vacancies);
-        const readies = newArray.filter((e) => e.ready);
-        const unreadies = newArray.filter((e) => !e.ready);
+        const readies = newArray.map(idGrabber(e, true));
+        const unreadies = newArray.map(idGrabber(e, false));
 
         const messageArray = [];
         if (!acceptedApplicants.length) {
@@ -127,8 +127,8 @@ module.exports = {
 };
 
 const updateMessage = (newArray, time) => {
-  const readies = newArray.filter((e) => e.ready);
-  const unreadies = newArray.filter((e) => !e.ready);
+  const readies = newArray.map(idGrabber(e, true));
+  const unreadies = newArray.map(idGrabber(e, false));
 
   return `${unreadies.join(
     ", "
@@ -146,11 +146,7 @@ const removeFromArray = (array, elementToRemove) => {
 };
 
 const claimToTheThrone = (newArray, vacancies) => {
-  const readies = newArray.map((e) => {
-    if (e.ready) {
-      return e.id;
-    }
-  });
+  const readies = newArray.map(idGrabber(e, true));
   readies.length = vacancies;
   console.log(readies);
   return readies;
@@ -167,6 +163,11 @@ const claimToTheThrone = (newArray, vacancies) => {
   //return heritage;
 };
 
+const idGrabber = (e, bool) => {
+  if (e.ready === bool) {
+    return e.id;
+  }
+};
 const checkEarlyComplete = (originalArray, readiedArr, vacancies) => {
   const originalCopy = [...originalArray];
   const readiedCopy = [...readiedArr];
