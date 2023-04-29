@@ -32,15 +32,14 @@ module.exports = {
       return;
     }
     const vacancies = interaction.options.getInteger("vacancies");
-    const readyArray = queue.data.map((e) => (e.ready = false));
+    const readyArray = queue.data.map((e) => {
+      e.queuer = e;
+      e.ready = false;
+    });
     console.log(`Här är ready array`);
     console.log(readyArray);
     const unreadiedArr = [...queue.data];
     const readiedArr = [];
-
-    const arrayConverter = (array) => {
-      return array.map((e) => (e.ready = false));
-    };
 
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
