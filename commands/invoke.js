@@ -146,7 +146,7 @@ const removeFromArray = (array, elementToRemove) => {
 };
 
 const claimToTheThrone = (newArray, vacancies) => {
-  const readies = newArray.map(idGrabber(e, true));
+  const readies = newArray.map(idGrabber);
   readies.length = vacancies;
   console.log(readies);
   return readies;
