@@ -80,8 +80,8 @@ module.exports = {
     collector.on("end", async (collected) => {
       try {
         const acceptedApplicants = claimToTheThrone(newArray, vacancies);
-        const readies = newArray.map(idGrabber(e, true));
-        const unreadies = newArray.map(idGrabber(e, false));
+        const readies = readySort(newArray, true);
+        const unreadies = readySort(newArray, false);
 
         const messageArray = [];
         if (!acceptedApplicants.length) {
@@ -146,7 +146,13 @@ const removeFromArray = (array, elementToRemove) => {
 };
 
 const claimToTheThrone = (newArray, vacancies) => {
-  const readies = newArray.map(idGrabber);
+  const readies = readySort(newArray, true);
+
+  //const readies = newArray.map((e) => {
+  //  if (e.ready === true) {
+  //    return e.id;
+  //  }
+  //});
   readies.length = vacancies;
   console.log(readies);
   return readies;
@@ -163,10 +169,12 @@ const claimToTheThrone = (newArray, vacancies) => {
   //return heritage;
 };
 
-const idGrabber = (e, bool) => {
-  if (e.ready === bool) {
-    return e.id;
-  }
+const readySort = (array, boolean) => {
+  return array.mapmap((e) => {
+    if (e.ready === boolean) {
+      return e.id;
+    }
+  });
 };
 const checkEarlyComplete = (originalArray, readiedArr, vacancies) => {
   const originalCopy = [...originalArray];
