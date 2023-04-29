@@ -103,7 +103,7 @@ module.exports = {
         }
 
         message.edit({
-          content: `${acceptedApplicants.join("\n")}`,
+          content: `${messageArray.join("\n")}`,
           components: [],
         });
 
