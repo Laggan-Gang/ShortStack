@@ -93,14 +93,14 @@ module.exports = {
         }
         if (readies.length) {
           messageArray.push(
-            `${readiedArr.join(
+            `${readies.join(
               " & "
             )} you readied up on time and will remain in the queue. Better luck next time :)`
           );
         }
         if (unreadies.length) {
           messageArray.push(
-            `${unreadiedArr.join(
+            `${unreadies.join(
               " & "
             )} you failed to ready up and have been removed from the queue.`
           );
