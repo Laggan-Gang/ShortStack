@@ -41,7 +41,7 @@ module.exports = {
         .setLabel("✅")
         .setStyle(ButtonStyle.Success)
     );
-    const time = getTimestamp(1000) + READYTIME;
+    const time = getTimestamp(1000); //+ READYTIME;
     await interaction.reply({
       content: `${queue.data.join(
         ", "
@@ -103,7 +103,7 @@ module.exports = {
         }
 
         message.edit({
-          content: `${messageArray.join("\n")}`,
+          content: `${messageArray.join("\n \n")}`,
           components: [],
         });
 
