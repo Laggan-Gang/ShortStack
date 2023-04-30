@@ -53,11 +53,11 @@ module.exports = {
 
     const filter = (i) =>
       i.customId === "rdyQueue" &&
-      newArray.filter((e) => e.id === i.user.toString() && !e.ready).length;
+      newArray.some((e) => e.id === i.user.toString() && !e.ready);
     const collector = await message.channel.createMessageComponentCollector({
       filter,
       time: READYTIME * 1000,
-      //max: queue.data.length,
+      max: queue.data.length,
     });
     collector.on("collect", async (i) => {
       newArray.map((e) => {
