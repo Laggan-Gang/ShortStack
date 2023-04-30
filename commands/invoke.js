@@ -67,7 +67,6 @@ module.exports = {
       });
 
       const premature = checkEarlyComplete(newArray, vacancies);
-      const acceptedApplicants = claimToTheThrone(newArray, vacancies);
       console.log("Här är premature");
       console.log(premature);
 
@@ -134,10 +133,10 @@ module.exports = {
   },
 };
 
-const updateMessage = (newArray, time, premature, acceptedApplicants) => {
+const updateMessage = (newArray, time, premature) => {
   const message = [];
   const readies = readySort(newArray, true).filter(
-    (e) => !acceptedApplicants.includes(e)
+    (e) => !premature.includes(e)
   );
   const unreadies = readySort(newArray, false);
 
