@@ -70,9 +70,7 @@ module.exports = {
       console.log("Här är premature");
       console.log(premature);
 
-      await message.edit(
-        updateMessage(newArray, time, premature, acceptedApplicants)
-      );
+      await message.edit(updateMessage(newArray, time, premature));
       await i.deferReply();
       await i.deleteReply();
     });
