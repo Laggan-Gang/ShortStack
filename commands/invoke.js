@@ -53,10 +53,8 @@ module.exports = {
 
     const filter = (i) =>
       i.customId === "rdyQueue" &&
-      //newArray.filter((e) => e.id === i.user.toString() && !e.ready) &&
-      newArray.map((e) => {
-        return e.id === i.user.toString() && !e.ready;
-      });
+      newArray.filter((e) => e.id === i.user.toString()) &&
+      !newArray.filter((e) => e.id === i.user.toString()).ready;
     const collector = await message.channel.createMessageComponentCollector({
       filter,
       time: READYTIME * 1000,
