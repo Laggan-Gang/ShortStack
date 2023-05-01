@@ -60,12 +60,11 @@ module.exports = {
       max: queue.data.length,
     });
     collector.on("collect", async (i) => {
-      newArray.map((e) => {
+      newArray.forEach((e) => {
         if (e.id === i.user.toString()) {
           e.ready = true;
         }
       });
-
       const premature = checkEarlyComplete(newArray, vacancies);
       console.log("Här är premature");
       console.log(premature);
@@ -82,11 +81,11 @@ module.exports = {
           (e) => !acceptedApplicants.includes(e)
         );
         const unreadies = readySort(newArray, false);
-        console.log("Accepted Applicants ");
+        console.log("Accepted Applicants (these are removed from queue)");
         console.log(acceptedApplicants);
-        console.log("Readies");
+        console.log("Readies (these remain in queue)");
         console.log(readies);
-        console.log("Unreadies");
+        console.log("Unreadies (these are removed from queue)");
         console.log(unreadies);
         const messageArray = [];
         if (!acceptedApplicants.length) {
@@ -100,26 +99,23 @@ module.exports = {
           messageArray.push(
             `${readies.join(
               " & "
-            )} you readied up on time and will remain in the queue. Better luck next time :)`
+            )} while you did ready up on time, you were not high in the queue to get the spot in the stack. You remain in the queue, better luck next time :)`
           );
         }
         if (unreadies.length) {
           messageArray.push(
             `${unreadies.join(
               " & "
-            )} you failed to ready up and have been removed from the queue.`
+            )} you failed to ready up and have been removed from the queue due to inactivity.`
           );
         }
-
         message.edit({
           content: `${messageArray.join("\n \n")}`,
           components: [],
         });
-
         for (picked of acceptedApplicants) {
           await helpMeLittleHelper({ id: picked }, "delete");
         }
-
         for (let noShow of unreadies) {
           await helpMeLittleHelper({ id: noShow }, "delete");
         }
@@ -137,14 +133,13 @@ const updateMessage = (newArray, time, premature) => {
     (e) => !premature.includes(e)
   );
   const unreadies = readySort(newArray, false);
-
   const prematureStr = `${premature.join(
     " & "
   )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`;
   const readiesStr = `${readies.join(" & ")} you have been confirmed ready.`;
   const unreadiesStr = `${unreadies.join(
     " & "
-  )} you are being summoned. Heed the call <t:${time}:R>, or lose your spot.`;
+  )} you are being summoned. Heed the call <t:${time}:R>, or you will be considered inactive and removed from the /queue`;
 
   if (premature.length) {
     message.push(prematureStr);
@@ -152,26 +147,21 @@ const updateMessage = (newArray, time, premature) => {
   if (readies.length) {
     message.push(readiesStr);
   }
-  message.push(unreadiesStr);
+  if (unreadies.length) {
+    message.push(unreadiesStr);
+  }
   return message.join("\n \n");
 };
 
-const removeFromArray = (array, elementToRemove) => {
-  const index = array.indexOf(elementToRemove);
-  if (index > -1) {
-    array.splice(index, 1);
-  }
-  return;
-};
-
 const claimToTheThrone = (newArray, vacancies) => {
-  const readies = readySort(newArray, true);
-  readies.length = vacancies;
-  return readies;
+  return readySort(newArray, true).slice(0, vacancies);
+  //const readies = readySort(newArray, true);
+  //readies.length = vacancies;
+  //return readies;
 };
 
-const readySort = (array, boolean) => {
-  return array.filter((e) => e.ready === boolean).map((e) => e.id);
+const readySort = (array, ready) => {
+  return array.filter((e) => e.ready === ready).map((e) => e.id);
 };
 const checkEarlyComplete = (newArray, vacancies) => {
   const prematureFinish = [];
