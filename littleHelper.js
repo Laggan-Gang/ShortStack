@@ -11,7 +11,9 @@ app.get("/queue", (req, res) => {
 
 app.post("/queue", (req, res) => {
   const queuer = req.body.id;
-  queue.push(queuer);
+  if (!queue.includes(queuer)) {
+    queue.push(queuer);
+  }
   res.status(201).header("location", `queue`).json(queue).end();
 });
 
