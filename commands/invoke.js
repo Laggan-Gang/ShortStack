@@ -133,27 +133,9 @@ const updateMessage = (newArray, time, premature) => {
     (e) => !premature.includes(e)
   );
   const unreadies = readySort(newArray, false);
-  //const prematureStr = `${premature.join(
-  //  " & "
-  //)} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`;
-  //const readiesStr = `${readies.join(" & ")} you have been confirmed ready.`;
-  //const unreadiesStr = `${unreadies.join(
-  //  " & "
-  //)} you are being summoned. Heed the call <t:${time}:R>, or you will be considered inactive and removed from the /queue`;
-  //if (premature.length) {
-  //  message.push(prematureStr);
-  //}
-  //if (readies.length) {
-  //  message.push(readiesStr);
-  //}
-  //if (unreadies.length) {
-  //  message.push(unreadiesStr);
-  //}
-
   content(premature, message, "premature", time);
   content(readies, message, "readies", time);
   content(unreadies, message, "unreadies", time);
-
   return message.join("\n \n");
 };
 
@@ -192,6 +174,7 @@ const claimToTheThrone = (newArray, vacancies) => {
 const readySort = (array, ready) => {
   return array.filter((e) => e.ready === ready).map((e) => e.id);
 };
+
 const checkEarlyComplete = (newArray, vacancies) => {
   const prematureFinish = [];
   for (let i = 0; i < vacancies; i++) {

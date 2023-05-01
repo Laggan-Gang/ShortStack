@@ -8,7 +8,6 @@ module.exports = {
   async execute(interaction) {
     const queuer = { id: interaction.user.toString() };
     const queue = await helpMeLittleHelper(queuer, "delete");
-    console.log(queue.data);
     await interaction.reply({
       content: `Roger...`,
       ephemeral: false,
