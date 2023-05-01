@@ -99,14 +99,14 @@ module.exports = {
           messageArray.push(
             `${readies.join(
               " & "
-            )} while you did ready up on time, your queue position was not high enough to get into the stack. You remain in the queue, better luck next time :)`
+            )} You will remain in the queue, better luck next time :)`
           );
         }
         if (unreadies.length) {
           messageArray.push(
             `${unreadies.join(
               " & "
-            )} you failed to ready up and have been removed from the queue due to inactivity.`
+            )} you failed to ready up and have been removed from the queue.`
           );
         }
         message.edit({
@@ -160,7 +160,7 @@ const content = (array, message, type, time) => {
         message.push(
           `${array.join(
             " & "
-          )} you are being summoned. Heed the call <t:${time}:R>, or you will be considered inactive and removed from the /queue`
+          )} ready up <t:${time}:R>, or you will be removed from the /queue due to inactivity.`
         );
       }
       break;
