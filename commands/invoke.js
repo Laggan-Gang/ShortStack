@@ -99,7 +99,7 @@ module.exports = {
           messageArray.push(
             `${readies.join(
               " & "
-            )} while you did ready up on time, you were not high in the queue to get the spot in the stack. You remain in the queue, better luck next time :)`
+            )} while you did ready up on time, your queue position was not high enough to get into the stack. You remain in the queue, better luck next time :)`
           );
         }
         if (unreadies.length) {
@@ -133,31 +133,60 @@ const updateMessage = (newArray, time, premature) => {
     (e) => !premature.includes(e)
   );
   const unreadies = readySort(newArray, false);
-  const prematureStr = `${premature.join(
-    " & "
-  )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`;
-  const readiesStr = `${readies.join(" & ")} you have been confirmed ready.`;
-  const unreadiesStr = `${unreadies.join(
-    " & "
-  )} you are being summoned. Heed the call <t:${time}:R>, or you will be considered inactive and removed from the /queue`;
+  //const prematureStr = `${premature.join(
+  //  " & "
+  //)} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`;
+  //const readiesStr = `${readies.join(" & ")} you have been confirmed ready.`;
+  //const unreadiesStr = `${unreadies.join(
+  //  " & "
+  //)} you are being summoned. Heed the call <t:${time}:R>, or you will be considered inactive and removed from the /queue`;
+  //if (premature.length) {
+  //  message.push(prematureStr);
+  //}
+  //if (readies.length) {
+  //  message.push(readiesStr);
+  //}
+  //if (unreadies.length) {
+  //  message.push(unreadiesStr);
+  //}
 
-  if (premature.length) {
-    message.push(prematureStr);
-  }
-  if (readies.length) {
-    message.push(readiesStr);
-  }
-  if (unreadies.length) {
-    message.push(unreadiesStr);
-  }
+  content(premature, message, "premature", time);
+  content(readies, message, "readies", time);
+  content(unreadies, message, "unreadies", time);
+
   return message.join("\n \n");
+};
+
+const content = (array, message, type, time) => {
+  switch (type) {
+    case "premature":
+      if (array.length) {
+        message.push(
+          `${array.join(
+            " & "
+          )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`
+        );
+      }
+      break;
+    case "readies":
+      if (array.length) {
+        message.push(`${array.join(" & ")} you have been confirmed ready.`);
+      }
+      break;
+    case "unreadies":
+      if (array.length) {
+        message.push(
+          `${array.join(
+            " & "
+          )} you are being summoned. Heed the call <t:${time}:R>, or you will be considered inactive and removed from the /queue`
+        );
+      }
+      break;
+  }
 };
 
 const claimToTheThrone = (newArray, vacancies) => {
   return readySort(newArray, true).slice(0, vacancies);
-  //const readies = readySort(newArray, true);
-  //readies.length = vacancies;
-  //return readies;
 };
 
 const readySort = (array, ready) => {
