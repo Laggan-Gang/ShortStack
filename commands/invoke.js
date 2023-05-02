@@ -39,7 +39,7 @@ module.exports = {
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("rdyQueue")
-        .setLabel("AND THE QUEUE SHALL ANSWER!")
+        .setLabel("🐎AND THE QUEUE SHALL ANSWER!🐎")
         .setStyle(ButtonStyle.Primary)
     );
     const time = getTimestamp(1000) + READYTIME;
@@ -110,7 +110,7 @@ module.exports = {
           );
         }
 
-        messageArray.push("**THE BEACONS ARE LIT**");
+        messageArray.push("**🔥🔥THE BEACONS ARE LIT🔥🔥**");
         message.edit({
           content: `${messageArray.join("\n \n")}`,
           components: [],
