@@ -39,14 +39,14 @@ module.exports = {
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("rdyQueue")
-        .setLabel("✅")
-        .setStyle(ButtonStyle.Success)
+        .setLabel("AND THE QUEUE SHALL ANSWER!")
+        .setStyle(ButtonStyle.Primary)
     );
     const time = getTimestamp(1000) + READYTIME;
     await interaction.reply({
       content: `${queue.data.join(
         ", "
-      )} you are being summoned. Your time to show ends <t:${time}:R>`,
+      )} **YAPOS CALLS FOR AID** \n Time <t:${time}:R>`,
       components: [buttonRow],
     });
     const message = await interaction.fetchReply();
@@ -109,6 +109,8 @@ module.exports = {
             )} you failed to ready up and have been removed from the queue.`
           );
         }
+
+        messageArray.push("**THE BEACONS ARE LIT**");
         message.edit({
           content: `${messageArray.join("\n \n")}`,
           components: [],
