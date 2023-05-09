@@ -3,70 +3,70 @@ const {
   SlashCommandBuilder,
   ButtonBuilder,
   ButtonStyle,
-} = require("discord.js");
-const { helpMeLittleHelper, getTimestamp } = require("../utils");
+} = require('discord.js');
+const { helpMeLittleHelper, getTimestamp } = require('../utils');
 
 const READYTIME = 5 * 60;
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("invoke")
-    .setDescription("Time to invoke the queue")
-    .addIntegerOption((option) =>
+    .setName('invoke')
+    .setDescription('Time to invoke the queue')
+    .addIntegerOption(option =>
       option
-        .setName("vacancies")
-        .setDescription("How many slots are open?")
+        .setName('vacancies')
+        .setDescription('How many slots are open?')
         .setRequired(true)
         .addChoices(
-          { name: "1 Slot open", value: 1 },
-          { name: "2 Slots open", value: 2 },
-          { name: "3 Slots open", value: 3 },
-          { name: "4 Slots open", value: 4 }
+          { name: '1 Slot open', value: 1 },
+          { name: '2 Slots open', value: 2 },
+          { name: '3 Slots open', value: 3 },
+          { name: '4 Slots open', value: 4 }
         )
     ),
   async execute(interaction) {
     const queuer = { id: interaction.user.toString() };
-    const queue = await helpMeLittleHelper(queuer, "get");
+    const queue = await helpMeLittleHelper(queuer, 'get');
     if (queue.data.length < 1) {
       interaction.reply(`There's no one in the queue, bozo`);
       return;
     }
-    const vacancies = interaction.options.getInteger("vacancies");
+    const vacancies = interaction.options.getInteger('vacancies');
     const newArray = [];
     for (let id of queue.data) {
       newArray.push({ id: id, ready: false });
     }
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setCustomId("rdyQueue")
-        .setLabel("🐎AND THE QUEUE SHALL ANSWER!🐎")
+        .setCustomId('rdyQueue')
+        .setLabel('🐎AND THE QUEUE SHALL ANSWER!🐎')
         .setStyle(ButtonStyle.Primary)
     );
     const time = getTimestamp(1000) + READYTIME;
     await interaction.reply({
       content: `${queue.data.join(
-        ", "
+        ', '
       )} **YAPOS CALLS FOR AID** \n Time <t:${time}:R>`,
       components: [buttonRow],
     });
     const message = await interaction.fetchReply();
 
-    const filter = (i) =>
-      i.customId === "rdyQueue" &&
-      newArray.some((e) => e.id === i.user.toString() && !e.ready);
+    const filter = i =>
+      i.customId === 'rdyQueue' &&
+      newArray.some(e => e.id === i.user.toString() && !e.ready);
     const collector = await message.channel.createMessageComponentCollector({
       filter,
       time: READYTIME * 1000,
       max: queue.data.length,
     });
-    collector.on("collect", async (i) => {
-      newArray.forEach((e) => {
+    collector.on('collect', async i => {
+      newArray.forEach(e => {
         if (e.id === i.user.toString()) {
           e.ready = true;
         }
       });
       const premature = checkEarlyComplete(newArray, vacancies);
-      console.log("Här är premature");
+      console.log('Här är premature');
       console.log(premature);
 
       await message.edit(updateMessage(newArray, time, premature));
@@ -74,55 +74,55 @@ module.exports = {
       await i.deleteReply();
     });
 
-    collector.on("end", async (collected) => {
+    collector.on('end', async collected => {
       try {
         const acceptedApplicants = claimToTheThrone(newArray, vacancies);
         const readies = readySort(newArray, true).filter(
-          (e) => !acceptedApplicants.includes(e)
+          e => !acceptedApplicants.includes(e)
         );
         const unreadies = readySort(newArray, false);
-        console.log("Accepted Applicants (these are removed from queue)");
+        console.log('Accepted Applicants (these are removed from queue)');
         console.log(acceptedApplicants);
-        console.log("Readies (these remain in queue)");
+        console.log('Readies (these remain in queue)');
         console.log(readies);
-        console.log("Unreadies (these are removed from queue)");
+        console.log('Unreadies (these are removed from queue)');
         console.log(unreadies);
         const messageArray = [];
         if (!acceptedApplicants.length) {
-          messageArray.push("But no one came....");
+          messageArray.push('But no one came....');
         } else {
           messageArray.push(
-            `${acceptedApplicants.join(" & ")} you're **CONFIRMED IN**.`
+            `${acceptedApplicants.join(' & ')} you're **CONFIRMED IN**.`
           );
         }
         if (readies.length) {
           messageArray.push(
             `${readies.join(
-              " & "
+              ' & '
             )} You will remain in the queue, better luck next time :)`
           );
         }
         if (unreadies.length) {
           messageArray.push(
             `${unreadies.join(
-              " & "
+              ' & '
             )} you failed to ready up and have been removed from the queue.`
           );
         }
 
-        messageArray.push("**🔥🔥THE BEACONS ARE LIT🔥🔥**");
+        messageArray.push('**🔥🔥THE BEACONS ARE LIT🔥🔥**');
         message.edit({
-          content: `${messageArray.join("\n \n")}`,
+          content: `${messageArray.join('\n \n')}`,
           components: [],
         });
         for (picked of acceptedApplicants) {
-          await helpMeLittleHelper({ id: picked }, "delete");
+          await helpMeLittleHelper({ id: picked }, 'delete');
         }
         for (let noShow of unreadies) {
-          await helpMeLittleHelper({ id: noShow }, "delete");
+          await helpMeLittleHelper({ id: noShow }, 'delete');
         }
       } catch (error) {
-        message.edit("There was an error baby  " + error);
+        message.edit('There was an error baby  ' + error);
         console.log(error);
       }
     });
@@ -130,38 +130,39 @@ module.exports = {
 };
 
 const updateMessage = (newArray, time, premature) => {
-  const message = [];
-  const readies = readySort(newArray, true).filter(
-    (e) => !premature.includes(e)
-  );
+  const message = [
+    `**🔥🔥THE BEACONS ARE LIT🔥🔥**\n**YAPOS CALLS FOR AID** \n Time <t:${time}:R>`,
+  ];
+  const readies = readySort(newArray, true).filter(e => !premature.includes(e));
   const unreadies = readySort(newArray, false);
-  content(premature, message, "premature", time);
-  content(readies, message, "readies", time);
-  content(unreadies, message, "unreadies", time);
-  return message.join("\n \n");
+  content(premature, message, 'premature', time);
+  content(readies, message, 'readies', time);
+  content(unreadies, message, 'unreadies', time);
+  console.log("Here's message as of right before joining", message);
+  return message.join('\n \n');
 };
 
 const content = (array, message, type, time) => {
   switch (type) {
-    case "premature":
+    case 'premature':
       if (array.length) {
         message.push(
           `${array.join(
-            " & "
+            ' & '
           )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`
         );
       }
       break;
-    case "readies":
+    case 'readies':
       if (array.length) {
-        message.push(`${array.join(" & ")} you have been confirmed ready.`);
+        message.push(`${array.join(' & ')} you have been confirmed ready.`);
       }
       break;
-    case "unreadies":
+    case 'unreadies':
       if (array.length) {
         message.push(
           `${array.join(
-            " & "
+            ' & '
           )} ready up <t:${time}:R>, or you will be removed from the /queue due to inactivity.`
         );
       }
@@ -174,7 +175,7 @@ const claimToTheThrone = (newArray, vacancies) => {
 };
 
 const readySort = (array, ready) => {
-  return array.filter((e) => e.ready === ready).map((e) => e.id);
+  return array.filter(e => e.ready === ready).map(e => e.id);
 };
 
 const checkEarlyComplete = (newArray, vacancies) => {
