@@ -3,8 +3,8 @@ const {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
-} = require("discord.js");
-const badaBing = require("../badaBing.js");
+} = require('discord.js');
+const badaBing = require('../badaBing.js');
 const {
   stringPrettifier,
   rowBoat,
@@ -21,19 +21,19 @@ const {
   pingMessage,
   playerIdentity,
   modalComponent,
-} = require("../utils");
-const ljudGöraren = require("../jukeBox.js");
+} = require('../utils');
+const ljudGöraren = require('../jukeBox.js');
 
 const standardTime = 60;
-const TRASH_CHANNEL = "539847809004994560"; //shit thread
+const TRASH_CHANNEL = '539847809004994560'; //shit thread
 //const TRASH_CHANNEL = "1057444797301923860"; yapos thread
 const ONEHOUR = 60 * 60;
 const FIVEMINUTES = 5 * 60;
 const READYTIME = 2 * 60;
-const buttonOptions = { in: "in", out: "out", dummy: "dummy", condi: "condi" };
-const readyOptions = { rdy: "rdy", stop: "stop", sudo: "sudo", ping: "ping" };
+const buttonOptions = { in: 'in', out: 'out', dummy: 'dummy', condi: 'condi' };
+const readyOptions = { rdy: 'rdy', stop: 'stop', sudo: 'sudo', ping: 'ping' };
 
-const debug = ["<@&412260353699872768>", "test yapos"];
+const debug = ['<@&412260353699872768>', 'test yapos'];
 const yapos = debug[0];
 
 const readyColours = {
@@ -50,8 +50,8 @@ function arrayMaker(interaction) {
   confirmedPlayers.push({ player: interaction.user });
   //It's a 2 because I arbitrarily start at p2 because p2 would be the 2nd person in the Dota party
   for (let i = 2; i < 7; i++) {
-    if (interaction.options.getUser("p" + i)) {
-      const player = interaction.options.getUser("p" + i);
+    if (interaction.options.getUser('p' + i)) {
+      const player = interaction.options.getUser('p' + i);
       if (confirmedPlayers.includes(player)) {
         return;
       }
@@ -82,13 +82,13 @@ async function setUp(interaction, confirmedPlayers) {
     return;
   }
 
-  const filter = (i) =>
+  const filter = i =>
     i.customId in buttonOptions && i.message.id === dotaMessage.id;
   const collector = dotaMessage.channel.createMessageComponentCollector({
     filter,
     time: ONEHOUR * 1000,
   });
-  collector.on("collect", async (i) => {
+  collector.on('collect', async i => {
     console.log(`${i.user.username} clicked ${i.customId}`);
     switch (i.customId) {
       case buttonOptions.in:
@@ -110,8 +110,8 @@ async function setUp(interaction, confirmedPlayers) {
 
       case buttonOptions.dummy:
         const dummyArray = interaction.guild.members.cache.filter(
-          (dummy) =>
-            dummy.user.bot && !confirmedPlayers.find((d) => d.player == dummy)
+          dummy =>
+            dummy.user.bot && !confirmedPlayers.find(d => d.player == dummy)
         );
         //each element in the array from .filter() is itself an array, wherein the first
         //element is just the userID and the second is the member object
@@ -137,10 +137,10 @@ async function setUp(interaction, confirmedPlayers) {
     }
   });
 
-  collector.on("end", async (collected) => {
+  collector.on('end', async collected => {
     if (confirmedPlayers.length < 5) {
       await dotaMessage.edit({
-        content: "Looks like you ran out of time, darlings!",
+        content: 'Looks like you ran out of time, darlings!',
         components: [],
       });
     } else {
@@ -150,12 +150,22 @@ async function setUp(interaction, confirmedPlayers) {
         dotaMessage,
         confirmedPlayers
       );
-      await readyChecker(confirmedPlayers, party.message, party.thread);
+      await readyChecker(
+        confirmedPlayers,
+        party.message,
+        party.thread,
+        dotaMessage
+      );
     }
   });
 }
 
-async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
+async function readyChecker(
+  confirmedPlayers,
+  partyMessage,
+  partyThread,
+  dotaMessage
+) {
   const readyArray = [];
   const time = getTimestamp(1000);
   const miliTime = getTimestamp(1);
@@ -164,26 +174,26 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   }
 
   const embed = readyEmbed(readyArray);
-  await partyMessage.edit({
+  await dotaMessage.edit({
     content: `Ready check closes <t:${time + READYTIME}:R>`,
     embeds: [embed],
     components: rdyButtons(),
   });
 
-  const filter = (i) =>
-    i.channel.id === partyMessage.channel.id && i.customId in readyOptions;
+  const filter = i =>
+    i.channel.id === dotaMessage.channel.id && i.customId in readyOptions;
 
-  const collector = partyMessage.channel.createMessageComponentCollector({
+  const collector = dotaMessage.channel.createMessageComponentCollector({
     filter,
     time: READYTIME * 1000,
   });
 
-  collector.on("collect", async (i) => {
+  collector.on('collect', async i => {
     const pickTime = getTimestamp(1);
-    console.log(i.user.username + " clicked " + i.customId);
+    console.log(i.user.username + ' clicked ' + i.customId);
     switch (i.customId) {
       case readyOptions.rdy:
-        const player = readyArray.find((e) => {
+        const player = readyArray.find(e => {
           return e.gamer.id === i.member.user.id && e.ready === false;
         });
         if (player) {
@@ -191,13 +201,13 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           player.pickTime = pickTime - miliTime;
         }
         if (everyoneReady(readyArray)) {
-          console.log("Now stopping");
+          console.log('Now stopping');
           collector.stop("That's enough");
         }
         break;
 
       case readyOptions.stop:
-        collector.stop("Someone wants out!");
+        collector.stop('Someone wants out!');
         break;
 
       case readyOptions.sudo:
@@ -218,23 +228,23 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
     }
   });
 
-  collector.on("end", async (collected) => {
+  collector.on('end', async collected => {
     console.log(
       `Now stopping and removing components, the final interaction was: ${
         collected.last() ? collected.last().customId : `Nothing!`
       }`
     );
-    await partyMessage.edit({
+    await dotaMessage.edit({
       comopnents: [],
       embeds: [readyEmbed(readyArray)],
     });
     console.log(`Everyone ready ser ut såhär: ${everyoneReady(readyArray)}`);
     if (!everyoneReady(readyArray)) {
       const time = getTimestamp(1000);
-      const redoButton = rowBoat("Re-Check", "redo");
+      const redoButton = rowBoat('Re-Check', 'redo');
       switch (collected.last()?.customId) {
         case readyOptions.stop:
-          await partyMessage.edit({
+          await dotaMessage.edit({
             content: `${collected
               .last()
               .member.toString()} stopped the ready check. Option to Re-Check closes <t:${
@@ -242,23 +252,23 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
             }:R>`,
             components: [redoButton],
           });
-          await redoCollector(partyMessage, confirmedPlayers, partyThread);
+          await redoCollector(dotaMessage, confirmedPlayers, partyThread);
           return;
 
         default:
-          await partyMessage.edit({
+          await dotaMessage.edit({
             content: `Ready check failed after ${READYTIME.toString()} seconds. Option to Re-Check closes <t:${
               time + FIVEMINUTES
             }:R>`,
             components: [redoButton],
           });
-          await redoCollector(partyMessage, confirmedPlayers, partyThread);
+          await redoCollector(dotaMessage, confirmedPlayers, partyThread);
           return;
       }
     } else {
-      const stackButton = rowBoat("Stack it!", "stack");
-      console.log("Det här är efter stackButton");
-      let finalMessage = "";
+      const stackButton = rowBoat('Stack it!', 'stack');
+      console.log('Det här är efter stackButton');
+      let finalMessage = '';
       switch (collected.last().customId) {
         case readyOptions.sudo:
           const readyLast = collected.last().member.toString();
@@ -270,35 +280,35 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
           finalMessage = "Everyone's ready!";
           break;
       }
-      await partyMessage.edit({
+      await dotaMessage.edit({
         content: finalMessage,
         components: [stackButton],
       });
-      await stackIt(partyMessage, confirmedPlayers, partyThread);
+      await stackIt(dotaMessage, confirmedPlayers, partyThread);
     }
   });
 }
 
 async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
-  const filter = (i) =>
-    i.channel.id === partyMessage.channel.id && i.customId === "redo";
+  const filter = i =>
+    i.channel.id === partyMessage.channel.id && i.customId === 'redo';
   const collector = partyMessage.channel.createMessageComponentCollector({
     filter,
     time: FIVEMINUTES * 1000,
     max: 1,
   });
-  collector.on("collect", async (i) => {
-    await handleIt(i, "Again!");
+  collector.on('collect', async i => {
+    await handleIt(i, 'Again!');
   });
 
-  collector.on("end", async (collected) => {
+  collector.on('end', async collected => {
     switch (collected.last()?.customId) {
-      case "redo":
+      case 'redo':
         await readyChecker(confirmedPlayers, partyMessage, partyThread);
         break;
       default:
         await partyMessage.edit({
-          content: "Ready check failed.",
+          content: 'Ready check failed.',
           components: [],
         });
         break;
@@ -312,13 +322,13 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   const partyThread = await channel.threads.create({
     name: interaction.user.username + "'s Party Thread",
     autoArchiveDuration: 60,
-    reason: "Time for stack!",
+    reason: 'Time for stack!',
   });
 
   message.edit({
     content:
-      "Looks like we got a stack! Ready check is running in the Party Thread!",
-    components: [linkButton(partyThread, "Party Thread")],
+      'Looks like we got a stack! Ready check is running in the Party Thread!',
+    components: [linkButton(partyThread, 'Party Thread')],
   });
   const partyMessage = await partyThread.send({
     content: confirmedPlayers.join(),
@@ -329,19 +339,19 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
 }
 
 async function stackIt(message, confirmedPlayers) {
-  const filter = (i) => i.message.id === message.id && i.customId === "stack";
+  const filter = i => i.message.id === message.id && i.customId === 'stack';
   const collector = message.channel.createMessageComponentCollector({
     filter,
     time: FIVEMINUTES * 1000,
     max: 1,
   });
-  collector.on("collect", async (i) => {});
+  collector.on('collect', async i => {});
 
-  collector.on("end", async (collected) => {
+  collector.on('end', async collected => {
     await message.edit({ components: [] });
     if (collected.last()) {
       const interaction = collected.last();
-      const choices = confirmedPlayers.map((cP) => cP.player.id); //badaBing takes an array of player IDs, not player objects
+      const choices = confirmedPlayers.map(cP => cP.player.id); //badaBing takes an array of player IDs, not player objects
       const shuffledChoices = shuffle(choices);
 
       const channel = await interaction.member.guild.channels.cache.get(
@@ -350,7 +360,7 @@ async function stackIt(message, confirmedPlayers) {
       const stackThread = await channel.threads.create({
         name: interaction.user.username + "'s Dota Party",
         autoArchiveDuration: 60,
-        reason: "Time for stack!",
+        reason: 'Time for stack!',
       });
       await badaBing.badaBing(
         interaction,
@@ -358,9 +368,9 @@ async function stackIt(message, confirmedPlayers) {
         standardTime,
         stackThread
       );
-      const button = linkButton(stackThread, "Stack Thread");
+      const button = linkButton(stackThread, 'Stack Thread');
       await message.edit({
-        content: "Stack is running in the Stack Thread!",
+        content: 'Stack is running in the Stack Thread!',
         components: [button],
       });
     } else {
@@ -374,12 +384,12 @@ async function stackIt(message, confirmedPlayers) {
 async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
   //this is  a little busy
   const modal = new ModalBuilder()
-    .setCustomId("textCollector")
-    .setTitle("Ok, buddy");
+    .setCustomId('textCollector')
+    .setTitle('Ok, buddy');
   const avatarInput = new TextInputBuilder()
-    .setCustomId("avatar")
-    .setLabel("Which Dummy is the Dummy representing?")
-    .setPlaceholder("The Dummy this Dummy is representing is...")
+    .setCustomId('avatar')
+    .setLabel('Which Dummy is the Dummy representing?')
+    .setPlaceholder('The Dummy this Dummy is representing is...')
     .setMaxLength(140)
     .setStyle(TextInputStyle.Short);
   const modalInput = modalComponent(avatarInput);
@@ -388,9 +398,9 @@ async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
   const submitted = await interaction
     .awaitModalSubmit({
       time: READYTIME * 1000,
-      filter: (i) => i.user.id === interaction.user.id,
+      filter: i => i.user.id === interaction.user.id,
     })
-    .catch((error) => {
+    .catch(error => {
       console.error(error);
       return null;
     });
@@ -401,7 +411,7 @@ async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
     return;
   }
   const representing = ` *avatar of **${submitted.fields.getTextInputValue(
-    "avatar"
+    'avatar'
   )}***`;
   confirmedPlayers.push({
     player: dummy,
@@ -416,10 +426,10 @@ async function dummySystem(interaction, condiPlayers, confirmedPlayers, dummy) {
 async function modalThing(interaction, condiPlayers, confirmedPlayers) {
   //this is  a little busy
   const modal = new ModalBuilder()
-    .setCustomId("textCollector")
-    .setTitle("Ok, buddy");
+    .setCustomId('textCollector')
+    .setTitle('Ok, buddy');
   const reasonInput = new TextInputBuilder()
-    .setCustomId("reason")
+    .setCustomId('reason')
     .setLabel("What's the holdup? Include ETA")
     .setPlaceholder("Describe what's stopping you from being IN RIGHT NOW")
     .setMaxLength(140)
@@ -430,9 +440,9 @@ async function modalThing(interaction, condiPlayers, confirmedPlayers) {
   const submitted = await interaction
     .awaitModalSubmit({
       time: READYTIME * 1000,
-      filter: (i) => i.user.id === interaction.user.id,
+      filter: i => i.user.id === interaction.user.id,
     })
-    .catch((error) => {
+    .catch(error => {
       console.error(error);
       return null;
     });
@@ -444,7 +454,7 @@ async function modalThing(interaction, condiPlayers, confirmedPlayers) {
   }
   const time = getTimestamp(1000);
   const condition = `${submitted.fields.getTextInputValue(
-    "reason"
+    'reason'
   )} *(written <t:${time}:R>)*`;
   condiPlayers.push({ player: interaction.user, condition: condition });
 
@@ -459,12 +469,12 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
   const conditionalFields = [];
   const embedFields = [];
   for (let i = 0; i < maxLength; i++) {
-    let field = "";
+    let field = '';
 
     if (confirmedPlayers[i]) {
       playerFields.push(
         confirmedPlayers[i].player.toString() +
-          (confirmedPlayers[i].representing || "")
+          (confirmedPlayers[i].representing || '')
       );
     } else {
       playerFields.push(`${`\`\`Open slot\`\``}`);
@@ -472,16 +482,16 @@ function prettyEmbed(confirmedPlayers, condiPlayers) {
   }
   embedFields.push({
     name: "*Who's up for Dota?*",
-    value: playerFields.join("\n"),
+    value: playerFields.join('\n'),
   });
 
   if (condiPlayers.length > 0) {
-    condiPlayers.map((e) => {
+    condiPlayers.map(e => {
       conditionalFields.push(`${e.player} ${e.condition}`);
     });
     embedFields.push({
-      name: "*Conditionally In*",
-      value: conditionalFields.join("\n"),
+      name: '*Conditionally In*',
+      value: conditionalFields.join('\n'),
     });
   }
 
@@ -510,7 +520,7 @@ function readyEmbed(readyArray) {
   const embed = {
     color: readyColours[rAmount],
     fields: [
-      { name: "**R E A D Y  C H E C K**", value: playerFields.join("\n") },
+      { name: '**R E A D Y  C H E C K**', value: playerFields.join('\n') },
     ],
   };
   return embed;
@@ -518,26 +528,26 @@ function readyEmbed(readyArray) {
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("yapos")
-    .setDescription("Time to gauge dota interest")
-    .addUserOption((option) =>
-      option.setName("p2").setDescription("Anyone else?").setRequired(false)
+    .setName('yapos')
+    .setDescription('Time to gauge dota interest')
+    .addUserOption(option =>
+      option.setName('p2').setDescription('Anyone else?').setRequired(false)
     )
-    .addUserOption((option) =>
-      option.setName("p3").setDescription("Anyone else?").setRequired(false)
+    .addUserOption(option =>
+      option.setName('p3').setDescription('Anyone else?').setRequired(false)
     )
-    .addUserOption((option) =>
-      option.setName("p4").setDescription("Anyone else?").setRequired(false)
+    .addUserOption(option =>
+      option.setName('p4').setDescription('Anyone else?').setRequired(false)
     )
-    .addUserOption((option) =>
-      option.setName("p5").setDescription("Anyone else?").setRequired(false)
+    .addUserOption(option =>
+      option.setName('p5').setDescription('Anyone else?').setRequired(false)
     ),
 
   async execute(interaction) {
     const confirmedPlayers = arrayMaker(interaction);
     if (!confirmedPlayers) {
       interaction.reply(
-        "Please provide unique players!\nLove, **ShortStack!**"
+        'Please provide unique players!\nLove, **ShortStack!**'
       );
       return;
     }
