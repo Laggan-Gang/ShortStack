@@ -21,7 +21,8 @@ module.exports = {
           { name: '1 Slot open', value: 1 },
           { name: '2 Slots open', value: 2 },
           { name: '3 Slots open', value: 3 },
-          { name: '4 Slots open', value: 4 }
+          { name: '4 Slots open', value: 4 },
+          { name: '5 Slots open', value: 5 }
         )
     ),
   async execute(interaction) {
