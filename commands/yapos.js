@@ -318,7 +318,7 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
   message.edit({
     content:
       'Looks like we got a stack! Ready check is running in the Party Thread!',
-    components: [linkButton(party.thread, 'Party Thread')],
+    components: [linkButton(party, 'Party Thread')],
   });
   const partyMessage = await party.thread.send({
     content: confirmedPlayers.join(),
