@@ -145,21 +145,21 @@ module.exports = {
           .setLabel('FORCE READY')
           .setStyle(ButtonStyle.Primary)
       );
-    const row2 = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId('ping')
-        .setLabel('Ping')
-        .setStyle(ButtonStyle.Secondary)
-        .addComponents(
-          new ButtonBuilder()
-            .setURL(
-              `https://discord.com/channels/${thread.guild.id}/${thread.id}`
-            )
-            .setLabel(label)
-            .setStyle(ButtonStyle.Link)
-        )
-    );
-
+    const row2 = new ActionRowBuilder()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId('ping')
+          .setLabel('Ping')
+          .setStyle(ButtonStyle.Secondary)
+      )
+      .addComponents(
+        new ButtonBuilder()
+          .setURL(
+            `https://discord.com/channels/${thread.guild.id}/${thread.id}`
+          )
+          .setLabel(label)
+          .setStyle(ButtonStyle.Link)
+      );
     return [buttonRow, row2];
   },
 
