@@ -78,7 +78,7 @@ async function setUp(interaction, confirmedPlayers) {
       dotaMessage,
       confirmedPlayers
     );
-    await readyChecker(confirmedPlayers, party.message, party.thread);
+    await readyChecker(confirmedPlayers, dotaMessage, party.thread);
     return;
   }
 
