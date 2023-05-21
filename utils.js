@@ -125,7 +125,7 @@ module.exports = {
     return [row1, row2];
   },
 
-  rdyButtons(thread, label) {
+  rdyButtons() {
     const buttonRow = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
@@ -138,12 +138,6 @@ module.exports = {
           .setCustomId('stop')
           .setLabel('Cancel')
           .setStyle(ButtonStyle.Danger)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('sudo')
-          .setLabel('FORCE READY')
-          .setStyle(ButtonStyle.Primary)
       );
     const row2 = new ActionRowBuilder()
       .addComponents(
@@ -154,11 +148,9 @@ module.exports = {
       )
       .addComponents(
         new ButtonBuilder()
-          .setURL(
-            `https://discord.com/channels/${thread.guild.id}/${thread.id}`
-          )
-          .setLabel(label)
-          .setStyle(ButtonStyle.Link)
+          .setCustomId('sudo')
+          .setLabel('FORCE READY')
+          .setStyle(ButtonStyle.Primary)
       );
     return [buttonRow, row2];
   },

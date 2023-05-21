@@ -66,13 +66,13 @@ async function setUp(interaction, confirmedPlayers) {
   const condiPlayers = [];
   const embed = prettyEmbed(confirmedPlayers, condiPlayers);
   const time = getTimestamp(1000);
-  const partyThread = await pThreadCreator(interaction);
-  const inOutButtons = inOutBut(partyThread, 'Party Thread');
+  const inOutButtons = inOutBut();
   const dotaMessage = await interaction.channel.send({
     content: `${yapos} call, closes <t:${time + ONEHOUR}:R>`,
     embeds: [embed],
     components: inOutButtons,
   });
+  const partyThread = await pThreadCreator(interaction, dotaMessage);
   if (confirmedPlayers.length > 4) {
     const memberArray = userToMember(confirmedPlayers, interaction);
     ljudGöraren.ljudGöraren(memberArray);
@@ -300,18 +300,18 @@ async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
     }
   });
 }
-async function pThreadCreator(interaction) {
-  console.log('Here is interaction', interaction);
-  console.log('Here is interaction.message', interaction.message);
-  const channel = await interaction.member.guild.channels.cache.get(
-    TRASH_CHANNEL
-  );
-  const partyThread = await channel.threads.create({
+async function pThreadCreator(interaction, dotaMessage) {
+  //const channel = await interaction.member.guild.channels.cache.get(
+  //TRASH_CHANNEL
+  //);
+  //const partyThread = await channel.threads.create({
+
+  //});
+  const partyThread = await dotaMessage.startThread({
     name: interaction.user.username + "'s Party Thread",
     autoArchiveDuration: 60,
     reason: 'Time for stack!',
   });
-
   return partyThread;
 }
 
