@@ -105,15 +105,15 @@ module.exports = {
     const row2 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId('condi')
-          .setLabel("I'm In, but (...)")
-          .setStyle(ButtonStyle.Secondary)
-      )
-      .addComponents(
-        new ButtonBuilder()
           .setCustomId('dummy')
           .setLabel('Dummy')
           .setStyle(ButtonStyle.Primary)
+      )
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId('condi')
+          .setLabel("I'm In, but (...)")
+          .setStyle(ButtonStyle.Secondary)
       );
     return [row1, row2];
   },
@@ -135,15 +135,15 @@ module.exports = {
     const row2 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId('ping')
-          .setLabel('Ping')
-          .setStyle(ButtonStyle.Secondary)
-      )
-      .addComponents(
-        new ButtonBuilder()
           .setCustomId('sudo')
           .setLabel('FORCE READY')
           .setStyle(ButtonStyle.Primary)
+      )
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId('ping')
+          .setLabel('Ping')
+          .setStyle(ButtonStyle.Secondary)
       );
     return [buttonRow, row2];
   },
@@ -211,6 +211,7 @@ module.exports = {
         shitList.push(gentleReminder);
       }
     }
+    shitList.map(async message => await message.delete());
   },
 
   playerIdentity,

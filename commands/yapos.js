@@ -161,9 +161,8 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   await partyMessage.edit({
     content: `Ready check closes <t:${time + READYTIME}:R>`,
     embeds: [embed],
-    components: rdyButtons(partyThread, 'PartyThread'),
+    components: rdyButtons(),
   });
-  // THIS IS THE STRANGTEST PART
 
   const filter = i =>
     i.channel.id === partyMessage.channel.id && i.customId in readyOptions;
@@ -301,12 +300,6 @@ async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
   });
 }
 async function pThreadCreator(interaction, dotaMessage) {
-  //const channel = await interaction.member.guild.channels.cache.get(
-  //TRASH_CHANNEL
-  //);
-  //const partyThread = await channel.threads.create({
-
-  //});
   const partyThread = await dotaMessage.startThread({
     name: interaction.user.username + "'s Party Thread",
     autoArchiveDuration: 60,
