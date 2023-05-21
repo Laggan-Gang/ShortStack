@@ -226,9 +226,6 @@ module.exports = {
         shitList.push(gentleReminder);
       }
     }
-    for (let message of shitList) {
-      await message.delete();
-    }
   },
 
   playerIdentity,

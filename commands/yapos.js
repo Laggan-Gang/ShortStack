@@ -201,9 +201,9 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
         break;
 
       case readyOptions.ping:
-        i.deferReply();
-        await pingMessage(readyArray, partyThread);
-        i.deleteReply();
+        await i.deferReply();
+        pingMessage(readyArray, partyThread);
+        await i.deleteReply();
         break;
     }
     if (!i.deferred) {
@@ -301,6 +301,8 @@ async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
   });
 }
 async function pThreadCreator(interaction) {
+  console.log('Here is interaction', interaction);
+  console.log('Here is interaction.message', interaction.message);
   const channel = await interaction.member.guild.channels.cache.get(
     TRASH_CHANNEL
   );
