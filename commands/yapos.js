@@ -166,7 +166,7 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
   await partyMessage.edit({
     content: `Ready check closes <t:${time + READYTIME}:R>`,
     embeds: [embed],
-    components: rdyButtons(),
+    components: partyMessage.components.push(rdyButtons()),
   });
 
   const filter = i =>
@@ -320,9 +320,12 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
     components: [linkButton(party, 'Party Thread')],
   });
   console.log('This is confirmed players', confirmedPlayers);
-  console.log('They look like this with .join()', confirmedPlayers.join());
+  console.log(
+    'They look like this with .join()',
+    confirmedPlayers.map(p => p.player).join()
+  );
   const partyMessage = await party.send({
-    content: confirmedPlayers.join(),
+    content: confirmedPlayers.map(p => p.player).join(),
   });
   const memberArray = userToMember(confirmedPlayers, interaction);
   ljudGöraren.ljudGöraren(memberArray);
