@@ -87,7 +87,7 @@ module.exports = {
     return buttonRow;
   },
 
-  inOutBut(thread, label) {
+  inOutBut() {
     const row1 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
@@ -100,13 +100,8 @@ module.exports = {
           .setCustomId('out')
           .setLabel("I'M OUT")
           .setStyle(ButtonStyle.Danger)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('dummy')
-          .setLabel('Dummy')
-          .setStyle(ButtonStyle.Primary)
       );
+
     const row2 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
@@ -116,11 +111,9 @@ module.exports = {
       )
       .addComponents(
         new ButtonBuilder()
-          .setURL(
-            `https://discord.com/channels/${thread.guild.id}/${thread.id}`
-          )
-          .setLabel(label)
-          .setStyle(ButtonStyle.Link)
+          .setCustomId('dummy')
+          .setLabel('Dummy')
+          .setStyle(ButtonStyle.Primary)
       );
     return [row1, row2];
   },
