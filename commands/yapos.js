@@ -320,12 +320,12 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
       'Looks like we got a stack! Ready check is running in the Party Thread!',
     components: [linkButton(party, 'Party Thread')],
   });
-  const partyMessage = await party.thread.send({
+  const partyMessage = await party.send({
     content: confirmedPlayers.join(),
   });
   const memberArray = userToMember(confirmedPlayers, interaction);
   ljudGöraren.ljudGöraren(memberArray);
-  return { thread: party.thread, message: partyMessage };
+  return { thread: party, message: partyMessage };
 }
 
 async function stackIt(message, confirmedPlayers) {
