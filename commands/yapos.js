@@ -166,8 +166,9 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
   await partyMessage.edit({
     content: `Ready check closes <t:${time + READYTIME}:R>`,
     embeds: [embed],
-    components: partyMessage.components.push(rdyButtons()),
+    components: rdyButtons().push(linkButton(party.thread, confirmedPlayers)),
   });
+  // THIS IS THE STRANGTEST PART
 
   const filter = i =>
     i.channel.id === partyMessage.channel.id && i.customId in readyOptions;
