@@ -1,23 +1,23 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-const axios = require("axios");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const axios = require('axios');
 
 const REMINDERS = [
-  " TAKING OUR SWEET TIME, HUH?",
-  " **JALLA, BITCH!**",
-  " CHOP CHOP!",
-  " NU SKET DU ALLT I DET BLÅ SKÅPET",
-  " Hur lång tid kan det ta...",
+  ' TAKING OUR SWEET TIME, HUH?',
+  ' **JALLA, BITCH!**',
+  ' CHOP CHOP!',
+  ' NU SKET DU ALLT I DET BLÅ SKÅPET',
+  ' Hur lång tid kan det ta...',
   " WHAT'S TAKING YOU???",
   " THIS GAME AIN'T GONNA THROW ITSELF",
-  " A LITTLE LESS CONVERSATION, A LITTLE MORE ACTION PLEASE",
-  " LESS TALK, MORE COCK",
-  " LESS STALL, MORE /STACK",
-  " POOP FASTER!!!",
-  " ***TODAY MB???***",
+  ' A LITTLE LESS CONVERSATION, A LITTLE MORE ACTION PLEASE',
+  ' LESS TALK, MORE COCK',
+  ' LESS STALL, MORE /STACK',
+  ' POOP FASTER!!!',
+  ' ***TODAY MB???***',
 ];
 
 function playerIdentity(interaction) {
-  return (e) => [e?.id, e.player?.id].includes(interaction.user.id);
+  return e => [e?.id, e.player?.id].includes(interaction.user.id);
 }
 
 function shuffle([...array]) {
@@ -43,14 +43,14 @@ function shuffle([...array]) {
 module.exports = {
   async helpMeLittleHelper(queuer, method) {
     const request = {
-      baseURL: "http://localhost:3000/",
-      url: "queue",
+      baseURL: 'http://localhost:3000/',
+      url: 'queue',
       method: method,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       data: queuer,
-      responseType: "json",
+      responseType: 'json',
     };
     try {
       const res = await axios(request);
@@ -63,7 +63,7 @@ module.exports = {
   stringPrettifier(string) {
     const optimalStringLength = 39;
     const neededFilling = optimalStringLength - string.length;
-    const stringFilling = "\u200b".repeat(neededFilling + 1);
+    const stringFilling = '\u200b'.repeat(neededFilling + 1);
     return `${string}${stringFilling}`;
   },
 
@@ -91,60 +91,67 @@ module.exports = {
     const row1 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("in")
+          .setCustomId('in')
           .setLabel("I'M IN")
           .setStyle(ButtonStyle.Success)
       )
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("out")
+          .setCustomId('out')
           .setLabel("I'M OUT")
           .setStyle(ButtonStyle.Danger)
       );
     const row2 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("dummy")
-          .setLabel("Dummy")
+          .setCustomId('dummy')
+          .setLabel('Dummy')
           .setStyle(ButtonStyle.Primary)
       )
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("condi")
+          .setCustomId('condi')
           .setLabel("I'm In, but (...)")
           .setStyle(ButtonStyle.Secondary)
       );
     return [row1, row2];
   },
 
-  rdyButtons() {
+  rdyButtons(thread, label) {
     const buttonRow = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("rdy")
-          .setLabel("✅")
+          .setCustomId('rdy')
+          .setLabel('✅')
           .setStyle(ButtonStyle.Success)
       )
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("stop")
-          .setLabel("Cancel")
+          .setCustomId('stop')
+          .setLabel('Cancel')
           .setStyle(ButtonStyle.Danger)
       );
     const row2 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("sudo")
-          .setLabel("FORCE READY")
+          .setCustomId('sudo')
+          .setLabel('FORCE READY')
           .setStyle(ButtonStyle.Primary)
       )
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("ping")
-          .setLabel("Ping")
+          .setCustomId('ping')
+          .setLabel('Ping')
           .setStyle(ButtonStyle.Secondary)
       );
-    return [buttonRow, row2];
+    const row3 = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setURL(`https://discord.com/channels/${thread.guild.id}/${thread.id}`)
+        .setLabel(label)
+        .setStyle(ButtonStyle.Link)
+    );
+
+    return [buttonRow, row2, row3];
   },
 
   eRemover(array, interaction) {
@@ -162,7 +169,7 @@ module.exports = {
     const memberArray = [];
     for (let user of array) {
       const member = interaction.guild.members.cache.find(
-        (member) => member.id === user.player.id
+        member => member.id === user.player.id
       );
       memberArray.push(member);
     }
@@ -179,7 +186,7 @@ module.exports = {
 
   async handleIt(i, flavourText) {
     try {
-      console.log("Handling it!");
+      console.log('Handling it!');
       await i.reply(flavourText);
       await i.deleteReply();
     } catch (error) {
@@ -197,7 +204,7 @@ module.exports = {
   },
 
   everyoneReady(readyArray) {
-    return readyArray.filter((p) => p.ready).length > 4;
+    return readyArray.filter(p => p.ready).length > 4;
   },
 
   async pingMessage(readyArray, partyThread) {

@@ -166,7 +166,7 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
   await partyMessage.edit({
     content: `Ready check closes <t:${time + READYTIME}:R>`,
     embeds: [embed],
-    components: rdyButtons().push(linkButton(party.thread, confirmedPlayers)),
+    components: rdyButtons(party.thread, 'PartyThread'),
   });
   // THIS IS THE STRANGTEST PART
 
