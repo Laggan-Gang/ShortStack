@@ -116,7 +116,6 @@ async function setUp(interaction, confirmedPlayers) {
         //each element in the array from .filter() is itself an array, wherein the first
         //element is just the userID and the second is the member object
         const dummy = shuffle(dummyArray)[0][1];
-        console.log(dummy);
         if (dummy) {
           await dummySystem(i, condiPlayers, confirmedPlayers, dummy);
           if (confirmedPlayers.length > 4) {
@@ -320,6 +319,8 @@ async function pThreadCreator(interaction, message, confirmedPlayers) {
       'Looks like we got a stack! Ready check is running in the Party Thread!',
     components: [linkButton(party, 'Party Thread')],
   });
+  console.log('This is confirmed players', confirmedPlayers);
+  console.log('They look like this with .join()', confirmedPlayers.join());
   const partyMessage = await party.send({
     content: confirmedPlayers.join(),
   });
