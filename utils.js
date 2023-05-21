@@ -87,7 +87,7 @@ module.exports = {
     return buttonRow;
   },
 
-  inOutBut() {
+  inOutBut(thread, label) {
     const row1 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
@@ -100,19 +100,27 @@ module.exports = {
           .setCustomId('out')
           .setLabel("I'M OUT")
           .setStyle(ButtonStyle.Danger)
-      );
-    const row2 = new ActionRowBuilder()
+      )
       .addComponents(
         new ButtonBuilder()
           .setCustomId('dummy')
           .setLabel('Dummy')
           .setStyle(ButtonStyle.Primary)
-      )
+      );
+    const row2 = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
           .setCustomId('condi')
           .setLabel("I'm In, but (...)")
           .setStyle(ButtonStyle.Secondary)
+      )
+      .addComponents(
+        new ButtonBuilder()
+          .setURL(
+            `https://discord.com/channels/${thread.guild.id}/${thread.id}`
+          )
+          .setLabel(label)
+          .setStyle(ButtonStyle.Link)
       );
     return [row1, row2];
   },
@@ -130,28 +138,29 @@ module.exports = {
           .setCustomId('stop')
           .setLabel('Cancel')
           .setStyle(ButtonStyle.Danger)
-      );
-    const row2 = new ActionRowBuilder()
+      )
       .addComponents(
         new ButtonBuilder()
           .setCustomId('sudo')
           .setLabel('FORCE READY')
           .setStyle(ButtonStyle.Primary)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('ping')
-          .setLabel('Ping')
-          .setStyle(ButtonStyle.Secondary)
       );
-    const row3 = new ActionRowBuilder().addComponents(
+    const row2 = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setURL(`https://discord.com/channels/${thread.guild.id}/${thread.id}`)
-        .setLabel(label)
-        .setStyle(ButtonStyle.Link)
+        .setCustomId('ping')
+        .setLabel('Ping')
+        .setStyle(ButtonStyle.Secondary)
+        .addComponents(
+          new ButtonBuilder()
+            .setURL(
+              `https://discord.com/channels/${thread.guild.id}/${thread.id}`
+            )
+            .setLabel(label)
+            .setStyle(ButtonStyle.Link)
+        )
     );
 
-    return [buttonRow, row2, row3];
+    return [buttonRow, row2];
   },
 
   eRemover(array, interaction) {

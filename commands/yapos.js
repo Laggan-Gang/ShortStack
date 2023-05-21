@@ -67,18 +67,16 @@ async function setUp(interaction, confirmedPlayers) {
   const embed = prettyEmbed(confirmedPlayers, condiPlayers);
   const inOutButtons = inOutBut();
   const time = getTimestamp(1000);
+  const partyThread = pThreadCreator(interaction);
   const dotaMessage = await interaction.channel.send({
     content: `${yapos} call, closes <t:${time + ONEHOUR}:R>`,
     embeds: [embed],
     components: inOutButtons,
   });
   if (confirmedPlayers.length > 4) {
-    const party = await pThreadCreator(
-      interaction,
-      dotaMessage,
-      confirmedPlayers
-    );
-    await readyChecker(confirmedPlayers, dotaMessage, party.thread);
+    const memberArray = userToMember(confirmedPlayers, interaction);
+    ljudGöraren.ljudGöraren(memberArray);
+    await readyChecker(confirmedPlayers, dotaMessage, partyThread);
     return;
   }
 
@@ -144,17 +142,14 @@ async function setUp(interaction, confirmedPlayers) {
       });
     } else {
       //Time for a ready check
-      const party = await pThreadCreator(
-        interaction,
-        dotaMessage,
-        confirmedPlayers
-      );
-      await readyChecker(confirmedPlayers, dotaMessage, party);
+      const memberArray = userToMember(confirmedPlayers, interaction);
+      ljudGöraren.ljudGöraren(memberArray);
+      await readyChecker(confirmedPlayers, dotaMessage, partyThread);
     }
   });
 }
 
-async function readyChecker(confirmedPlayers, partyMessage, party) {
+async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   const readyArray = [];
   const time = getTimestamp(1000);
   const miliTime = getTimestamp(1);
@@ -166,7 +161,7 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
   await partyMessage.edit({
     content: `Ready check closes <t:${time + READYTIME}:R>`,
     embeds: [embed],
-    components: rdyButtons(party.thread, 'PartyThread'),
+    components: rdyButtons(partyThread, 'PartyThread'),
   });
   // THIS IS THE STRANGTEST PART
 
@@ -207,7 +202,7 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
 
       case readyOptions.ping:
         i.deferReply();
-        await pingMessage(readyArray, party.thread);
+        await pingMessage(readyArray, partyTread);
         i.deleteReply();
         break;
     }
@@ -242,7 +237,7 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
             }:R>`,
             components: [redoButton],
           });
-          await redoCollector(partyMessage, confirmedPlayers, party.thread);
+          await redoCollector(partyMessage, confirmedPlayers, partyThread);
           return;
 
         default:
@@ -252,7 +247,7 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
             }:R>`,
             components: [redoButton],
           });
-          await redoCollector(partyMessage, confirmedPlayers, party.thread);
+          await redoCollector(partyMessage, confirmedPlayers, partyThread);
           return;
       }
     } else {
@@ -274,12 +269,12 @@ async function readyChecker(confirmedPlayers, partyMessage, party) {
         content: finalMessage,
         components: [stackButton],
       });
-      await stackIt(partyMessage, confirmedPlayers, party.thread);
+      await stackIt(partyMessage, confirmedPlayers, partyThread);
     }
   });
 }
 
-async function redoCollector(partyMessage, confirmedPlayers, party) {
+async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
   const filter = i =>
     i.channel.id === partyMessage.channel.id && i.customId === 'redo';
   const collector = partyMessage.channel.createMessageComponentCollector({
@@ -294,7 +289,7 @@ async function redoCollector(partyMessage, confirmedPlayers, party) {
   collector.on('end', async collected => {
     switch (collected.last()?.customId) {
       case 'redo':
-        await readyChecker(confirmedPlayers, partyMessage, party);
+        await readyChecker(confirmedPlayers, partyMessage, partyThread);
         break;
       default:
         await partyMessage.edit({
@@ -305,32 +300,17 @@ async function redoCollector(partyMessage, confirmedPlayers, party) {
     }
   });
 }
-async function pThreadCreator(interaction, message, confirmedPlayers) {
+async function pThreadCreator(interaction) {
   const channel = await interaction.member.guild.channels.cache.get(
     TRASH_CHANNEL
   );
-  const party = await channel.threads.create({
+  const partyThread = await channel.threads.create({
     name: interaction.user.username + "'s Party Thread",
     autoArchiveDuration: 60,
     reason: 'Time for stack!',
   });
 
-  message.edit({
-    content:
-      'Looks like we got a stack! Ready check is running in the Party Thread!',
-    components: [linkButton(party, 'Party Thread')],
-  });
-  console.log('This is confirmed players', confirmedPlayers);
-  console.log(
-    'They look like this with .join()',
-    confirmedPlayers.map(p => p.player).join()
-  );
-  const partyMessage = await party.send({
-    content: confirmedPlayers.map(p => p.player).join(),
-  });
-  const memberArray = userToMember(confirmedPlayers, interaction);
-  ljudGöraren.ljudGöraren(memberArray);
-  return { thread: party, message: partyMessage };
+  return partyThread;
 }
 
 async function stackIt(message, confirmedPlayers) {
