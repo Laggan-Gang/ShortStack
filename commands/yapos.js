@@ -65,9 +65,9 @@ async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const condiPlayers = [];
   const embed = prettyEmbed(confirmedPlayers, condiPlayers);
-  const inOutButtons = inOutBut();
   const time = getTimestamp(1000);
   const partyThread = await pThreadCreator(interaction);
+  const inOutButtons = inOutBut(partyThread, 'Party Thread');
   const dotaMessage = await interaction.channel.send({
     content: `${yapos} call, closes <t:${time + ONEHOUR}:R>`,
     embeds: [embed],
