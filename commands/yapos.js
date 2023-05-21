@@ -202,7 +202,7 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
 
       case readyOptions.ping:
         i.deferReply();
-        await pingMessage(readyArray, partyTread);
+        await pingMessage(readyArray, partyThread);
         i.deleteReply();
         break;
     }
