@@ -108,7 +108,7 @@ async function setUp(interaction, confirmedPlayers) {
         if (!confirmedPlayers.find(playerIdentity(i))) {
           eRemover(condiPlayers, i); //remove player from Condi if they're in it
           confirmedPlayers.push({ player: i.user });
-          partyThread.members.add(playerIdentity(i));
+          partyThread.members.add(i.user);
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
