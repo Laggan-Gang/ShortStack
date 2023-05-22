@@ -49,7 +49,7 @@ const readyColours = {
 const invokeQueue = async interaction => {
   const queuer = { id: interaction.user.toString() };
   const queue = await helpMeLittleHelper(queuer, 'get');
-  console.log('Here is queue', queue);
+  console.log('Here is queue', queue.data);
   queue.data.forEach(async invokee => {
     await helpMeLittleHelper({ id: invokee }, 'delete');
   });
@@ -93,7 +93,7 @@ async function setUp(interaction, confirmedPlayers) {
     const memberArray = userToMember(confirmedPlayers, interaction);
     ljudGöraren.ljudGöraren(memberArray);
     console.log('Line 90');
-    await readyChecker(confirmedPlayers, dotaMessage, partyThread);
+    readyChecker(confirmedPlayers, dotaMessage, partyThread);
     return;
   }
 
@@ -162,13 +162,14 @@ async function setUp(interaction, confirmedPlayers) {
       const memberArray = userToMember(confirmedPlayers, interaction);
       ljudGöraren.ljudGöraren(memberArray);
       console.log('Line 159');
-      await readyChecker(confirmedPlayers, dotaMessage, partyThread);
+      readyChecker(confirmedPlayers, dotaMessage, partyThread);
       return;
     }
   });
 }
 
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
+  console.log("Now we're executing readyChecker");
   const readyArray = [];
   const time = getTimestamp(1000);
   const miliTime = getTimestamp(1);
@@ -307,8 +308,8 @@ async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
   collector.on('end', async collected => {
     switch (collected.last()?.customId) {
       case 'redo':
-        await readyChecker(confirmedPlayers, partyMessage, partyThread);
-        break;
+        readyChecker(confirmedPlayers, partyMessage, partyThread);
+        return;
       default:
         await partyMessage.edit({
           content: 'Ready check failed.',
