@@ -319,7 +319,7 @@ async function redoCollector(partyMessage, confirmedPlayers, partyThread) {
 }
 async function pThreadCreator(interaction, dotaMessage) {
   const partyThread = await dotaMessage.startThread({
-    name: interaction.user.username + "'s Party Thread",
+    name: `🍹${interaction.user.username}'s Pre-Game Lounge 🍹`,
     autoArchiveDuration: 60,
     reason: 'Time for stack!',
   });
