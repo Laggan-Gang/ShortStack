@@ -82,6 +82,7 @@ async function setUp(interaction, confirmedPlayers) {
   if (queue) {
     console.log('There is someone in the queue', queue);
     initMessage.concat(`\nFor your interest ${queue.join(' & ')}`);
+    console.log(initMessage);
   } else {
     console.log('There is no one in the queue', queue);
   }
