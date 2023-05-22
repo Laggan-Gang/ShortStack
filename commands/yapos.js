@@ -50,10 +50,10 @@ const invokeQueue = async interaction => {
   const queuer = { id: interaction.user.toString() };
   const queue = await helpMeLittleHelper(queuer, 'get');
   console.log('Here is queue', queue);
-  queue.forEach(async invokee => {
+  queue.data.forEach(async invokee => {
     await helpMeLittleHelper({ id: invokee }, 'delete');
   });
-  return queue;
+  return queue.data;
 };
 
 function arrayMaker(interaction) {
