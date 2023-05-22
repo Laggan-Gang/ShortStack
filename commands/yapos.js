@@ -81,7 +81,6 @@ async function setUp(interaction, confirmedPlayers) {
   const queue = await invokeQueue(interaction);
   if (queue) {
     initMessage += `\nFor your interest ${queue.join(' & ')}`;
-    console.log(initMessage);
   }
   const dotaMessage = await interaction.channel.send({
     content: initMessage,
@@ -92,7 +91,6 @@ async function setUp(interaction, confirmedPlayers) {
   if (confirmedPlayers.length > 4) {
     const memberArray = userToMember(confirmedPlayers, interaction);
     ljudGöraren.ljudGöraren(memberArray);
-    console.log('Line 90');
     readyChecker(confirmedPlayers, dotaMessage, partyThread);
     return;
   }
@@ -110,6 +108,7 @@ async function setUp(interaction, confirmedPlayers) {
         if (!confirmedPlayers.find(playerIdentity(i))) {
           eRemover(condiPlayers, i); //remove player from Condi if they're in it
           confirmedPlayers.push({ player: i.user });
+          partyThread.members.add(playerIdentity(i));
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
@@ -169,7 +168,6 @@ async function setUp(interaction, confirmedPlayers) {
 }
 
 async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
-  console.log("Now we're executing readyChecker");
   const readyArray = [];
   const time = getTimestamp(1000);
   const miliTime = getTimestamp(1);
@@ -271,7 +269,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       }
     } else {
       const stackButton = rowBoat('Stack it!', 'stack');
-      console.log('Det här är efter stackButton');
       let finalMessage = '';
       switch (collected.last().customId) {
         case readyOptions.sudo:
