@@ -88,7 +88,7 @@ async function setUp(interaction, confirmedPlayers) {
     components: inOutButtons,
   });
   const partyThread = await pThreadCreator(interaction, dotaMessage);
-  partyThread.members.add(i.user);
+  await partyThread.members.add(interaction.user);
   if (confirmedPlayers.length > 4) {
     const memberArray = userToMember(confirmedPlayers, interaction);
     ljudGöraren.ljudGöraren(memberArray);
@@ -109,7 +109,7 @@ async function setUp(interaction, confirmedPlayers) {
         if (!confirmedPlayers.find(playerIdentity(i))) {
           eRemover(condiPlayers, i); //remove player from Condi if they're in it
           confirmedPlayers.push({ player: i.user });
-          partyThread.members.add(i.user);
+          await partyThread.members.add(i.user);
           if (confirmedPlayers.length > 4) {
             collector.stop("That's enough!");
           }
