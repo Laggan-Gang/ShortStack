@@ -49,7 +49,9 @@ const readyColours = {
 const invokeQueue = async interaction => {
   const queuer = { id: interaction.user.toString() };
   const queue = await helpMeLittleHelper(queuer, 'get');
-  await helpMeLittleHelper({ id: picked }, 'delete');
+  queue.forEach(async invokee => {
+    await helpMeLittleHelper({ id: invokee }, 'delete');
+  });
   return queue;
 };
 
