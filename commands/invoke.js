@@ -43,10 +43,9 @@ module.exports = {
     });
 
     const time = getTimestamp(1000) + READYTIME;
+    const callForHelp = `**YAPOS CALLS FOR AID** \n ${vacancies} gamers needed, time's up <t:${time}:R>`;
     await interaction.reply({
-      content: `${queue.data.join(
-        ', '
-      )} **YAPOS CALLS FOR AID** \n Time <t:${time}:R>`,
+      content: `${queue.data.join(', ')} ${callForHelp}`,
       components: [buttonRow],
     });
     const message = await interaction.fetchReply();
@@ -81,12 +80,7 @@ module.exports = {
           e => !acceptedApplicants.includes(e)
         );
         const unreadies = readySort(newArray, false);
-        console.log('Accepted Applicants (these are removed from queue)');
-        console.log(acceptedApplicants);
-        console.log('Readies (these remain in queue)');
-        console.log(readies);
-        console.log('Unreadies (these are removed from queue)');
-        console.log(unreadies);
+
         const messageArray = [];
         if (!acceptedApplicants.length) {
           messageArray.push('But no one came....');
@@ -129,10 +123,8 @@ module.exports = {
   },
 };
 
-const updateMessage = (newArray, time, premature) => {
-  const message = [
-    `**🔥🔥THE BEACONS ARE LIT🔥🔥**\n**YAPOS CALLS FOR AID** \n Time <t:${time}:R>`,
-  ];
+const updateMessage = (newArray, time, premature, callForHelp) => {
+  const message = [`**🔥🔥THE BEACONS ARE LIT🔥🔥**\n${callForHelp}`];
   const readies = readySort(newArray, true).filter(e => !premature.includes(e));
   const unreadies = readySort(newArray, false);
   content(premature, message, 'premature', time);
