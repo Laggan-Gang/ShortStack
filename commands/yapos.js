@@ -88,6 +88,7 @@ async function setUp(interaction, confirmedPlayers) {
     components: inOutButtons,
   });
   const partyThread = await pThreadCreator(interaction, dotaMessage);
+  partyThread.members.add(i.user);
   if (confirmedPlayers.length > 4) {
     const memberArray = userToMember(confirmedPlayers, interaction);
     ljudGöraren.ljudGöraren(memberArray);
