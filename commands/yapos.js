@@ -16,6 +16,7 @@ const {
   getTimestamp,
   shuffle,
   handleIt,
+  helpMeLittleHelper,
   forceReady,
   everyoneReady,
   pingMessage,
