@@ -45,6 +45,12 @@ const readyColours = {
   5: 0x99ff33, //green
 };
 
+const invokeQueue = async () => {
+  const queue = await helpMeLittleHelper(queuer, 'get');
+  await helpMeLittleHelper({ id: picked }, 'delete');
+  return queue;
+};
+
 function arrayMaker(interaction) {
   const confirmedPlayers = [];
   confirmedPlayers.push({ player: interaction.user });
@@ -67,8 +73,13 @@ async function setUp(interaction, confirmedPlayers) {
   const embed = prettyEmbed(confirmedPlayers, condiPlayers);
   const time = getTimestamp(1000);
   const inOutButtons = inOutBut();
+  const initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
+  const queue = await invokeQueue();
+  if (queue) {
+    initMessage.concat(`\nFor your interest ${queue.join(' & ')}`);
+  }
   const dotaMessage = await interaction.channel.send({
-    content: `${yapos} call, closes <t:${time + ONEHOUR}:R>`,
+    content: initMessage,
     embeds: [embed],
     components: inOutButtons,
   });
@@ -76,6 +87,7 @@ async function setUp(interaction, confirmedPlayers) {
   if (confirmedPlayers.length > 4) {
     const memberArray = userToMember(confirmedPlayers, interaction);
     ljudGöraren.ljudGöraren(memberArray);
+    console.log('Line 90');
     await readyChecker(confirmedPlayers, dotaMessage, partyThread);
     return;
   }
@@ -144,7 +156,9 @@ async function setUp(interaction, confirmedPlayers) {
       //Time for a ready check
       const memberArray = userToMember(confirmedPlayers, interaction);
       ljudGöraren.ljudGöraren(memberArray);
+      console.log('Line 159');
       await readyChecker(confirmedPlayers, dotaMessage, partyThread);
+      return;
     }
   });
 }
@@ -521,6 +535,7 @@ module.exports = {
       );
       return;
     }
+
     interaction.deferReply();
     interaction.deleteReply();
     await setUp(interaction, confirmedPlayers);

@@ -4,7 +4,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require('discord.js');
-const { helpMeLittleHelper, getTimestamp } = require('../utils');
+const { helpMeLittleHelper, getTimestamp, shortButton } = require('../utils');
 
 const READYTIME = 5 * 60;
 
@@ -33,16 +33,15 @@ module.exports = {
       return;
     }
     const vacancies = interaction.options.getInteger('vacancies');
-    const newArray = [];
-    for (let id of queue.data) {
-      newArray.push({ id: id, ready: false });
-    }
-    const buttonRow = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId('rdyQueue')
-        .setLabel('🐎AND THE QUEUE SHALL ANSWER!🐎')
-        .setStyle(ButtonStyle.Primary)
-    );
+    const newArray = queue.data.map(id => {
+      return { id: id, ready: false };
+    });
+    const buttonRow = shortButton({
+      id: 'rdyQueue',
+      label: '🐎AND THE QUEUE SHALL ANSWER!🐎',
+      style: 'primary',
+    });
+
     const time = getTimestamp(1000) + READYTIME;
     await interaction.reply({
       content: `${queue.data.join(

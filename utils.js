@@ -16,6 +16,10 @@ const REMINDERS = [
   ' ***TODAY MB???***',
 ];
 
+const buttonDict = {
+  primary: ButtonStyle.Primary,
+};
+
 function playerIdentity(interaction) {
   return e => [e?.id, e.player?.id].includes(interaction.user.id);
 }
@@ -41,6 +45,15 @@ function shuffle([...array]) {
 }
 
 module.exports = {
+  shortButton({ id, label, style }) {
+    return new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId(id)
+        .setLabel(label)
+        .setStyle(buttonDict[style])
+    );
+  },
+
   async helpMeLittleHelper(queuer, method) {
     const request = {
       baseURL: 'http://localhost:3000/',
