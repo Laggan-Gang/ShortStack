@@ -46,7 +46,8 @@ const readyColours = {
   5: 0x99ff33, //green
 };
 
-const invokeQueue = async () => {
+const invokeQueue = async interaction => {
+  const queuer = { id: interaction.user.toString() };
   const queue = await helpMeLittleHelper(queuer, 'get');
   await helpMeLittleHelper({ id: picked }, 'delete');
   return queue;
@@ -75,7 +76,7 @@ async function setUp(interaction, confirmedPlayers) {
   const time = getTimestamp(1000);
   const inOutButtons = inOutBut();
   const initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
-  const queue = await invokeQueue();
+  const queue = await invokeQueue(interaction);
   if (queue) {
     initMessage.concat(`\nFor your interest ${queue.join(' & ')}`);
   }
