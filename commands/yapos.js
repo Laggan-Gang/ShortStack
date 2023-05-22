@@ -77,14 +77,11 @@ async function setUp(interaction, confirmedPlayers) {
   const embed = prettyEmbed(confirmedPlayers, condiPlayers);
   const time = getTimestamp(1000);
   const inOutButtons = inOutBut();
-  const initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
+  let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
   const queue = await invokeQueue(interaction);
   if (queue) {
-    console.log('There is someone in the queue', queue);
-    initMessage.concat(`\nFor your interest ${queue.join(' & ')}`);
+    initMessage += `\nFor your interest ${queue.join(' & ')}`;
     console.log(initMessage);
-  } else {
-    console.log('There is no one in the queue', queue);
   }
   const dotaMessage = await interaction.channel.send({
     content: initMessage,
