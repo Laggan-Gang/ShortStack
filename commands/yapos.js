@@ -49,7 +49,6 @@ const readyColours = {
 const invokeQueue = async interaction => {
   const queuer = { id: interaction.user.toString() };
   const queue = await helpMeLittleHelper(queuer, 'get');
-  console.log('Here is queue', queue.data);
   queue.data.forEach(async invokee => {
     await helpMeLittleHelper({ id: invokee }, 'delete');
   });
@@ -81,7 +80,10 @@ async function setUp(interaction, confirmedPlayers) {
   const initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
   const queue = await invokeQueue(interaction);
   if (queue) {
+    console.log('There is someone in the queue', queue);
     initMessage.concat(`\nFor your interest ${queue.join(' & ')}`);
+  } else {
+    console.log('There is no one in the queue', queue);
   }
   const dotaMessage = await interaction.channel.send({
     content: initMessage,
