@@ -86,12 +86,7 @@ async function setUp(interaction, confirmedPlayers) {
     components: inOutBut(),
   });
   const partyThread = await pThreadCreator(interaction, dotaMessage);
-  confirmedPlayers.forEach(
-    p => console.log(p.player) ?? partyThread.members.add(p.player)
-  );
-  console.log(
-    "This is some feature we're tesitng with the confirmed players and stuff"
-  );
+  confirmedPlayers.forEach(p => partyThread.members.add(p.player));
 
   if (confirmedPlayers.length > 4) {
     ljudGöraren.ljudGöraren(userToMember(confirmedPlayers, interaction));
