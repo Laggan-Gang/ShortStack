@@ -65,8 +65,6 @@ module.exports = {
         }
       });
       const premature = checkEarlyComplete(newArray, vacancies);
-      console.log('Här är premature');
-      console.log(premature);
 
       await message.edit(updateMessage(newArray, time, premature, callForHelp));
       await i.deferReply();
@@ -123,6 +121,14 @@ module.exports = {
   },
 };
 
+//Secret tech
+const messages = {
+  premature: poopers => `foo bar kek ${poopers}`,
+  readies: poopers => `den andra som printar ${poopers}`,
+  unreadies: (poopers, time) => `nu med ${time} också era ${poopers}`,
+};
+//Called like this messages[type](poopers,time);
+
 const updateMessage = (newArray, time, premature, callForHelp) => {
   const message = [`**🔥🔥THE BEACONS ARE LIT🔥🔥**\n${callForHelp}`];
   const readies = readySort(newArray, true).filter(e => !premature.includes(e));
@@ -130,34 +136,30 @@ const updateMessage = (newArray, time, premature, callForHelp) => {
   content(premature, message, 'premature', time);
   content(readies, message, 'readies', time);
   content(unreadies, message, 'unreadies', time);
-  console.log("Here's message as of right before joining", message);
   return message.join('\n \n');
 };
 
 const content = (array, message, type, time) => {
+  if (!array.length) {
+    return;
+  }
+
+  const poopers = array.join(' & ');
   switch (type) {
     case 'premature':
-      if (array.length) {
-        message.push(
-          `${array.join(
-            ' & '
-          )} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`
-        );
-      }
+      message.push(
+        `${poopers} you have been **CONFIRMED IN**, since you were at the top at the queue and the vacant slot/s have been filled.`
+      );
       break;
+
     case 'readies':
-      if (array.length) {
-        message.push(`${array.join(' & ')} you have been confirmed ready.`);
-      }
+      message.push(`${poopers} you have been confirmed ready.`);
       break;
+
     case 'unreadies':
-      if (array.length) {
-        message.push(
-          `${array.join(
-            ' & '
-          )} ready up <t:${time}:R>, or you will be removed from the /queue due to inactivity.`
-        );
-      }
+      message.push(
+        `${poopers} ready up <t:${time}:R>, or you will be removed from the /queue due to inactivity.`
+      );
       break;
   }
 };

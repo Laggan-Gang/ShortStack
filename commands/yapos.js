@@ -71,17 +71,21 @@ function arrayMaker(interaction) {
   return confirmedPlayers;
 }
 
-async function setUp(interaction, confirmedPlayers) {
-  //Embed görare
-  const condiPlayers = [];
+const messageMaker = async interaction => {
   const time = getTimestamp(1000);
   let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
   const queue = await invokeQueue(interaction);
   if (queue) {
     initMessage += `\nFor your interest ${queue.join(' & ')}`;
   }
+  return initMessage;
+};
+
+async function setUp(interaction, confirmedPlayers) {
+  //Embed görare
+  const condiPlayers = [];
   const dotaMessage = await interaction.channel.send({
-    content: initMessage,
+    content: messageMaker(interaction),
     embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
     components: inOutBut(),
   });
@@ -93,7 +97,6 @@ async function setUp(interaction, confirmedPlayers) {
     readyChecker(confirmedPlayers, dotaMessage, partyThread);
     return;
   }
-
   const filter = i =>
     i.customId in buttonOptions && i.message.id === dotaMessage.id;
   const collector = dotaMessage.channel.createMessageComponentCollector({
