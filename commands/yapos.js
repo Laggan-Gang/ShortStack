@@ -74,9 +74,7 @@ function arrayMaker(interaction) {
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const condiPlayers = [];
-  const embed = prettyEmbed(confirmedPlayers, condiPlayers);
   const time = getTimestamp(1000);
-  const inOutButtons = inOutBut();
   let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
   const queue = await invokeQueue(interaction);
   if (queue) {
@@ -84,14 +82,17 @@ async function setUp(interaction, confirmedPlayers) {
   }
   const dotaMessage = await interaction.channel.send({
     content: initMessage,
-    embeds: [embed],
-    components: inOutButtons,
+    embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
+    components: inOutBut(),
   });
   const partyThread = await pThreadCreator(interaction, dotaMessage);
-  await partyThread.members.add(interaction.user);
+  confirmedPlayers.forEach(p => console.log(p) ?? partyThread.members.add(p));
+  console.log(
+    "This is some feature we're tesitng with the confirmed players and stuff"
+  );
+
   if (confirmedPlayers.length > 4) {
-    const memberArray = userToMember(confirmedPlayers, interaction);
-    ljudGöraren.ljudGöraren(memberArray);
+    ljudGöraren.ljudGöraren(userToMember(confirmedPlayers, interaction));
     readyChecker(confirmedPlayers, dotaMessage, partyThread);
     return;
   }
@@ -163,7 +164,6 @@ async function setUp(interaction, confirmedPlayers) {
       ljudGöraren.ljudGöraren(memberArray);
       console.log('Line 159');
       readyChecker(confirmedPlayers, dotaMessage, partyThread);
-      return;
     }
   });
 }
@@ -175,14 +175,6 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
   for (let player of confirmedPlayers) {
     readyArray.push({ gamer: player.player, ready: false });
   }
-
-  const embed = readyEmbed(readyArray);
-  await partyMessage.edit({
-    content: `Ready check closes <t:${time + READYTIME}:R>`,
-    embeds: [embed],
-    components: rdyButtons(),
-  });
-
   const filter = i =>
     i.channel.id === partyMessage.channel.id && i.customId in readyOptions;
 
@@ -288,6 +280,13 @@ async function readyChecker(confirmedPlayers, partyMessage, partyThread) {
       });
       await stackIt(partyMessage, confirmedPlayers, partyThread);
     }
+  });
+
+  const embed = readyEmbed(readyArray);
+  partyMessage.edit({
+    content: `Ready check closes <t:${time + READYTIME}:R>`,
+    embeds: [embed],
+    components: rdyButtons(),
   });
 }
 
