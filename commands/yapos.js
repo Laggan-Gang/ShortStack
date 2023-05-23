@@ -86,7 +86,9 @@ async function setUp(interaction, confirmedPlayers) {
     components: inOutBut(),
   });
   const partyThread = await pThreadCreator(interaction, dotaMessage);
-  confirmedPlayers.forEach(p => console.log(p) ?? partyThread.members.add(p));
+  confirmedPlayers.forEach(
+    p => console.log(p) ?? partyThread.members.add(p.player.user)
+  );
   console.log(
     "This is some feature we're tesitng with the confirmed players and stuff"
   );
