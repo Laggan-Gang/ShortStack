@@ -56,10 +56,11 @@ module.exports = {
         break;
     }
 		
-		if (stackIt) {
-			ljudfil = "stack it.wav";
-			console.log("stack it!");
-		}
+    // TODO: probably put this before the switch true lol and else into that
+    if (stackIt) {
+      ljudfil = "stack it.wav";
+      console.log("stack it!");
+    }
 
     const channel = channelFinder(memberArray);
     if (channel == undefined) {
