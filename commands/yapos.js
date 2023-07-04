@@ -162,7 +162,7 @@ async function setUp(interaction, confirmedPlayers) {
       //Time for a ready check
       const memberArray = userToMember(confirmedPlayers, interaction);
       ljudGöraren.ljudGöraren(memberArray);
-      console.log('Line 159');
+      console.log('Line 165');
       readyChecker(confirmedPlayers, dotaMessage, partyThread);
     }
   });
@@ -326,6 +326,12 @@ async function pThreadCreator(interaction, dotaMessage) {
 }
 
 async function stackIt(message, confirmedPlayers) {
+  // Gör ljud när du stackar
+  // Original
+  // ljudGöraren.ljudGöraren(userToMember(confirmedPlayers, interaction));
+  // Anpassad, borde funka?
+  ljudGöraren.ljudGöraren(userToMember(confirmedPlayers, message), stackIt = true);
+
   const filter = i => i.message.id === message.id && i.customId === 'stack';
   const collector = message.channel.createMessageComponentCollector({
     filter,
