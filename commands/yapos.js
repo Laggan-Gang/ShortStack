@@ -330,11 +330,6 @@ async function pThreadCreator(interaction, dotaMessage) {
 }
 
 async function stackIt(message, confirmedPlayers) {
-  // Gör ljud när du stackar
-  // Original
-  // ljudGöraren.ljudGöraren(userToMember(confirmedPlayers, interaction));
-  // Anpassad, borde funka?
-  ljudGöraren.ljudGöraren(userToMember(confirmedPlayers, message), stackIt = true);
 
   const filter = i => i.message.id === message.id && i.customId === 'stack';
   const collector = message.channel.createMessageComponentCollector({
@@ -345,6 +340,8 @@ async function stackIt(message, confirmedPlayers) {
   collector.on('collect', async i => {});
 
   collector.on('end', async collected => {
+    // Gör ljud när du stackar
+    ljudGöraren.ljudGöraren(userToMember(confirmedPlayers, message), shouldWeStackIt = true);
     await message.edit({ components: [] });
     if (collected.last()) {
       const interaction = collected.last();
