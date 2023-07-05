@@ -66,7 +66,6 @@ module.exports = {
       responseType: 'json',
     };
     try {
-      console.log(request);
       res = await axios(request);
       return res;
       //switch (method){

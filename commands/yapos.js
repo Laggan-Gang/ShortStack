@@ -72,7 +72,6 @@ function arrayMaker(interaction) {
 }
 
 const messageMaker = async interaction => {
-  console.log("Inside messageMaker!");
   const time = getTimestamp(1000);
   //let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
   let initMessage = `FAKE yapos call, closes when it crashes`;
@@ -80,8 +79,6 @@ const messageMaker = async interaction => {
   if (queue) {
     initMessage += `\nFor your interest ${queue.join(' & ')}`;
   }
-  console.log("Going out of messageMaker with message:");
-  console.log(initMessage);
   return initMessage;
 };
 
@@ -94,8 +91,6 @@ async function setUp(interaction, confirmedPlayers) {
     embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
     components: inOutBut(),
   };
-  console.log("setUp: messageToSend:");
-  console.log(messageToSend);
   const dotaMessage = await interaction.channel.send(messageToSend);
   const partyThread = await pThreadCreator(interaction, dotaMessage);
   confirmedPlayers.forEach(p => partyThread.members.add(p.player));
@@ -172,7 +167,6 @@ async function setUp(interaction, confirmedPlayers) {
       //Time for a ready check
       const memberArray = userToMember(confirmedPlayers, interaction);
       ljudGöraren.ljudGöraren(memberArray);
-      console.log('Line 159');
       readyChecker(confirmedPlayers, dotaMessage, partyThread);
     }
   });
@@ -542,7 +536,6 @@ module.exports = {
 
   async execute(interaction) {
     const confirmedPlayers = arrayMaker(interaction);
-    console.log(confirmedPlayers)
     if (!confirmedPlayers) {
       interaction.reply(
         'Please provide unique players!\nLove, **ShortStack!**'

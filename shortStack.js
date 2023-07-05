@@ -34,7 +34,7 @@ client.once("ready", () => {
 client.on("interactionCreate", async (interaction) => {
   console.log(interaction.commandName);
   if (interaction.commandName === 'yapos') {
-    await interaction.deferReply();
+    //await interaction.deferReply();
   }
   //console.log(interaction);
   const command = client.commands.get(interaction.commandName);
