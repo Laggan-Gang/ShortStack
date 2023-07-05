@@ -73,8 +73,8 @@ function arrayMaker(interaction) {
 
 const messageMaker = async interaction => {
   const time = getTimestamp(1000);
-  //let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
-  let initMessage = `FAKE yapos call, closes when it crashes`;
+  let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
+  //let initMessage = `FAKE yapos call, closes when it crashes`; //Use for testing purposes
   const queue = await invokeQueue(interaction);
   if (queue) {
     initMessage += `\nFor your interest ${queue.join(' & ')}`;
