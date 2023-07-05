@@ -6,7 +6,7 @@ const {
 } = require("@discordjs/voice");
 
 module.exports = {
-  ljudGöraren: async function ljudGöraren(memberArray) {
+  ljudGöraren: async function ljudGöraren(memberArray, stackIt = false) {
     const aleaIactaEst = Math.floor(Math.random() * 50);
     let ljudfil = "bow bow.wav";
     switch (true) {
@@ -54,6 +54,12 @@ module.exports = {
       default:
         console.log("default");
         break;
+    }
+		
+    // TODO: probably put this before the switch true lol and else into that
+    if (stackIt) {
+      ljudfil = "stack it.wav";
+      console.log("stack it!");
     }
 
     const channel = channelFinder(memberArray);
