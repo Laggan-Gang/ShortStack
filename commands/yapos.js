@@ -72,23 +72,31 @@ function arrayMaker(interaction) {
 }
 
 const messageMaker = async interaction => {
+  console.log("Inside messageMaker!");
   const time = getTimestamp(1000);
-  let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
+  //let initMessage = `${yapos} call, closes <t:${time + ONEHOUR}:R>`;
+  let initMessage = `FAKE yapos call, closes when it crashes`;
   const queue = await invokeQueue(interaction);
   if (queue) {
     initMessage += `\nFor your interest ${queue.join(' & ')}`;
   }
+  console.log("Going out of messageMaker with message:");
+  console.log(initMessage);
   return initMessage;
 };
 
 async function setUp(interaction, confirmedPlayers) {
   //Embed görare
   const condiPlayers = [];
-  const dotaMessage = await interaction.channel.send({
-    content: messageMaker(interaction),
+  messageContent = await messageMaker(interaction);
+  messageToSend = {
+    content: messageContent,
     embeds: [prettyEmbed(confirmedPlayers, condiPlayers)],
     components: inOutBut(),
-  });
+  };
+  console.log("setUp: messageToSend:");
+  console.log(messageToSend);
+  const dotaMessage = await interaction.channel.send(messageToSend);
   const partyThread = await pThreadCreator(interaction, dotaMessage);
   confirmedPlayers.forEach(p => partyThread.members.add(p.player));
 
@@ -103,6 +111,7 @@ async function setUp(interaction, confirmedPlayers) {
     filter,
     time: ONEHOUR * 1000,
   });
+  console.log("setUp: on collect")
   collector.on('collect', async i => {
     console.log(`${i.user.username} clicked ${i.customId}`);
     switch (i.customId) {
@@ -152,6 +161,7 @@ async function setUp(interaction, confirmedPlayers) {
     }
   });
 
+  console.log("setUp: on end");
   collector.on('end', async collected => {
     if (confirmedPlayers.length < 5) {
       await dotaMessage.edit({
@@ -532,6 +542,7 @@ module.exports = {
 
   async execute(interaction) {
     const confirmedPlayers = arrayMaker(interaction);
+    console.log(confirmedPlayers)
     if (!confirmedPlayers) {
       interaction.reply(
         'Please provide unique players!\nLove, **ShortStack!**'

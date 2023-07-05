@@ -6,12 +6,12 @@ module.exports = {
     .setName("unqueue")
     .setDescription("Uh oh it's donut time"),
   async execute(interaction) {
-    const queuer = { id: interaction.user.toString() };
-    const queue = await helpMeLittleHelper(queuer, "delete");
     await interaction.reply({
       content: `Roger...`,
       ephemeral: false,
     });
+    const queuer = { id: interaction.user.toString() };
+    const queue = await helpMeLittleHelper(queuer, "delete");
     const message = await interaction.fetchReply();
     await message.edit({
       content: `The queue looks like this: \n${queue.data.join("\n")}`,
