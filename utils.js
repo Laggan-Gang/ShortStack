@@ -56,9 +56,9 @@ module.exports = {
 
   async helpMeLittleHelper(queuer, method) {
     const request = {
+      method: method,
       baseURL: 'http://localhost:3000/',
       url: 'queue',
-      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -66,8 +66,23 @@ module.exports = {
       responseType: 'json',
     };
     try {
-      const res = await axios(request);
+      console.log(request);
+      res = await axios(request);
       return res;
+      //switch (method){
+        //case "post":
+          //postRes = await axios.post(request);
+          //return postRed
+          //break;
+        //case "delete":
+          //deleteRes = await axios.delete(request);
+          //return deleteRes
+          //break;
+        //case "get":
+          //getRes = await axios.get(request);
+          //return getRes
+          //break;
+      //}
     } catch (error) {
       console.error(error);
     }

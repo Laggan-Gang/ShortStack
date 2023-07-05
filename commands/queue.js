@@ -12,10 +12,6 @@ module.exports = {
         .setRequired(false)
     ),
   async execute(interaction) {
-    await interaction.reply({
-      content: `Roger...`,
-      ephemeral: false,
-    });
     let target = interaction.options.getUser("target");
     let queuer = "";
     if (target) {
@@ -23,8 +19,16 @@ module.exports = {
     } else {
       queuer = { id: interaction.user.toString() };
     }
+    await interaction.reply({
+      content: `Roger...`,
+      ephemeral: false,
+    });
+    console.log("This is the queuer:");
+    console.log(queuer);
     const queue = await helpMeLittleHelper(queuer, "post");
     const message = await interaction.fetchReply();
+    console.log("This is the queue:");
+    console.log(queue);
     await message.edit({
       content: `The queue looks like this: \n${queue.data.join("\n")}`,
     });

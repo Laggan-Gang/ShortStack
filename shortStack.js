@@ -36,7 +36,7 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.commandName === 'yapos') {
     await interaction.deferReply();
   }
-  console.log(interaction);
+  //console.log(interaction);
   const command = client.commands.get(interaction.commandName);
   if (!interaction.isChatInputCommand()) return;
   if (!command) return;
@@ -44,6 +44,7 @@ client.on("interactionCreate", async (interaction) => {
   try {
     command.execute(interaction);
   } catch (error) {
+    console.log("Oopsie! Error in interactionCreate");
     console.error(error);
     await interaction.reply({
       content: "There was an error while executing this command!",
